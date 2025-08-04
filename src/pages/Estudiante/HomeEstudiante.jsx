@@ -145,7 +145,7 @@ const HomeEstudiante = () => {
     };
   };
 
-  if (isLoading || loadingNoticias) return "";
+  if (isLoading) return ;
 
   const fecha = new Date();
   const meses = [
@@ -323,7 +323,7 @@ const HomeEstudiante = () => {
               value={selectedAsesoriaId || ''}
               className='border rounded-t-md border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
             >
-              {asesorias.isEmpty ?
+              {asesorias?.isEmpty ?
                 <option value="" disabled>No hay asesorías disponibles</option>
                 :
                 Object.values(asesorias).map((asesoria, index) => (
