@@ -81,7 +81,7 @@ const Terminados = () => {
 
   return (
     <>
-      <div className="flex justify-between text-[#2B2829] font-normal  p-[6px] rounded-md">
+      <div className="flex justify-between text-[#495D72] font-normal p-[6px] rounded-md">
         <div className="mn:w-[300px] text-xs md:text-base flex">
           Nombre Entregas
         </div>

@@ -103,7 +103,6 @@ const EntregaRevisionEst = () => {
             <div className=" mt-5 flex justify-between">
               <h2 className="text-base md:text-2xl font-bold">Asuntos</h2>
               <span className="flex  justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <a href="">Ver todo</a>
                 <img src={flechaAzul} alt="" />
               </span>
             </div>
@@ -137,7 +136,6 @@ const EntregaRevisionEst = () => {
           <div className="flex justify-between flex-col md:flex-row">
             <h2 className="text-base md:text-2xl font-bold">Documentos</h2>
             <span className="flex md:justify-end gap-1 items-center font-medium text-[#2F80ED]">
-              <a href="">Ver todo</a>
               <img src={flechaAzul} alt="" />
             </span>
           </div>

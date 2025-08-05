@@ -379,7 +379,6 @@ const RecursosEstudiante = () => {
           <div className="mt-5 mx-5 flex justify-between items-center">
             <h2 className="text-[20px] font-medium">Tutoriales</h2>
             <span className="flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-              <a href="">Ver todo</a>
               <img src={flechaAzul} alt="" />
             </span>
           </div>
@@ -453,7 +452,6 @@ const RecursosEstudiante = () => {
           <div className="mt-5 mx-5 flex justify-between items-center ">
             <h2 className="text-[20px] font-medium">Guías</h2>
             <span className="flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-              <a href="">Ver todo</a>
               <img src={flechaAzul} alt="" />
             </span>
           </div>
@@ -522,7 +520,6 @@ const RecursosEstudiante = () => {
           <div className="mt-5 mx-5 flex justify-between items-center ">
             <h2 className="text-[20px] font-medium">Herramientas</h2>
             <span className="flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-              <a href="">Ver todo</a>
               <img src={flechaAzul} alt="" />
             </span>
           </div>
