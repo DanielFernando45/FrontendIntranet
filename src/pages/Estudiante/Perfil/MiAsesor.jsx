@@ -81,7 +81,7 @@ const MiAsesor = () => {
           <h1 className='text-xl font-medium'>Mi asesor</h1>
           {verAsesor.map((asesor) => (
             asesor?.id === asesores?.id && (
-              <img key={asesor.id} src={asesor.imagen} alt="Asesor" className='w-[240px] h-[240px]' />
+              <img key={asesor.id} src={asesor.imagen} alt="Asesor" className='w-[240px] h-[240px] rounded-full' />
             )
           ))}
           
