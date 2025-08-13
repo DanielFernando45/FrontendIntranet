@@ -206,7 +206,7 @@ const AsesoriaNueva = () => {
   return (
     <LayoutApp>
       <main className="flex flex-col mx-32  items-start">
-        <h1 className='ml-8 font-semibold text-[25px]'>Nueva Asesoria </h1>
+        <h1 className='ml-8 font-semibold text-[25px]'>Nueva Asesoria</h1>
         <div className="flex flex-col gap-[10px] ml-8 pt-3 p-[30px] w-full bg-white rounded-[10px] drop-shadow-lg">
           <div className="flex flex-col gap-[12px]">
 

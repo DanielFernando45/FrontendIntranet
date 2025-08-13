@@ -10,6 +10,7 @@ import Reuniones from "../../assets/icons/IconEstudiante/ReunionEstudiante.svg";
 import EntreRev from "../../assets/icons/IconEstudiante/EnvioEstudiante.svg";
 import Calendario from "../../assets/icons/IconEstudiante/CalendarEstudiante.svg";
 import Gestion from "../../assets/icons/IconAsesor/gestionAlum.svg";
+import InduccionIconSideBar from "../../assets/icons/IconAdmin/video-play.png";
 
 const LINKS = [
   { icono: HomeEstu, path: "/asesor/home", title: "Home" },
@@ -28,6 +29,11 @@ const LINKS = [
     icono: Gestion,
     path: "/asesor/gestionarAlumno",
     title: "Gestionar Clientes",
+  },
+  {
+    icono: InduccionIconSideBar,
+    path: "/asesor/inducciones",
+    title: "Inducciones",
   },
 ];
 
