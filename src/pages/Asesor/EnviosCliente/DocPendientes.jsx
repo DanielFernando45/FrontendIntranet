@@ -5,6 +5,8 @@ import { useOutletContext } from "react-router-dom";
 import documentosVacios from '../../../assets/icons/documentosVacios.png'
 import FechaEstimada from "../../../Components/Asesor/FechaEstimada";
 import EnviarAvance from "../../../Components/Asesor/EnviarAvance";
+import { FaRegEdit } from "react-icons/fa";
+import ModalEditarFechaPendientes from "./components/ModalEditarFechaPendientes";
 
 const DocPendientes = () => {
   const [pendientes, setPendientes] = useState([]);
@@ -14,6 +16,10 @@ const DocPendientes = () => {
   const [showEnviarAvance, setShowEnviarAvance] = useState(null);
   const [loading, setLoading] = useState(true);
   const idAsesoramiento = useOutletContext();
+
+  const [showModalEdit, setShowModalEdit] = useState(false);
+  const [idAsunto, setIdAsunto] = useState(null);
+
 
   useEffect(() => {
     if (idAsesoramiento) {
@@ -99,7 +105,7 @@ const DocPendientes = () => {
 
     // Determinar AM/PM
     const ampm = horas >= 12 ? "PM" : "AM";
-    
+
     // Convertir a formato de 12 horas con dos dígitos
     horas = horas % 12;
     horas = horas ? horas.toString().padStart(2, "0") : "12"; // La hora 0 se convierte en 12
@@ -108,7 +114,7 @@ const DocPendientes = () => {
     const hora12ConAmPm = `${horas}:${minutos} ${ampm}`;
 
     return hora12ConAmPm;
-};
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -117,7 +123,7 @@ const DocPendientes = () => {
     const month = date.toLocaleDateString('es-PE', { month: 'long' });
     const year = date.getFullYear();
     return `${day} ${month} de ${year}`;
-};
+  };
 
 
   const handleSubmitAvance = async (id, titulo, files) => {
@@ -170,87 +176,90 @@ const DocPendientes = () => {
         <div className="h-[200px] overflow-auto ">
           {
             pendientes.map((pendiente) => (
-          <div
-            key={pendiente.id_asunto}
-            className="flex flex-col text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md px-6 transition-all duration-300"
-          >
-            <div className="flex justify-between items-center ">
-              <div className="w-[300px] flex">{pendiente.titulo}</div>
-              <div className="w-[250px] flex justify-center">
-                {formatDate(pendiente.fecha_entrega)}
-              </div>
-              <button
-                onClick={() => toggleEnviarAvance(pendiente.id_asunto)}
-                className="flex justify-center items-center w-[180px] h-[30px] font-medium rounded-3xl bg-[#0CB2D5] text-white"
+              <div
+                key={pendiente.id_asunto}
+                className="flex flex-col text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md px-6 transition-all duration-300"
               >
-                ENVIAR AVANCE
-              </button>
-              <button
-                onClick={() => toggleOpen(pendiente.id_asunto)}
-                className="transition-transform duration-300"
-              >
-                <img
-                  src={arrowIcon}
-                  alt="toggle"
-                  className={`transform transition-transform duration-300 ${openItems[pendiente.id_asunto] ? "rotate-180" : "rotate-0"
-                    }`}
-                />
-              </button>
-            </div>
-
-            {openItems[pendiente.id_asunto] && (
-              <>
-                <div className='flex flex-col transition-all duration-300 ease-in-out mt-5'>
-                  <div className='flex justify-between'>
-                    <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">{pendiente.documento_0}</div>
-                    <div className='flex w-[450px] justify-center gap-4'>
-                      <p>Enviado: {formatDate(pendiente.fecha_entrega)}</p>
-                    </div>
-                    <div>{formatHora(pendiente.fecha_entrega)}</div>
-                    <div className="flex gap-5">
-                      <div className="text-white bg-[#054755] rounded-md px-6">
-                        Entregado
-                      </div>
-                      <input
-                        className="w-[25px]"
-                        type="checkbox"
-                        checked={checkedItems[pendiente.id_asunto] || false}
-                        onChange={() => handleCheckboxClick(pendiente.id_asunto)}
-                        disabled={checkedItems[pendiente.id_asunto]}
-                      />
-                    </div>
+                <div className="flex justify-between items-center ">
+                  <div className="w-[300px] flex">{pendiente.titulo}</div>
+                  <div className="w-[250px] flex justify-center">
+                    {formatDate(pendiente.fecha_entrega)}
                   </div>
-
-                  {checkedItems[pendiente.id_asunto] && pendiente.fecha_terminado && (
-                    <div className='flex justify-between mt-3'>
-                      <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">{pendiente.documento_0}</div>
-                      <div className='flex w-[450px] gap-4'>
-                        <p>Revisado: {formatDate(pendiente.fecha_revision)}</p>
-                        <p>Estimado: {formatDate(pendiente.fecha_terminado)}</p>
-                      </div>
-                      <div>{formatHora(pendiente.fecha_terminado)}</div>
-                      <div className='flex gap-5'>
-                        <div className='text-white bg-[#0CB2D5] rounded-md px-8'>
-                          {pendiente.estado}
-                        </div>
-                        <input
-                          className='w-[25px]'
-                          type="checkbox"
-                          checked={true}
-                          disabled={true}
-                        />
-                      </div>
-                    </div>
-                  )}
+                  <button
+                    onClick={() => toggleEnviarAvance(pendiente.id_asunto)}
+                    className="flex justify-center items-center w-[180px] h-[30px] font-medium rounded-3xl bg-[#0CB2D5] text-white"
+                  >
+                    ENVIAR AVANCE
+                  </button>
+                  <button
+                    onClick={() => toggleOpen(pendiente.id_asunto)}
+                    className="transition-transform duration-300"
+                  >
+                    <img
+                      src={arrowIcon}
+                      alt="toggle"
+                      className={`transform transition-transform duration-300 ${openItems[pendiente.id_asunto] ? "rotate-180" : "rotate-0"
+                        }`}
+                    />
+                  </button>
                 </div>
-              </>
-            )}
-          </div>
-        ))
+
+                {openItems[pendiente.id_asunto] && (
+                  <>
+                    <div className='flex flex-col transition-all duration-300 ease-in-out mt-5'>
+                      <div className='flex justify-between'>
+                        <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">{pendiente.documento_0}</div>
+                        <div className='flex w-[450px] justify-center gap-4'>
+                          <p>Enviado: {formatDate(pendiente.fecha_entrega)}</p>
+                        </div>
+                        <div>{formatHora(pendiente.fecha_entrega)}</div>
+                        <div className="flex gap-5">
+                          <div className="text-white bg-[#054755] rounded-md px-6">
+                            Entregado
+                          </div>
+                          <input
+                            className="w-[25px]"
+                            type="checkbox"
+                            checked={checkedItems[pendiente.id_asunto] || false}
+                            onChange={() => handleCheckboxClick(pendiente.id_asunto)}
+                            disabled={checkedItems[pendiente.id_asunto]}
+                          />
+                        </div>
+                      </div>
+
+                      {checkedItems[pendiente.id_asunto] && pendiente.fecha_terminado && (
+                        <div className='flex justify-between mt-3'>
+                          <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">{pendiente.documento_0}</div>
+                          <div className='flex w-[450px] gap-4'>
+                            <p>Revisado: {formatDate(pendiente.fecha_revision)}</p>
+                            <p>Estimado: {formatDate(pendiente.fecha_terminado)}</p>
+                          </div>
+                          <div>{formatHora(pendiente.fecha_terminado)}</div>
+                          <div className='flex gap-5'>
+                            <div className='text-white bg-[#0CB2D5] rounded-md px-8'>
+                              {pendiente.estado}
+                            </div>
+                            <input
+                              className='w-[25px]'
+                              type="checkbox"
+                              checked={true}
+                              disabled={true}
+                            />
+                            <button onClick={ () => { setIdAsunto(pendiente.id_asunto), setShowModalEdit(true)} } className="bg-slate-900 px-1 py-1">
+                              <FaRegEdit color="white" size={20} />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            ))
           }
         </div>
         // Mostrar datos cuando ya están cargados
-        
+
       ) : (
         // Mostrar cuando no hay datos
         <div className="flex justify-center ">
@@ -291,6 +300,10 @@ const DocPendientes = () => {
           </div>
         </div>
       )}
+      {
+        showModalEdit &&
+        <ModalEditarFechaPendientes idAsunto={idAsunto} setShowModalEdit={setShowModalEdit} />
+      }
     </div>
   );
 };
