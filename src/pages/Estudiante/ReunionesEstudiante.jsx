@@ -16,7 +16,7 @@ const ReunionesEstudiante = () => {
 
   const [showModalVideo, setShowModalVideo] = useState(false);
   const [urlVideo, setUrlVideo] = useState(null);
-  
+
 
   const { data: inducciones, isLoading: induccionesLoading } = useQuery({
     queryKey: ["inducciones", selectedAsesoriaId],
@@ -36,18 +36,28 @@ const ReunionesEstudiante = () => {
       fetch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/miAsesoramiento/${id}`)
         .then((res) => res.json())
         .then((data) => {
+
+          if (data.isEmpty) {
+            console.warn(data.message);
+            setAsesorias([]);
+            return;
+          }
           const asesoriasArray = Object.values(data).map((item) => ({
             id: item.id,
             profesion: item.profesion_asesoria,
           }));
-          setAsesorias(asesoriasArray);
+          setAsesorias(() => {
+            console.log(data)
+            return asesoriasArray
+          });
 
           if (asesoriasArray.length > 0) {
             const primeraAsesoriaId = asesoriasArray[0].id;
             setSelectedAsesoriaId(primeraAsesoriaId);
           }
         })
-        .catch((error) => console.error("Error al obtener asesorías:", error));
+        .catch((error) => console.error("Error al obtener asesorías:", error))
+        .finally(() => setLoading(false));
     }
   }, []);
 
@@ -116,14 +126,15 @@ const ReunionesEstudiante = () => {
       <main className="flex justify-center ">
         <div className="flex flex-col gap-[40px] lg:ml-1 p-[20px]  w-full  bg-white rounded-[20px] ">
           <div className="flex flex-col gap-[12px]">
-            <div className="flex justify-between flex-col sm:flex-row ">
+            <div className="flex justify-between flex-col sm:flex-row">
               <h1 className="font-medium text-[20px]">Reuniones</h1>
               <select
                 onChange={handleChange}
                 value={selectedAsesoriaId || ""}
                 className="border rounded-t-md border-[#b4a6aa]"
               >
-                {asesorias.map((asesoria, index) => (
+                <option value="" disabled>Seleccione una opción</option>
+                {asesorias && asesorias.length > 0 && asesorias.map((asesoria, index) => (
                   <option key={index} value={asesoria.id}>
                     {asesoria.profesion}
                   </option>
@@ -250,8 +261,8 @@ const ReunionesEstudiante = () => {
         </div>
 
         {showModalVideo && (
-          <div onClick={ () => setShowModalVideo(false) } className="fixed bg-black/50 top-0 left-0 w-full h-full flex items-center justify-center z-50 px-4">
-            <div onClick={ (event) => event.stopPropagation() } className="bg-white p-6 rounded-lg w-full shadow-lg lg:w-[500px] lg:h-[500px] max-w-[800px] max-h-[500px]">
+          <div onClick={() => setShowModalVideo(false)} className="fixed bg-black/50 top-0 left-0 w-full h-full flex items-center justify-center z-50 px-4">
+            <div onClick={(event) => event.stopPropagation()} className="bg-white p-6 rounded-lg w-full shadow-lg lg:w-[500px] lg:h-[500px] max-w-[800px] max-h-[500px]">
               <VideoPlayer urlVideo={urlVideo} />
               {/* <video
                 src={urlVideo}

@@ -36,26 +36,26 @@ const MiPerfil = () => {
 
     return (
         <LayoutApp>
-            <main className="m-20">
-                <div className='ml-8 fondo_login rounded-t-[20px] w-full h-14 '></div>
-                <div className="flex flex-col gap-[40px] ml-8 pb-12 pt-[38px] w-full h-full px-5 bg-white rounded-b-[20px]">
-                    
+            <main className="m-5 max-sm:m-[2px]">
+                <div className=' fondo_login rounded-t-[20px] w-full h-14 '></div>
+                <div className="flex flex-col gap-[40px]  pb-12 pt-[38px] w-full h-full px-5 bg-white rounded-b-[20px]">
+
                     <div className='flex justify-between gap-[22px] items-center'>
                         <div className='flex gap-[22px] items-center'>
                             <img src={perfil} alt="" className='w-[94px] h-[94px]' />
-                            <div> 
-                                <h3 className='text-[20px] font-medium'>{perfilData.nombre} {perfilData.apellido}</h3> 
-                                <p className='text-[#808080]'>{perfilData.email}</p>
-                            </div>  
+                            <div>
+                                <h3 className='text-[20px] font-medium max-sm:text-[17px]'>{perfilData.nombre} {perfilData.apellido}</h3>
+                                <p className='text-[#808080] max-sm:text-[12px]'>{perfilData.email}</p>
+                            </div>
                         </div>
 
-                        <button onClick={handlerEdit} className='flex justify-center items-center text-white bg-black rounded-lg w-[87px] h-[41px]'>
+                        {/* <button onClick={handlerEdit} className='flex justify-center items-center text-white bg-black rounded-lg w-[87px] h-[41px]'>
                             Edit
-                        </button>
+                        </button> */}
                     </div>
 
                     <div className='flex flex-col gap-4'>
-                        <div className='flex gap-10'>
+                        <div className='flex gap-10 max-md:flex-col'>
                             <div className='flex flex-col gap-3 w-full'>
                                 <p className='pl-[1px]'>Nombres</p>
                                 <div className='flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4'>
@@ -70,7 +70,7 @@ const MiPerfil = () => {
                             </div>
                         </div>
 
-                        <div className='flex gap-10'>
+                        <div className='flex gap-10 max-md:flex-col'>
                             <div className='flex flex-col gap-3 w-full'>
                                 <p className='pl-[1px]'>Carrera</p>
                                 <div className='flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4'>
@@ -86,7 +86,7 @@ const MiPerfil = () => {
                             </div>
                         </div>
 
-                        <div className='flex gap-10'>
+                        <div className='flex gap-10 max-md:flex-col'>
                             <div className='flex flex-col gap-3 w-full'>
                                 <p className='pl-[1px]'>Universidad</p>
                                 <div className='flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4'>
@@ -101,7 +101,7 @@ const MiPerfil = () => {
                             </div>
                         </div>
 
-                        <div className='flex gap-10'>
+                        <div className='flex gap-10 max-md:flex-col'>
                             <div className='flex flex-col gap-3 w-full'>
                                 <p className='pl-[1px]'>Correo electrónico</p>
                                 <div className='flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4'>

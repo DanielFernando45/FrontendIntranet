@@ -19,10 +19,11 @@ const HomeEstudiante = () => {
   const [NoticiasRecientes, setNoticiasRecientes] = useState([]);
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState('');
   const [proximasReuniones, setProximasReuniones] = useState([]);
-  const [verNoticias, setVerNoticias] = useState(null); // ahora guarda el objeto de la noticia seleccionada
+  const [verNoticias, setVerNoticias] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleItems, setVisibleItems] = useState(1);
   const [loadingNoticias, setLoadingNoticias] = useState(true);
+  const [loadingReuniones, setLoadingReuniones] = useState(true);
 
   const usuario = localStorage.getItem('user');
   const user = useSelector((state) => state.auth.user);
@@ -68,12 +69,17 @@ const HomeEstudiante = () => {
 
   useEffect(() => {
     if (selectedAsesoriaId) {
+      setLoadingReuniones(true);
       fetch(`${import.meta.env.VITE_API_PORT_ENV}/reuniones/espera/${selectedAsesoriaId}`)
         .then(res => res.json())
         .then(data => {
           setProximasReuniones(data);
+          setLoadingReuniones(false);
         })
-        .catch(error => console.error('Error al obtener reuniones próximas:', error));
+        .catch(error => {
+          console.error('Error al obtener reuniones próximas:', error);
+          setLoadingReuniones(false);
+        });
     }
   }, [selectedAsesoriaId])
 
@@ -105,7 +111,6 @@ const HomeEstudiante = () => {
   const handleVerNoticia = (id) => {
     const noticiaSeleccionada = NoticiasRecientes.find(noticia => noticia.id === id);
     setVerNoticias(noticiaSeleccionada);
-
   };
 
   // Función para navegar manualmente
@@ -145,7 +150,7 @@ const HomeEstudiante = () => {
     };
   };
 
-  if (isLoading || loadingNoticias) return "";
+  if (isLoading) return;
 
   const fecha = new Date();
   const meses = [
@@ -159,6 +164,43 @@ const HomeEstudiante = () => {
 
   const cliente = localStorage.getItem('user');
   const clienteNombre = JSON.parse(cliente);
+
+  // Componente Skeleton para Noticias
+  const NoticiaSkeleton = () => (
+    <div className="bg-[#1C1C34] w-[192px] lg:w-[230px] h-[204px] lg:h-[242px] rounded-[10px] overflow-hidden flex-shrink-0 animate-pulse">
+      <div className="w-full h-[115px] lg:h-[153px] bg-gray-300"></div>
+      <div className="m-4 gap-[13px]">
+        <div className="h-4 bg-gray-300 rounded mb-2"></div>
+        <div className="h-3 bg-gray-300 rounded w-3/4"></div>
+        <div className="flex justify-end mt-4">
+          <div className="h-3 bg-gray-300 rounded w-10"></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Componente Skeleton para Reuniones
+  const ReunionSkeleton = () => (
+    <div className="flex flex-row w-full items-center xl:h-[150px] animate-pulse">
+      <div className="flex flex-col justify-between items-center rounded-l-xl w-[100px] sm:w-[140px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-full bg-gray-300 p-4">
+        <div className="h-6 bg-gray-400 rounded w-3/4"></div>
+        <div className="h-8 bg-gray-400 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-400 rounded w-3/4"></div>
+      </div>
+      <div className="flex flex-col justify-between w-[235px] h-full border border-[#AAA3A5] bg-white p-4 sm:p-6 rounded-r-xl">
+        <div className="space-y-2">
+          <div className="h-5 bg-gray-300 rounded w-full"></div>
+          <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+        </div>
+        <div className="px-10 sm:px-24 xl:px-4">
+          <div className="flex w-full justify-between px-1 sm:px-5 lg:p-4 py-1 xl:py-[4px] items-center rounded-2xl bg-gray-300">
+            <div className="h-4 bg-gray-400 rounded w-16"></div>
+            <div className="w-6 h-6 bg-gray-400 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <LayoutApp>
@@ -207,13 +249,19 @@ const HomeEstudiante = () => {
             <button
               onClick={() => navigate('prev')}
               className="pr-2 hover:bg-[#1C1C34] rounded-full transition-colors 5xl:p-0"
-              disabled={NoticiasRecientes.length === 0}
+              disabled={NoticiasRecientes.length === 0 || loadingNoticias}
             >
               <img src={FeclaIzqui} alt="Anterior" className="w-6" />
             </button>
 
             <div className="flex overflow-hidden justify-center flex-1">
-              {NoticiasRecientes.length > 0 ? (
+              {loadingNoticias ? (
+                <div className="flex gap-4 xl:gap-9 1xl:gap-2 2xl:gap-8 3xl:gap-2 4xl:gap-5 5xl:gap-3 6xl:gap-2">
+                  {[...Array(visibleItems)].map((_, index) => (
+                    <NoticiaSkeleton key={index} />
+                  ))}
+                </div>
+              ) : NoticiasRecientes.length > 0 ? (
                 <div className="flex gap-4 xl:gap-9 1xl:gap-2 2xl:gap-8 3xl:gap-2 4xl:gap-5 5xl:gap-3 6xl:gap-2">
                   {getVisibleNoticias().map((noticia, index) => (
                     <div
@@ -250,7 +298,7 @@ const HomeEstudiante = () => {
             <button
               onClick={() => navigate('next')}
               className="pl-2 hover:bg-[#1C1C34] rounded-full transition-colors 5xl:p-0"
-              disabled={NoticiasRecientes.length === 0}
+              disabled={NoticiasRecientes.length === 0 || loadingNoticias}
             >
               <img src={FechaDerec} alt="Siguiente" />
             </button>
@@ -268,13 +316,19 @@ const HomeEstudiante = () => {
                 <button
                   onClick={() => navigate('prev')}
                   className="p-2 hover:bg-[#1C1C34] rounded-full transition-colors"
-                  disabled={NoticiasRecientes.length === 0}
+                  disabled={NoticiasRecientes.length === 0 || loadingNoticias}
                 >
                   <img src={FeclaIzqui} alt="Anterior" className="w-6" />
                 </button>
 
                 <div className="flex overflow-hidden justify-center flex-1">
-                  {NoticiasRecientes.length > 0 ? (
+                  {loadingNoticias ? (
+                    <div className="flex gap-4">
+                      {[...Array(visibleItems)].map((_, index) => (
+                        <NoticiaSkeleton key={index} />
+                      ))}
+                    </div>
+                  ) : NoticiasRecientes.length > 0 ? (
                     <div className="flex gap-4">
                       {getVisibleNoticias().map((noticia, index) => (
                         <div
@@ -311,7 +365,7 @@ const HomeEstudiante = () => {
                 <button
                   onClick={() => navigate('next')}
                   className="p-2 hover:bg-[#1C1C34] rounded-full transition-colors"
-                  disabled={NoticiasRecientes.length === 0}
+                  disabled={NoticiasRecientes.length === 0 || loadingNoticias}
                 >
                   <img src={FechaDerec} alt="Siguiente" />
                 </button>
@@ -323,7 +377,7 @@ const HomeEstudiante = () => {
               value={selectedAsesoriaId || ''}
               className='border rounded-t-md border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
             >
-              {asesorias.isEmpty ?
+              {asesorias?.isEmpty ?
                 <option value="" disabled>No hay asesorías disponibles</option>
                 :
                 Object.values(asesorias).map((asesoria, index) => (
@@ -358,37 +412,40 @@ const HomeEstudiante = () => {
               </div>
               <div className="flex flex-col gap-5 md:px-20 xl:px-0">
                 <div className="flex flex-wrap justify-start gap-6 ">
-                  {proximasReuniones.map((reunion, index) => {
-                    const formattedDate = formatDate(reunion.fecha_reunion);
-                    return (
-                      <div key={index} className="flex flex-row w-full items-center xl:h-[150px]">
-                        <div className={`flex flex-col justify-between items-center rounded-l-xl text-[10px] sm:text-[15px]
-                        w-[100px] sm:w-[140px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-full bg-[#17162E] p-4 text-white`}>
-                          <span className="flex flex-col items-center">
-                            <p className="lg:text-[20px] xl:text-[15px] uppercase">{formattedDate.month}</p>
-                            <h1 className="text-[16px] sm:text-[22px] lg:text-[30px]">{formattedDate.day}</h1>
-                          </span>
-                          <p className="text-[10px] lg:text-[18px] xl:text-[15px]">{formattedDate.time}</p>
-                        </div>
+                  {loadingReuniones ? (
+                    <ReunionSkeleton />
+                  ) : proximasReuniones.length > 0 ? (
+                    proximasReuniones.map((reunion, index) => {
+                      const formattedDate = formatDate(reunion.fecha_reunion);
+                      return (
+                        <div key={index} className="flex flex-row w-full items-center xl:h-[150px]">
+                          <div className={`flex flex-col justify-between items-center rounded-l-xl text-[10px] sm:text-[15px]
+                          w-[100px] sm:w-[140px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-full bg-[#17162E] p-4 text-white`}>
+                            <span className="flex flex-col items-center">
+                              <p className="lg:text-[20px] xl:text-[15px] uppercase">{formattedDate.month}</p>
+                              <h1 className="text-[16px] sm:text-[22px] lg:text-[30px]">{formattedDate.day}</h1>
+                            </span>
+                            <p className="text-[10px] lg:text-[18px] xl:text-[15px]">{formattedDate.time}</p>
+                          </div>
 
-                        <div className="flex flex-col justify-between w-[235px] h-full border border-[#AAA3A5] bg-[#FFFFFF] p-4 sm:p-6 rounded-r-xl">
-                          <span className="flex flex-col gap-[6px]">
-                            <p className="font-medium text-[10px] sm:text-[16px] lg:text-[25px] xl:text-[15px]">{reunion.titulo}</p>
-                            <h1 className="text-[#666666] text-[10px] sm:text-[14px] lg:text-[20px] xl:text-[15px]">Codigo: {reunion.meetingId}</h1>
-                          </span>
-                          <div className="px-10 sm:px-24 xl:px-4">
-                            <button className="flex w-full justify-between px-1 sm:px-5 lg:p-4 py-1 xl:py-[4px] items-center text-white rounded-2xl bg-[#1271ED]">
-                              <a href={reunion.enlace_zoom} target="_blank" rel="noopener noreferrer">
-                                <p className="font-medium"> Zoom</p>
-                              </a>
-                              <img src={Zoom} alt="Zoom" className="w-6 h-6" />
-                            </button>
+                          <div className="flex flex-col justify-between w-[235px] h-full border border-[#AAA3A5] bg-[#FFFFFF] p-4 sm:p-6 rounded-r-xl">
+                            <span className="flex flex-col gap-[6px]">
+                              <p className="font-medium text-[10px] sm:text-[16px] lg:text-[25px] xl:text-[15px]">{reunion.titulo}</p>
+                              <h1 className="text-[#666666] text-[10px] sm:text-[14px] lg:text-[20px] xl:text-[15px]">Codigo: {reunion.meetingId}</h1>
+                            </span>
+                            <div className="px-10 sm:px-24 xl:px-4">
+                              <button className="flex w-full justify-between px-1 sm:px-5 lg:p-4 py-1 xl:py-[4px] items-center text-white rounded-2xl bg-[#1271ED]">
+                                <a href={reunion.enlace_zoom} target="_blank" rel="noopener noreferrer">
+                                  <p className="font-medium"> Zoom</p>
+                                </a>
+                                <img src={Zoom} alt="Zoom" className="w-6 h-6" />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                  {proximasReuniones.length === 0 && (
+                      );
+                    })
+                  ) : (
                     <div className="flex justify-center mt-5">
                       <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.25)]">
                         <img src={videoOff} alt="" />
@@ -411,37 +468,40 @@ const HomeEstudiante = () => {
             </div>
 
             <div className="flex flex-col gap-5 md:px-20 lg:px-1">
-              {proximasReuniones.map((reunion, index) => {
-                const formattedDate = formatDate(reunion.fecha_reunion);
-                return (
-                  <div key={index} className="flex flex-row w-full items-center justify-center rounded-r-xl">
-                    <div className={`flex flex-col justify-between items-center rounded-l-xl text-[10px] sm:text-[15px]
-                        w-[100px] sm:w-[140px] lg:w-[25%] h-[120px] sm:h-[180px] lg:h-[220px] bg-[#17162E] p-4 text-white`}>
-                      <span className="flex flex-col items-center">
-                        <p className="lg:text-[20px]">{formattedDate.month}</p>
-                        <h1 className="text-[16px] sm:text-[22px] lg:text-[30px]">{formattedDate.day}</h1>
-                      </span>
-                      <p className="text-[10px] sm:text-[15px]">{formattedDate.time}</p>
-                    </div>
+              {loadingReuniones ? (
+                <ReunionSkeleton />
+              ) : proximasReuniones.length > 0 ? (
+                proximasReuniones.map((reunion, index) => {
+                  const formattedDate = formatDate(reunion.fecha_reunion);
+                  return (
+                    <div key={index} className="flex flex-row w-full items-center justify-center rounded-r-xl">
+                      <div className={`flex flex-col justify-between items-center rounded-l-xl text-[10px] sm:text-[15px]
+                          w-[100px] sm:w-[140px] lg:w-[25%] h-[120px] sm:h-[180px] lg:h-[220px] bg-[#17162E] p-4 text-white`}>
+                        <span className="flex flex-col items-center">
+                          <p className="lg:text-[20px]">{formattedDate.month}</p>
+                          <h1 className="text-[16px] sm:text-[22px] lg:text-[30px]">{formattedDate.day}</h1>
+                        </span>
+                        <p className="text-[10px] sm:text-[15px]">{formattedDate.time}</p>
+                      </div>
 
-                    <div className="flex flex-col justify-between w-[235px] lg:w-full h-[120px] sm:h-[180px] lg:h-[220px] border border-[#AAA3A5] bg-white p-4 rounded-r-xl">
-                      <span className="flex flex-col gap-[6px]">
-                        <p className="font-medium text-[10px] sm:text-[16px] lg:text-[25px]">{reunion.titulo}</p>
-                        <h1 className="text-[#666666] text-[10px] sm:text-[14px] lg:text-[20px]">Codigo: {reunion.meetingId}</h1>
-                      </span>
-                      <div className="px-5 sm:px-8">
-                        <button className="flex w-full justify-between px-5 lg:p-4 py-1 items-center text-white rounded-2xl bg-[#1271ED]">
-                          <a href={reunion.enlace_zoom} target="_blank" rel="noopener noreferrer">
-                            <p className="font-medium"> Zoom</p>
-                          </a>
-                          <img src={Zoom} alt="Zoom" className="w-6 h-6" />
-                        </button>
+                      <div className="flex flex-col justify-between w-[235px] lg:w-full h-[120px] sm:h-[180px] lg:h-[220px] border border-[#AAA3A5] bg-white p-4 rounded-r-xl">
+                        <span className="flex flex-col gap-[6px]">
+                          <p className="font-medium text-[10px] sm:text-[16px] lg:text-[25px]">{reunion.titulo}</p>
+                          <h1 className="text-[#666666] text-[10px] sm:text-[14px] lg:text-[20px]">Codigo: {reunion.meetingId}</h1>
+                        </span>
+                        <div className="px-5 sm:px-8">
+                          <button className="flex w-full justify-between px-5 lg:p-4 py-1 items-center text-white rounded-2xl bg-[#1271ED]">
+                            <a href={reunion.enlace_zoom} target="_blank" rel="noopener noreferrer">
+                              <p className="font-medium"> Zoom</p>
+                            </a>
+                            <img src={Zoom} alt="Zoom" className="w-6 h-6" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-              {proximasReuniones.length === 0 && (
+                  );
+                })
+              ) : (
                 <div className="flex justify-center mt-5">
                   <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.25)]">
                     <img src={videoOff} alt="" />
@@ -470,11 +530,11 @@ const HomeEstudiante = () => {
         {verNoticias && (
           <div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            onClick={() => setVerNoticias(null)} // click en fondo cierra
+            onClick={() => setVerNoticias(null)}
           >
             <div
               className="relative flex flex-col overflow-hidden bg-white w-[600px] max-h-[90vh] shadow-[8px_8px_4px_0px_rgba(0,0,0,0.25)] rounded-[20px] mx-auto"
-              onClick={(e) => e.stopPropagation()} // evita que clic dentro cierre el modal
+              onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setVerNoticias(null)}
@@ -496,10 +556,6 @@ const HomeEstudiante = () => {
             </div>
           </div>
         )}
-
-
-
-
       </main>
     </LayoutApp>
   );

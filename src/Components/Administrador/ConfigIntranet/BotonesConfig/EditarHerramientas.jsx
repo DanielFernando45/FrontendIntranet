@@ -19,7 +19,7 @@ const EditarHerramientas = ({ close, herramientaId }) => {
         const response = await fetch(
           `${
             import.meta.env.VITE_API_PORT_ENV
-          }1/recursos/herramientas/list/${herramientaId}`
+          }/recursos/herramientas/list/${herramientaId}`
         );
 
         if (!response.ok) {
@@ -148,7 +148,7 @@ const EditarHerramientas = ({ close, herramientaId }) => {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_PORT_ENV
-        }1/recursos/herramientas/update/${herramientaId}`,
+        }/recursos/herramientas/update/${herramientaId}`,
         {
           method: "PATCH",
           body: formDataToSend,

@@ -47,7 +47,7 @@ const ReunionesAsesor = () => {
   return (
     <LayoutApp>
       <main className="m-2 ">
-        <div className="flex flex-col gap-[40px] xl:ml-8 p-[40px] h-[767px] bg-white rounded-[20px] ">
+        <div className="flex flex-col gap-[40px] xl:ml-8 p-[40px] bg-white rounded-[20px] ">
 
           <div className="flex flex-col gap-[12px]">
 
