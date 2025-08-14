@@ -149,7 +149,13 @@ const ListarSinAsignar = () => {
       return;
     }
 
-    if (!formData.profesion_asesoria || !formData.tipo_servicio || !formData.id_contrato ||
+    // if (!formData.profesion_asesoria || !formData.tipo_servicio || !formData.id_contrato ||
+    //   !formData.id_tipo_trabajo || !formData.fecha_inicio || !formData.fecha_fin) {
+    //   alert('Debe completar todos los campos obligatorios');
+    //   return;
+    // }
+
+    if (!formData.profesion_asesoria || !formData.tipo_servicio ||
       !formData.id_tipo_trabajo || !formData.fecha_inicio || !formData.fecha_fin) {
       alert('Debe completar todos los campos obligatorios');
       return;

@@ -61,6 +61,8 @@ import ListarAsesor from '../pages/Administrador/GestionarUsuario/ListarAsesor';
 import ConfigIntra from '../pages/Administrador/ConfigIntra';
 import Induccion from '../pages/Administrador/Induccion/Inducciones';
 import InduccionById from '../pages/Administrador/Induccion/InduccionById';
+import InduccionAsesor from '../pages/Administrador/Induccion/Inducciones';
+import InduccionAsesorById from '../pages/Administrador/Induccion/InduccionById';
 
 
 const RouterApp = () => {
@@ -117,6 +119,9 @@ const RouterApp = () => {
           <Route path="activos" element={<Activos />} />
           <Route path="desactivados" element={<Desactivados />} />
         </Route>
+
+        <Route path="/asesor/inducciones" element={<Induccion />} />
+        <Route path="/asesor/induccion/:id" element={<InduccionById />} />
 
       </Route>
 
