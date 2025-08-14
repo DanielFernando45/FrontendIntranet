@@ -5,6 +5,10 @@
 import EstudianteSidebar from "../Components/Sidebar/EstudianteSidebar";
 import AsesorSidebar from "../Components/Sidebar/AsesorSidebar";
 import AdminSidebar from "../Components/Sidebar/AdminSidebar";
+import JefeOperSidebar from "../Components/Sidebar/JefeOperSidebar";
+import SupervisorSidebar from "../Components/Sidebar/SupervisorSidebar";
+import MarketingSidebar from "../Components/Sidebar/MarketingSidebar";
+import ContPagoSidebar from "../Components/Sidebar/ContPagoSidebar";
 import Navbar from "../Components/Navbar";
 import { useSelector } from "react-redux";
 
@@ -24,7 +28,7 @@ const LayoutApp = ({ children }) => {
       case 'asesor':
         return <AsesorSidebar />;
       case 'admin':
-        return <AdminSidebar />;
+        return <ContPagoSidebar />;
       default:
         return null;
     }

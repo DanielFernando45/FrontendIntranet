@@ -173,7 +173,7 @@ const DocPendientes = () => {
           <SkeletonItem />
         </>
       ) : pendientes.length > 0 ? (
-        <div className="h-[200px] overflow-auto ">
+        <div className="h-[200px] overflow-auto flex flex-col gap-2 ">
           {
             pendientes.map((pendiente) => (
               <div
@@ -214,7 +214,7 @@ const DocPendientes = () => {
                         </div>
                         <div>{formatHora(pendiente.fecha_entrega)}</div>
                         <div className="flex gap-5">
-                          <div className="text-white bg-[#054755] rounded-md px-6">
+                          <div className="text-white bg-[#054755] rounded-md px-6 uppercase">
                             Entregado
                           </div>
                           <input
@@ -236,7 +236,7 @@ const DocPendientes = () => {
                           </div>
                           <div>{formatHora(pendiente.fecha_terminado)}</div>
                           <div className='flex gap-5'>
-                            <div className='text-white bg-[#0CB2D5] rounded-md px-8'>
+                            <div className='text-white bg-[#0CB2D5] rounded-md px-8 items-center flex uppercase'>
                               {pendiente.estado}
                             </div>
                             <input
@@ -245,7 +245,7 @@ const DocPendientes = () => {
                               checked={true}
                               disabled={true}
                             />
-                            <button onClick={ () => { setIdAsunto(pendiente.id_asunto), setShowModalEdit(true)} } className="bg-slate-900 px-1 py-1">
+                            <button onClick={ () => { setIdAsunto(pendiente.id_asunto), setShowModalEdit(true)} } className="bg-slate-900 px-1 py-1 rounded-md ">
                               <FaRegEdit color="white" size={20} />
                             </button>
                           </div>

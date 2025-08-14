@@ -149,7 +149,9 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
                 className="flex h-[70px] items-center border-l-4 border-transparent  hover:border-l-gray-500 group"
               >
                 <div className=" flex min-w-[80px] justify-center ">
-                  <FaUserCog size={25} />
+                  <img
+                    src={item.icono}
+                  />
                 </div>
                 <p
                   className={`text-[14px] min-w-[220px] flex-1 flex ${

@@ -29,6 +29,7 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
             const documentosEdi = data.asunto.documentos.map(doc => {
                 return { id: doc.id, nombre: doc.nombre }
             })
+            
 
             setIdAsesoramiento(data.asunto?.asesoramiento.id)
             setDocumentosEditar(documentosEdi)

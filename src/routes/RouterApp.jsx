@@ -48,6 +48,7 @@ import ListarSinAsignar from '../pages/Administrador/Asignaciones/ListarSinAsign
 import ListarAsignado from '../pages/Administrador/Asignaciones/ListarAsignados';
 import AsesoriaNueva from '../pages/Administrador/Asignaciones/AsesoriaNueva';
 import GestionarSoporte from '../pages/Administrador/GestionSoporte';
+import Contratos from '../pages/Administrador/Contrato';
 
 //Paginas Errores
 import Unauthorized from '../pages/Unauthorized';
@@ -63,7 +64,6 @@ import Induccion from '../pages/Administrador/Induccion/Inducciones';
 import InduccionById from '../pages/Administrador/Induccion/InduccionById';
 import InduccionAsesor from '../pages/Administrador/Induccion/Inducciones';
 import InduccionAsesorById from '../pages/Administrador/Induccion/InduccionById';
-
 
 const RouterApp = () => {
   return (
@@ -156,6 +156,7 @@ const RouterApp = () => {
            <Route path="servicio-extra" element={<ServiciosExtra/>}/>            
         </Route>
 
+        <Route path="/admin/contratos" element={<Contratos />} />
 
         <Route path="/admin/confIntra" element={<ConfigIntra />} />
         <Route path="/admin/soporte" element={<GestionarSoporte />} />

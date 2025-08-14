@@ -108,8 +108,8 @@ const EnviosCliente = ({ idAsesoramiento }) => {
 
   return (
     <div className="flex flex-col text-[14px]">
-      <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-        <div className="flex-1 md:w-[300px] flex">Titulo</div>
+      <div className="flex  justify-between text-[#495D72] font-medium p-[6px] rounded-md">
+        <div className="flex-1 md:w-[300px]   flex">Titulo</div>
         <div className="w-[102px] hidden md:flex justify-center">Estado</div>
         <div className="flex-1 md:w-[100px] flex justify-center">Fecha</div>
         <div className="flex-1 md:w-[250px] flex justify-center">Archivo</div>
