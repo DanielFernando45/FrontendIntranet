@@ -189,7 +189,7 @@ const AsesoriaNueva = () => {
 
     try {
       const response = await axios.post(
-        "${import.meta.env}/asesoramiento/asignacion",
+        `${import.meta.env.VITE_API_PORT_ENV}/asesoramiento/asignacion`,
         payload
       );
       alert('Asesoría asignada correctamente');

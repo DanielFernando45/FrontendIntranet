@@ -3,12 +3,39 @@ import arrowIcon from "../../../assets/icons/IconEstudiante/arriba.svg";
 import documentosVacios from '../../../assets/icons/documentosVacios.png'
 import axios from 'axios'
 import { useOutletContext } from 'react-router-dom';
+import { FaRegEdit } from 'react-icons/fa';
+import { IoTrash } from 'react-icons/io5';
+import ModalEditarAsunto from './components/ModalEditarAsunto';
+import { useMutation } from '@tanstack/react-query';
+import { asuntosService } from '../../../services/asuntosServices';
 
 const Pendientes = () => {
   const [pendientes, setPendientes] = useState([])
   const [openItems, setOpenItems] = useState({})
   const [loading, setLoading] = useState(true)
   const idAsesoramiento = useOutletContext();
+
+  const [showEditarModal, setShowEditarModal] = useState(false);
+  const [idAsunto, setIdAsunto] = useState(null);
+
+
+  const mutate = useMutation({
+    mutationFn: (idAsunto) => asuntosService.eliminarAsunto(idAsunto)
+  })
+
+  const handleDeleteAsunto = async (id) => {
+
+    const confirmacion = confirm("¿Estás de acuerdo con eliminar este documento?");
+    if (confirmacion) {
+      // Acción si el usuario presiona "Sí"
+      mutate.mutate(id)
+      alert("El documento ha sido eliminado.");
+    } else {
+      // Acción si el usuario presiona "No"
+      alert("El documento no ha sido eliminado.");
+    }
+  }
+
 
   useEffect(() => {
     if (idAsesoramiento) {
@@ -67,7 +94,7 @@ const Pendientes = () => {
 
     // Determinar AM/PM
     const ampm = horas >= 12 ? "PM" : "AM";
-    
+
     // Convertir a formato de 12 horas con dos dígitos
     horas = horas % 12;
     horas = horas ? horas.toString().padStart(2, "0") : "12"; // La hora 0 se convierte en 12
@@ -76,7 +103,7 @@ const Pendientes = () => {
     const hora12ConAmPm = `${horas}:${minutos} ${ampm}`;
 
     return hora12ConAmPm;
-};
+  };
 
   const cortarTexto = (texto) => {
     const index = texto.indexOf('-')
@@ -137,6 +164,14 @@ const Pendientes = () => {
               <div className={`hidden md:block text-white ${pendiente.estado === 'entregado' ? "bg-[#054755] " : "bg-[#353563] "} bg-[#054755] rounded-md px-4 min-w-[150px] text-center`}>
                 {pendiente.estado === 'entregado' ? 'Entregado' : 'En Proceso'}
               </div>
+              <div className={`text-white  flex gap-x-4 rounded-md px-4 min-w-[150px] text-center`}>
+                <button onClick={() => { setIdAsunto(pendiente.id_asunto), setShowEditarModal(true) }} className='p-2 bg-[#353563] rounded-md'>
+                  <FaRegEdit size={20} />
+                </button>
+                <button onClick={() => handleDeleteAsunto(pendiente.id_asunto)} className='p-2 bg-[#353563] rounded-md'>
+                  <IoTrash size={20} className='bg-[#353563]' />
+                </button>
+              </div>
               <button
                 onClick={() => toggleOpen(pendiente.id_asunto)}
                 className="transition-transform duration-300 mn:w-[65px] flex justify-center"
@@ -188,17 +223,17 @@ const Pendientes = () => {
                     <div className='flex flex-col lg:flex-row justify-between text-xs md:text-sm xl:text-base gap-y-4 border border-gray-300 lg:border-none rounded-lg p-3 lg:p-0'>
                       <div>{cortarTexto(pendiente.documento_0)}</div>
                       <div className='flex w-[450px] gap-4'>
-                        <p>Enviado: {formatDateExpan(pendiente.fecha_revision)}</p>  
+                        <p>Enviado: {formatDateExpan(pendiente.fecha_revision)}</p>
                         <p>Estimado: {formatDateExpan(pendiente.fecha_terminado)}</p>
                       </div>
                       <div>
                         {formatTime(pendiente.fecha_revision)}
                       </div>
-                       <div className="text-white bg-[#353563]  rounded-md px-4">
+                      <div className="text-white bg-[#353563]  rounded-md px-4">
                         {pendiente.estado === 'entregado' ? 'Entregado' : 'En Proceso'}
                       </div>
                     </div>
-                     
+
                   </div>
                 )}
 
@@ -216,6 +251,8 @@ const Pendientes = () => {
           </div>
         </div>
       )}
+
+      {showEditarModal && <ModalEditarAsunto onClose={() => setShowEditarModal(false)} idAsunto={idAsunto} />}
     </div>
   )
 }

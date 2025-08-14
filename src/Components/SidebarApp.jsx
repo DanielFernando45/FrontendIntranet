@@ -16,12 +16,10 @@ import Gestion from "../assets/icons/IconAsesor/gestionAlum.svg";
 
 import Recursos from "../assets/icons/IconEstudiante/RecursosEstudiante.svg";
 import { Link } from "react-router-dom";
+import { IoMenuSharp } from "react-icons/io5";
+import { FaUserCog } from "react-icons/fa";
 
-const SidebarApp = ({ expand, setExpand }) => {
-  //   const [expand, setExpand] = useState(false);
-
-  const rol = JSON.parse(localStorage.getItem("user"))?.role || "estudiante";
-
+const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
   const rutasPorRoles = {
     admin: [
       {
@@ -121,51 +119,58 @@ const SidebarApp = ({ expand, setExpand }) => {
     ],
   };
 
-  const toggleMenu = () => {
-    setExpand(!expand);
-  };
-
   return (
     <div
-      className={` ${
-        expand ? "w-[300px]" : "w-[100px]"
-      } transition-all duration-200 ease-linear h-full bg-white absolute  xl:translate-x-0 -translate-x-full top-0 z-50`}
+      className={`bg-white h-screen ${
+        activeSidebar ? "w-[300px]" : "w-[88px]"
+      } py-4 space-y-6 absolute left-0 transition-all z-[51] xl:translate-x-0 -translate-x-full overflow-hidden`}
     >
-      <div className={`flex flex-col items-center h-full py-6 transition-all`}>
-        <div className="flex flex-col items-center mb-10 gap-y-4">
-          <img className="w-[60px] h-[60px]" src={LogoAleja} alt="Logo" />
-          <button onClick={toggleMenu}>
-            <img src={MenuRetraido} alt="Toggle Menu" />
-          </button>
-        </div>
-
-        {/* PATHS */}
-        <div className="space-y-10 w-full flex flex-col items-center px-4">
-          {rutasPorRoles[rol].map((ruta, index) => (
-            <Link
-              className="flex justify-center items-center  relative overflow-hidden w-full"
-              to={ruta.path}
-              key={index}
-              onClick={() => setExpand(false)}
-            >
-              <img
-                className={`w-[30px] transition-all `}
-                src={ruta.icono}
-                alt="icono-ruta"
-              />
-              <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden transform ${
-                  expand
-                    ? "w-[160px] opacity-100 translate-x-0 ml-2"
-                    : "w-0 opacity-0 translate-x-10 ml-0"
-                } ease-linear`}
+      <img
+        className="w-[50px] h-[50px] mx-auto"
+        draggable="false"
+        src={LogoAleja}
+        alt="logo"
+      />
+      <button
+        className="mx-auto block cursor-pointer border z-30"
+        onClick={() => {
+          setActiveSidebar(!activeSidebar);
+        }}
+      >
+        <IoMenuSharp size={30} />
+      </button>
+      {/* ICONOS */}
+      <div className="">
+        <ul className="flex flex-col items-center gap-4">
+          {rutasPorRoles[role].map((item) => (
+            <li className="w-full relative ">
+              <Link
+                to={item.path}
+                className="flex h-[70px] items-center border-l-4 border-transparent  hover:border-l-gray-500 group"
               >
-                <p className="w-[160px]">{ruta.title}</p>
-              </div>
-            </Link>
+                <div className=" flex min-w-[80px] justify-center ">
+                  <FaUserCog size={25} />
+                </div>
+                <p
+                  className={`text-[14px] min-w-[220px] flex-1 flex ${
+                    activeSidebar
+                      ? "opacity-100 translate-x-0"
+                      : "opacity-0 -translate-x-10 "
+                  } transition-all `}
+                >
+                  {item.title}
+                </p>
+              </Link>
+              {/* <p
+                className={`absolute left-full ${
+                  activeSidebar ? "invisible" : "group-hover:visible"
+                } ml-2  top-1/2 z-20 bg-indigo-600 text-white rounded-md px-3 py-1 group-hover:opacity-100 opacity-0 transition-all group-hover:-translate-y-1/2   -translate-y-1/5 whitespace-nowrap`}
+              >
+                {item.title}
+              </p> */}
+            </li>
           ))}
-        </div>
-        {/* PATHS */}
+        </ul>
       </div>
     </div>
   );
