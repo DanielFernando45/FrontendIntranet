@@ -132,7 +132,7 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
         alt="logo"
       />
       <button
-        className="mx-auto block cursor-pointer border z-30"
+        className="mx-auto block cursor-pointer z-30"
         onClick={() => {
           setActiveSidebar(!activeSidebar);
         }}

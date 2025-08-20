@@ -6,7 +6,7 @@ import ContratoAsignado from '../Administrador/Contrato/ContratoAsignado'
 
 const Contrato = () => {
 
-    const [contratado, setContratdo] = useState("ContratoNuevo");
+    const [contratado, setContrato] = useState("ContratoNuevo");
 
     return (
         <LayoutApp>
@@ -16,16 +16,14 @@ const Contrato = () => {
 
                         <div className="flex w-full border-b-2 gap-3 border-black font-normal">
                             <button
-                                className={`px-3 rounded-t-[5px] w-[200px] ${contratado === "ContratoNuevo" ? "bg-[#17162E] text-white" : ""
-                                    }`}
-                                onClick={() => setContratdo("ContratoNuevo")}
+                                className={`px-3 rounded-t-[5px] w-[200px] ${contratado === "ContratoNuevo" ? "bg-[#17162E] text-white" : ""}`}
+                                onClick={() => setContrato("ContratoNuevo")}
                             >
                                 Nuevo Contrato
                             </button>
                             <button
-                                className={`px-3 rounded-t-[5px] w-[200px] ${contratado === "ContratoAsignado" ? "bg-[#17162E] text-white" : ""
-                                    }`}
-                                onClick={() => setContratdo("ContratoAsignado")}
+                                className={`px-3 rounded-t-[5px] w-[200px] ${contratado === "ContratoAsignado" ? "bg-[#17162E] text-white" : ""}`}
+                                onClick={() => setContrato("ContratoAsignado")}
                             >
                                 Contratos Asignados
                             </button>

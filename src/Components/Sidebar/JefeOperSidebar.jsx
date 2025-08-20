@@ -28,18 +28,8 @@ const LINKS = [
   },
   {
     icono: Asignaciones,
-    path: "/admin/asignaciones",
-    title: "Asignaciones",
-    subLinks: [
-      {
-        path: "/admin/asignaciones/listar-asignar",
-        title: "Listar Sin Asignar",
-      },
-      {
-        path: "/admin/asignaciones/listar-asignado",
-        title: "Listar Asignados",
-      },
-    ],
+    path: "/admin/jefe-ope-asignar",
+    title: "Asignados",
   },
 ];
 

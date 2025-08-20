@@ -28,7 +28,7 @@ const LayoutApp = ({ children }) => {
       case 'asesor':
         return <AsesorSidebar />;
       case 'admin':
-        return <ContPagoSidebar />;
+        return <SupervisorSidebar />;
       default:
         return null;
     }

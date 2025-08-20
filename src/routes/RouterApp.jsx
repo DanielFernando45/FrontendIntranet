@@ -48,7 +48,13 @@ import ListarSinAsignar from '../pages/Administrador/Asignaciones/ListarSinAsign
 import ListarAsignado from '../pages/Administrador/Asignaciones/ListarAsignados';
 import AsesoriaNueva from '../pages/Administrador/Asignaciones/AsesoriaNueva';
 import GestionarSoporte from '../pages/Administrador/GestionSoporte';
+
+//--rutas de prueba para interfaces
 import Contratos from '../pages/Administrador/Contrato';
+import JefeOpeAsignar from '../pages/Administrador/JefeOpeAsignar';
+import SupervisorAsig from '../pages/Administrador/SupervisorAsig';
+import NuevaAsesoria from '../pages/Administrador/Contrato/NuevaAsesoria';
+import EditAsig from '../pages/Administrador/Contrato/EditAsig';
 
 //Paginas Errores
 import Unauthorized from '../pages/Unauthorized';
@@ -62,8 +68,6 @@ import ListarAsesor from '../pages/Administrador/GestionarUsuario/ListarAsesor';
 import ConfigIntra from '../pages/Administrador/ConfigIntra';
 import Induccion from '../pages/Administrador/Induccion/Inducciones';
 import InduccionById from '../pages/Administrador/Induccion/InduccionById';
-import InduccionAsesor from '../pages/Administrador/Induccion/Inducciones';
-import InduccionAsesorById from '../pages/Administrador/Induccion/InduccionById';
 
 const RouterApp = () => {
   return (
@@ -156,7 +160,13 @@ const RouterApp = () => {
            <Route path="servicio-extra" element={<ServiciosExtra/>}/>            
         </Route>
 
+        {/* Rutas de prueba para interfaces */}
         <Route path="/admin/contratos" element={<Contratos />} />
+        <Route path="/admin/jefe-ope-asignar" element={<JefeOpeAsignar />} />
+        <Route path="/admin/supervisor-asig" element={<SupervisorAsig />} />
+        <Route path="/admin/contrato/nueva-asesoria" element={<NuevaAsesoria />} />
+        <Route path="/admin/contrato/edit-asig/:id" element={<EditAsig />} />
+
 
         <Route path="/admin/confIntra" element={<ConfigIntra />} />
         <Route path="/admin/soporte" element={<GestionarSoporte />} />
