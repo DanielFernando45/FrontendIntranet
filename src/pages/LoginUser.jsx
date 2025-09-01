@@ -27,11 +27,12 @@ const Login = () => {
       const { access_token, datos_usuario } = res.data;
       dispatch(loginSuccess({datos_usuario, access_token}));
 
+      console.log('Login successful:', datos_usuario.role.nombre);
       // Guardamos en AuthContext
       // login({ ...datos_usuario, access_token });
 
       // Redirigimos según el rol
-      switch (datos_usuario.role) {
+      switch (datos_usuario.role.nombre) {
         case "admin":
           navigate("/admin/gestionar-usuarios");
           break;
@@ -40,6 +41,21 @@ const Login = () => {
           break;
         case "estudiante":
           navigate("/estudiante/home");
+          break;
+        case "jefe_operaciones":
+          navigate("/jefe-operaciones/gestionar-usuarios");
+          break;
+        case "supervisor":
+          navigate("/supervisor/asignaciones");
+          break;
+        case "contrato_pago":
+          navigate("/cont-pago/contratos"); 
+          break;
+        case "marketing":   
+          navigate("/marketing/ConfigIntra"); 
+          break;
+        case "soporte":   
+          navigate("/soporte-ti");
           break;
         default:
           navigate("/");

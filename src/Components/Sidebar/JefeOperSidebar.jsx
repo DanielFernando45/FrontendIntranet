@@ -12,23 +12,23 @@ import Asignaciones from "../../assets/icons/IconAdmin/asignar.svg";
 const LINKS = [
   {
     icono: Gestion,
-    path: "/admin/gestionar-usuarios",
+    path: "/jefe-operaciones/gestionar-usuarios",
     title: "Gestionar Usuarios",
     // SubLinks ya no se renderizan en la barra lateral
     subLinks: [
       {
-        path: "/admin/gestionar-usuarios/listar-estudiantes",
+        path: "/operaciones/gestionar-usuarios/listar-estudiantes",
         title: "Listar Estudiantes",
       },
       {
-        path: "/admin/gestionar-usuarios/listar-asesores",
+        path: "/operaciones/gestionar-usuarios/listar-asesores",
         title: "Listar Asesores",
       },
     ],
   },
   {
     icono: Asignaciones,
-    path: "/admin/jefe-ope-asignar",
+    path: "/jefe-operaciones/supervisor-asig",
     title: "Asignados",
   },
 ];

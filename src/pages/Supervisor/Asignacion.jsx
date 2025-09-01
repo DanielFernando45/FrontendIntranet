@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import LayoutApp from '../../layout/LayoutApp';
-import Asignados from '../Administrador/SupervisorAsignar/Asignados';
-import SinAsignados from '../Administrador/SupervisorAsignar/SinAsignar';
+import Asignados from '../Supervisor/SupervisorAsignar/Asignados';
+import SinAsignados from '../Supervisor/SupervisorAsignar/SinAsignar';
 
-const SupervisorAsig = () => {
 
-    const [asignado, setAsignado] = useState("SinAsignar");
+const Asignacion = () => {
+   const [asignado, setAsignado] = useState("SinAsignar");
 
     return (
         <LayoutApp>
@@ -41,4 +41,4 @@ const SupervisorAsig = () => {
     )
 }
 
-export default SupervisorAsig
+export default Asignacion

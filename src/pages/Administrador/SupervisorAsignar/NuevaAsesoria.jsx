@@ -1,12 +1,15 @@
 import React from 'react'
 import eliminar from "../../../assets/icons/delete.svg";
 import LayoutApp from '../../../layout/LayoutApp';
-
+import { useNavigate } from 'react-router-dom';
 const NuevaAsesoria = () => {
+
+    const navigate = useNavigate();
+
     return (
         <LayoutApp>
             <div className='ml-16 flex flex-col gap-[10px]  pt-3 p-[30px] w-[1200px]  xl:w-full bg-white rounded-[10px] drop-shadow-lg border-3 '>
-                <h1 className='text-[20px] font-medium'>Clientes Sin Asignar</h1>
+                <h1 className='text-[20px] font-medium'>Nueva Asignacion</h1>
                 <div className='mb-2'>
 
                     <div className="flex flex-row gap-1 mb-2 items-center">
@@ -103,6 +106,14 @@ const NuevaAsesoria = () => {
                         <input className="bg-transparent w-full focus:outline-none text-black placeholder:text-[#888]" type="text" />
                     </div>
 
+                </div>
+
+                <div className='flex justify-end gap-10'>
+                    <button
+                        className='w-[200px] bg-[#1C1C34] text-white rounded-md  py-2 mt-4'
+                        onClick={() => navigate('/admin/supervisor-asig')}
+                    > Cancelar</button>
+                    <button className='w-[200px] bg-[#1C1C34] text-white rounded-md  py-2 mt-4'>Asignar</button>
                 </div>
             </div>
         </LayoutApp>

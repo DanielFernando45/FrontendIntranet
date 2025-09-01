@@ -9,7 +9,7 @@ import ConfIntranet from "../../assets/icons/IconAdmin/configurar.svg";
 const LINKS = [
   {
     icono: ConfIntranet,
-    path: "/admin/confIntra",
+    path: "/marketing/ConfigIntra-marketing",
     title: "Configuración de Intranet",
   },
 ];

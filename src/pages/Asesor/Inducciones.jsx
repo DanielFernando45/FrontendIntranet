@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import LayoutApp from "../../../layout/LayoutApp";
-import { asesoriasService } from "../../../services/asesoriasService";
-import ModalSubirInduccion from "./components/ModalSubirInduccion";
+import LayoutApp from "../../layout/LayoutApp";
+import { asesoriasService } from "../../services/asesoriasService";
+import ModalSubirInduccion from "./Induccion/components/ModalSubirInduccion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

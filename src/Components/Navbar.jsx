@@ -45,7 +45,7 @@ const Navbar = ({ user }) => {
         <div className="flex gap-2 items-center">
           <div className="flex flex-col ">
             <span className="font-medium text-[8px] sm:text-[10px]">{user?.nombre}</span>
-            <span className="  text-gray-500 capitalize text-[7px] sm:text-[9px]">{user?.role}</span>
+            <span className="  text-gray-500 capitalize text-[7px] sm:text-[9px]">{user?.role.nombre}</span>
           </div>
 
           <button onClick={toggleMenu}>
@@ -55,7 +55,7 @@ const Navbar = ({ user }) => {
 
         {isMenuOpen && (
           <div className="text-[#575051] absolute right-0 top-[60px] flex flex-col bg-white border rounded-lg shadow-md min-w-[230px] p-2 z-50">
-            {user?.role === 'estudiante' && (
+            {user?.role.nombre === 'estudiante' && (
               <>
                 <button onClick={() => handleNavigation('miperfil')} className="flex justify-between text-left px-2 py-1 hover:bg-gray-100">
                   Mi perfil <img src={miperfil} alt="Icono" />
@@ -71,14 +71,14 @@ const Navbar = ({ user }) => {
                 </button>
               </>
             )}
-            {user?.role === 'asesor' && (
+            {user?.role.nombre === 'asesor' && (
               <>
                 <div className="flex justify-between text-left px-2 py-1 ">
                   Intranet Asesor 
                 </div>
               </>
             )}
-            {user?.role === 'admin' && (
+            {user?.role.nombre === 'admin' && (
               <>
                 <button className="text-left px-2 py-1 hover:bg-gray-100">Panel de control</button>
                 <button className="text-left px-2 py-1 hover:bg-gray-100">Configuración</button>

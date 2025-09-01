@@ -12,10 +12,14 @@ import Contrato from "../../assets/icons/IconAdmin/contratoIcon.svg";
 const LINKS = [
     {
         icono: Contrato,
-        path: "/admin/contratos",
+        path: "/cont-pago/contratos",
         title: "Contrato",
     },
-    { icono: Pagos, path: "/admin/pagos", title: "Pagos" },
+    { 
+        icono: Pagos, 
+        path: "/cont-pago/pagos", 
+        title: "Pagos" 
+    },
 ];
 
 const ContPagoSidebar = () => {

@@ -11,7 +11,7 @@ import Asignaciones from "../../assets/icons/IconAdmin/asignar.svg";
 const LINKS = [
   {
     icono: Asignaciones,
-    path: "/admin/supervisor-asig",
+    path: "/supervisor/asignaciones",
     title: "Asignaciones",
   },
 ];

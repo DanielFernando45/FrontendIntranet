@@ -119,13 +119,11 @@ const ListarEstudiante = () => {
             <div className="w-[360px] flex justify-center">
               {estudiante.carrera}
             </div>
-            <div className="w-[250px] flex justify-start">
-              {estudiante.modelidad}
-
+            <div className="w-[100px] flex justify-start">
+              { !estudiante.modalidad ? "Por Asignar" : estudiante.modalidad }
             </div>
-            <div className="w-[250px] flex justify-start">
-              {estudiante.tipopago}
-
+            <div className="w-[100px] flex justify-start">
+              { !estudiante.tipopago ? "Por Asignar" : estudiante.tipopago }
             </div>
             <button
               onClick={() => handlerEditarEstudiante(estudiante.id)}

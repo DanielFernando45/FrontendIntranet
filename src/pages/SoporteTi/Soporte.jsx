@@ -4,12 +4,10 @@ import Pendientes from '../../Components/Administrador/GestionSoporte/Pendientes
 import Hechos from '../../Components/Administrador/GestionSoporte/Hechos';
 
 
-const GestionSoporte = () => {
-
+const Soporte = () => {
     const [vista, setVista] = useState("pendientes");
-
-    return (
-        <LayoutApp>
+  return (
+    <LayoutApp>
             <main className="flex flex-col gap-11 m-5 items-start overflow-auto">
                 <div className="flex flex-col gap-[10px] px-[40px] py-5  w-[1200px] xl:w-full  bg-white rounded-[10px]">
                     <div className="flex flex-col gap-[12px]">
@@ -41,12 +39,12 @@ const GestionSoporte = () => {
                             <Hechos />
                         )}
                     </div>
-
+                    
                 </div>
 
             </main>
         </LayoutApp>
-    )
+  )
 }
 
-export default GestionSoporte
+export default Soporte

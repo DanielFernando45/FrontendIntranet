@@ -31,7 +31,8 @@ import Activos from '../pages/Asesor/GestionAlumActivos/Activos';
 import Desactivados from '../pages/Asesor/GestionAlumActivos/Desactivados';
 import Proximos from '../pages/Asesor/Reunion/ReunionProximo';
 import Anteriores from '../pages/Asesor/Reunion/ReunionAnteriores';
-
+import Induccion from '../pages/Asesor/Inducciones';
+import InduccionById from '../pages/Asesor/Induccion/InduccionById';
 //Paginas Admin
 import GestionarUsuarios from '../pages/Administrador/GestionUser';
 import Asignaciones from '../pages/Administrador/Asignaciones';
@@ -48,13 +49,34 @@ import ListarSinAsignar from '../pages/Administrador/Asignaciones/ListarSinAsign
 import ListarAsignado from '../pages/Administrador/Asignaciones/ListarAsignados';
 import AsesoriaNueva from '../pages/Administrador/Asignaciones/AsesoriaNueva';
 import GestionarSoporte from '../pages/Administrador/GestionSoporte';
+import ConfigIntra from '../pages/Administrador/ConfigIntra';
 
-//--rutas de prueba para interfaces
-import Contratos from '../pages/Administrador/Contrato';
-import JefeOpeAsignar from '../pages/Administrador/JefeOpeAsignar';
-import SupervisorAsig from '../pages/Administrador/SupervisorAsig';
-import NuevaAsesoria from '../pages/Administrador/Contrato/NuevaAsesoria';
-import EditAsig from '../pages/Administrador/Contrato/EditAsig';
+
+//Rutas Jefe Operaciones
+import JefeOperaciones from '../pages/JefeOperacion/GestionUser';
+import ListarEstudiante from '../pages/JefeOperacion/GestionarUsuario/ListarEstudiante';
+import ListarAsesor from '../pages/JefeOperacion/GestionarUsuario/ListarAsesor';
+import JefeOpeAsignar from '../pages/JefeOperacion/JefeOpeAsignar';
+
+//Rutas Supervisor
+import SupervisorAsig from '../pages/Supervisor/Asignacion';
+import NuevaAsesoria from '../pages/Supervisor/SupervisorAsignar/NuevaAsesoria';
+import EditAsig from '../pages/Supervisor/SupervisorAsignar/EditAsig';
+
+//Rutas ContratoYpago
+import Contrato from '../pages/ContPago/Contrato';
+import ContratoAsignado from '../pages/ContPago/Contrato/ContratoAsignado';
+import ContratoNuevo from '../pages/ContPago/Contrato/ContratoNuevo';
+import Pago from '../pages/ContPago/Pagos';
+import Cuota from '../pages/ContPago/Pagos/Cuotas';
+import Contado from '../pages/ContPago/Pagos/AlContado';
+import ServExtra from '../pages/ContPago/Pagos/ServiciosExtra';
+
+//Ruta Marketing
+import MarketingConf from '../pages/Marketing/ConfIntranet';
+
+//Ruta Soporte TI
+import SoporteTI from '../pages/SoporteTi/Soporte';
 
 //Paginas Errores
 import Unauthorized from '../pages/Unauthorized';
@@ -63,11 +85,7 @@ import ErrorScreen from '../pages/ErrorScreen';
 //Pagina Recuperar Contraseña
 import ResetPassword from '../pages/ResetPassword';
 import NuevaContraseña from '../pages/NuevaContraseña';
-import ListarEstudiante from '../pages/Administrador/GestionarUsuario/ListarEstudiante';
-import ListarAsesor from '../pages/Administrador/GestionarUsuario/ListarAsesor';
-import ConfigIntra from '../pages/Administrador/ConfigIntra';
-import Induccion from '../pages/Administrador/Induccion/Inducciones';
-import InduccionById from '../pages/Administrador/Induccion/InduccionById';
+
 
 const RouterApp = () => {
   return (
@@ -83,7 +101,6 @@ const RouterApp = () => {
           <Route path="terminados" element={<Terminados />} />
           <Route path="pendientes" element={<Pendientes />} />
           <Route />
-
         </Route>
 
         <Route path="/estudiante/calendario" element={<CalendarioEstudiante />} />
@@ -152,28 +169,62 @@ const RouterApp = () => {
         <Route path="/admin/gestionar-usuarios/editar-estudiante/:id" element={<EditarEstudiante />} />
         <Route path="/admin/gestionar-usuarios/editar-asesor/:id" element={<EditarAsesor />} />
 
-
         <Route path="/admin/pagos" element={<Pagos />}>
-           <Route index element={<Navigate to="cuotas" replace/>}/> 
-           <Route path="cuotas" element={<Cuotas/>}/>
-           <Route path="al-contado" element={<AlContado/>}/> 
-           <Route path="servicio-extra" element={<ServiciosExtra/>}/>            
+          <Route index element={<Navigate to="cuotas" replace />} />
+          <Route path="cuotas" element={<Cuotas />} />
+          <Route path="al-contado" element={<AlContado />} />
+          <Route path="servicio-extra" element={<ServiciosExtra />} />
         </Route>
-
-        {/* Rutas de prueba para interfaces */}
-        <Route path="/admin/contratos" element={<Contratos />} />
-        <Route path="/admin/jefe-ope-asignar" element={<JefeOpeAsignar />} />
-        <Route path="/admin/supervisor-asig" element={<SupervisorAsig />} />
-        <Route path="/admin/contrato/nueva-asesoria" element={<NuevaAsesoria />} />
-        <Route path="/admin/contrato/edit-asig/:id" element={<EditAsig />} />
-
 
         <Route path="/admin/confIntra" element={<ConfigIntra />} />
         <Route path="/admin/soporte" element={<GestionarSoporte />} />
 
-        <Route path="/admin/inducciones" element={<Induccion />} />
-        <Route path="/admin/induccion/:id" element={<InduccionById />} />
+      </Route>
 
+      {/* RUTAS JEFE OPERACIONES  */}
+      <Route element={<ProtectedRoutes allowedRoles={['jefe_operaciones']} />}>
+        <Route path="/jefe-operaciones/gestionar-usuarios" element={<JefeOperaciones />}>
+          <Route index element={<Navigate to="listar-estudiantes" replace />} />
+          <Route path="listar-estudiantes" element={<ListarEstudiante />} />
+          <Route path="listar-asesores" element={<ListarAsesor />} />
+        </Route>
+        <Route path="/jefe-operaciones/supervisor-asig" element={<JefeOpeAsignar />} />
+      </Route>
+
+      {/* RUTAS SUPERVISOR  */}
+      <Route element={<ProtectedRoutes allowedRoles={['supervisor']} />}>
+        <Route path="/supervisor/asignaciones" element={<SupervisorAsig />} />
+        <Route path="/supervisor/contrato/nueva-asesoria" element={<NuevaAsesoria />} />
+        <Route path="/supervisor/contrato/edit-asig/:id" element={<EditAsig />} />
+      </Route>
+
+      {/* RUTAS CONTRATO PAGO  */}
+      <Route element={<ProtectedRoutes allowedRoles={['contrato_pago']} />}>
+
+        <Route path="/cont-pago/contratos" element={<Contrato />}>
+          <Route path="nuevo_contrato" element={<ContratoNuevo />} />
+          <Route path="contrato_asignado" element={<ContratoAsignado />} />
+        </Route>
+
+        <Route path="/cont-pago/pagos" element={<Pago />}>
+          <Route index element={<Navigate to="cuotas" replace />} />
+          <Route path="cuotas" element={<Cuota />} />
+          <Route path="al-contado" element={<Contado />} />
+          <Route path="servicio-extra" element={<ServExtra />} />
+        </Route>
+
+      </Route>
+
+
+      {/* RUTAS MODULO DE MARKETING  */}
+      <Route element={<ProtectedRoutes allowedRoles={['marketing']} />}>
+        <Route path="/marketing/ConfigIntra" element={<MarketingConf />} />
+      </Route>
+
+
+      {/* RUTAS SOPORTE TI  */}
+      <Route element={<ProtectedRoutes allowedRoles={['soporte']} />}>
+        <Route path="/soporte-ti" element={<SoporteTI />} />
       </Route>
 
       {/* RUTA NO AUTORIZADA */}
