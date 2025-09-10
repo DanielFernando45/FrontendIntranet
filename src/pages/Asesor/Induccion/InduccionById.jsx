@@ -52,10 +52,10 @@ const InduccionById = () => {
             <div className="p-4 ml-[100px] xl:ml-0 relative">
 
                 <div className="bg-white p-4 relative rounded-xl">
-                    <button onClick={ () => navigate('/admin/inducciones') } className="w-[35px] h-[35px] absolute rounded-full bg-gray-200 flex justify-center items-center right-2 top-2">
+                    <button onClick={ () => navigate('/asesor/inducciones') } className="w-[35px] h-[35px] absolute rounded-full bg-gray-200 flex justify-center items-center right-2 top-2">
                         <img src={back} alt="back-icon" />
                     </button>
-                    <h3 className="text-2xl font-semibold mb-6">{asesoramientoById[0]?.profesion_asesoria}</h3>
+                    <h3 className="text-2xl font-semibold mb-6">{asesoramientoById[0]?.referencia}</h3>
 
                     <div className="space-y-2">
                         <div className="flex gap-x-[200px]">
@@ -82,7 +82,7 @@ const InduccionById = () => {
                                 ) : (
                                     <div className="grid gap-4 w-full grid-cols-[repeat(auto-fill,_minmax(250px,_1fr))]">
                                         {induccionesByIdAsesoramiento.map(item => (
-                                            <div className="relative rounded-2xl bg-[#F8F7F7] ">
+                                            <div className="relative  bg-[#F8F7F7] ">
                                                 <video src={item.url} controls className="rounded-t-2xl min-w-[250px] w-full max-h-[100px]">
                                                 </video>
                                                 <div className="px-3 py-1 shadow-video rounded-b-2xl">

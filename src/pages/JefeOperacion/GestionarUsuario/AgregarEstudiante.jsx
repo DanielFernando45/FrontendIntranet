@@ -21,7 +21,7 @@ const AgregarEstudiante = () => {
 
     // Función para ir atrás
     const handlerAtras = () => {
-        navigate('/admin/gestionar-usuarios/listar-estudiantes');
+        navigate('/jefe-operaciones/gestionar-usuarios');
     };
 
     // Función que maneja los cambios en los campos de entrada
@@ -40,7 +40,7 @@ const AgregarEstudiante = () => {
             try {
                 await axios.post(`${import.meta.env.VITE_API_PORT_ENV}/cliente/add`, clienteData);
                 alert("Cliente añadido exitosamente");
-                navigate('/admin/gestionar-usuarios/listar-estudiantes');
+                navigate('/jefe-operaciones/gestionar-usuarios');
             } catch (error) {
                 console.error("Error al añadir asesor:", error);
                 alert("Error al guardar asesor. Revisa los datos.");

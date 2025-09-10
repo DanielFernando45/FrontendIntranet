@@ -11,14 +11,20 @@ const Induccion = () => {
 
   const navigate = useNavigate();
 
+  const asesor = localStorage.getItem("user");
+  const user = JSON.parse(asesor)
+  const id = user.id
+
   const { data: asesoramientos, isLoading } = useQuery({
     queryKey: ["asesoramientos"],
-    queryFn: asesoriasService.asesorias,
+    queryFn:() => asesoriasService.asesorinducciones(id),
     refetchOnWindowFocus: false,
+    initialData:[],
+    enabled:!!id,
   });
 
   const navigateInduccion = (id) => {
-    navigate(`/admin/induccion/${id}`);
+    navigate(`/asesor/induccion/${id}`);
   };
 
 const formatDate = (dateString) => {
@@ -27,6 +33,8 @@ const formatDate = (dateString) => {
     const options = { month: "short", day: "numeric", year: "numeric" };
     return date.toLocaleDateString("es-PE", options);
   };
+
+   console.log(asesoramientos);
 
   return (
     // <div className="bg-red-400 absolute top-0 left-0 z-[99]">
@@ -43,17 +51,14 @@ const formatDate = (dateString) => {
               <div className="flex flex-col">
                 <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
                   <div className="w-[40px] flex justify-center">Id</div>
-                  <div className="flex-1 flex justify-center max-w-[150px]">
+                  <div className="flex-1 flex justify-center ">
                     Delegado
                   </div>
-                  <div className="flex-1 flex justify-center max-w-[200px]">
-                    Profesión Asesoria
+                  <div className="flex-1 flex justify-center max-w-[250px]">
+                    Referencia
                   </div>
-                  <div className="flex-1 flex justify-center">
+                  <div className="flex-1 flex justify-center max-w-[250px]">
                     Fecha Asignación
-                  </div>
-                  <div className="flex-1 flex justify-center max-w-[150px]">
-                    Área
                   </div>
                   <div className="flex-1 flex justify-center">Acciones</div>
                 </div>
@@ -63,30 +68,27 @@ const formatDate = (dateString) => {
               ? "cargando..."
               : asesoramientos.map((asesoria, index) => (
                   <div
-                    key={asesoria?.id_asesoramiento}
+                    key={asesoria?.asesoriaId}
                     className={`flex w-full overflow-auto text-[#2B2829] font-normal p-[30px] rounded-md ${
                       index % 2 === 0 ? "bg-white" : "bg-[#E9E7E7]"
                     }`}
                   >
                     <div className="w-[40px] flex justify-center">
-                      {asesoria?.id_asesoramiento}
+                      {asesoria?.asesoriaId}
                     </div>
-                    <div className="flex-1 flex justify-start max-w-[150px]">
-                      {asesoria?.delegado}
+                    <div className="flex-1 flex text-center justify-center">
+                      {asesoria?.cliente}
                     </div>
-                    <div className="flex-1 flex text-center max-w-[200px]">
-                      {asesoria?.profesion_asesoria}
+                    <div className="flex-1 flex text-center max-w-[250px]">
+                      {asesoria?.referenciaAsesoria}
                     </div>
-                    <div className="flex-1 flex justify-center items-center">
-                      {formatDate(asesoria?.fecha_inicio)}
-                    </div>
-                    <div className="flex-1 flex justify-center items-center max-w-[150px]">
-                      {asesoria?.area}
+                    <div className="flex-1 flex justify-center items-center max-w-[250px]">
+                      {formatDate(asesoria?.fechaInicio)}
                     </div>
                     <div className="flex-1 flex items-center gap-2">
                       <button
                         onClick={() =>
-                          navigateInduccion(asesoria?.id_asesoramiento)
+                          navigateInduccion(asesoria?.asesoriaId)
                         }
                         className="rounded-sm px-3 py-1 bg-[#1C1C34] flex justify-center text-white flex-1"
                       >
@@ -95,7 +97,7 @@ const formatDate = (dateString) => {
                       <button
                         onClick={() => {
                           setOpenModal(true),
-                            setIdSeleccionado(asesoria?.id_asesoramiento);
+                            setIdSeleccionado(asesoria?.asesoriaId);
                         }}
                         className=" rounded-sm px-3 py-1 bg-[#1B1B33] flex justify-center text-white flex-1"
                       >

@@ -10,12 +10,34 @@ const asesorias = async () => {
   } catch (error) {
     console.error("Error al obtener las asesorías del estudiante:", error);
   }
+  
 };
+
+const asignacionesContratos = async() =>{
+  try {
+    const {data} = await api.get(`/asesoramiento/listarAsignados`)
+    return data;
+  } catch (error) {
+    console.log("Error al obtener asignaciones y Contratos")
+  }
+}
+
+const asesorinducciones = async (id) =>{
+  try{
+    const {data} = await api.get(
+      `/procesos-asesoria/listadoInducciones/${id}`
+    );
+    return data
+  }catch (error){
+      console.error("Error al obtener los clientes de este asesor")
+  }
+}
+
 
 const asesoramientoById = async (id) => {
   try {
     const { data } = await api.get(
-      `/asesoramiento/listar/${id}`
+      `/asesoramiento/verInduccion/${id}`
     );
     return data;
   } catch (error) {
@@ -48,8 +70,10 @@ const obtenerDelegado = async (idAsesoria) => {
 };
 
 export const asesoriasService = {
+  asignacionesContratos,
   asesoriasPorEstudiante,
   asesorias,
+  asesorinducciones,
   asesoramientoById,
   obtenerDelegado,
 };

@@ -9,7 +9,7 @@ const AgregarAsesor = () => {
     const [formData, setFormData] = useState({
         nombre: "",
         apellido: "",
-        areaAsesor: null,       // numérico
+        area: "",       
         especialidad: "",
         universidad: "",
         gradoAcademico: null,   // numérico
@@ -20,13 +20,13 @@ const AgregarAsesor = () => {
     });
 
     const handlerAtras = () => {
-        navigate('/admin/gestionar-usuarios/listar-asesores');
+        navigate('/jefe-operaciones/gestionar-usuarios/listar-asesores');
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         // Convertimos a número los campos que lo requieren
-        const parsedValue = ["telefono", "areaAsesor", "gradoAcademico"].includes(name)
+        const parsedValue = ["telefono", "gradoAcademico"].includes(name)
             ? parseInt(value) || ""
             : value;
 
@@ -37,7 +37,7 @@ const AgregarAsesor = () => {
         try {
             await axios.post(`${import.meta.env.VITE_API_PORT_ENV}/asesor/add`, formData);
             alert("Asesor añadido exitosamente");
-            navigate('/admin/gestionar-usuarios/listar-asesores');
+            navigate('/jefe-operaciones/gestionar-usuarios/listar-asesores');
         } catch (error) {
             console.error("Error al añadir asesor:", error);
             alert("Error al guardar asesor. Revisa los datos.");
@@ -64,13 +64,13 @@ const AgregarAsesor = () => {
                         <div className='flex gap-10'>
                             <div className='flex flex-col gap-3 w-full'>
                                 <p className='pl-[1px]'>Área</p>
-                                <select name="areaAsesor" value={formData.areaAsesor || ""} onChange={handleChange} className='bg-[#F9F9F9] w-full h-[55px] rounded-lg text-[#808080] p-4'>
+                                <select name="area" value={formData.area || ""} onChange={handleChange} className='bg-[#F9F9F9] w-full h-[55px] rounded-lg text-[#808080] p-4'>
                                     <option value="">Seleccione Área</option>
-                                    <option value={1}>Negocio</option>
-                                    <option value={2}>Social</option>
-                                    <option value={3}>Salud</option>
-                                    <option value={4}>Ingeniería</option>
-                                    <option value={5}>Legal</option>
+                                    <option value="145b58f1-b41f-4eeb-a196-a01fa9f43aa7">Salud</option>
+                                    <option value="58e1231d-180a-4c6c-add1-990af1dcf4f7">Negocio</option>
+                                    <option value="d307e9b1-9f62-40ba-989e-e9f7d4344324">Social</option>
+                                    <option value="daf3c634-7cc7-4a99-a002-dddf4f7864e8">Legal</option>
+                                    <option value="f0551441-7c5d-4765-aa3d-35530497250d">Ingeneria</option>
                                 </select>
                             </div>
                             <div className='flex flex-col gap-3 w-full'>
@@ -113,10 +113,7 @@ const AgregarAsesor = () => {
                                 <p className='pl-[1px]'>DNI</p>
                                 <input name="dni" value={formData.dni} onChange={handleChange} placeholder='Ingresa DNI' className='bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4' />
                             </div>
-                            <div className='flex flex-col gap-3 w-full'>
-                                <p className='pl-[1px]'>Perfil (URL imagen)</p>
-                                <input name="url_imagen" value={formData.url_imagen} onChange={handleChange} placeholder='Ingresa Imagen Perfil' className='bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4' />
-                            </div>
+                            
 
                             <div className='flex w-full h-full gap-[50px] justify-center'>
                                 <button onClick={handlerAtras} className='h-[46px] w-[180px] flex justify-center items-center p-4 rounded-lg border border-black'>

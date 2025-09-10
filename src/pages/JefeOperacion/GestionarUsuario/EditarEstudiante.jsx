@@ -46,7 +46,7 @@ const EditarEstudiante = () => {
 
 
     const handlerAtras = () => {
-        navigate('/admin/gestionar-usuarios')
+        navigate('/jefe-operaciones/gestionar-usuarios')
     }
 
     const handleGuardar = async () => {
@@ -66,7 +66,7 @@ const EditarEstudiante = () => {
         try {
             await axios.patch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/update/${id}`, payload);
             alert("Asesor actualizado correctamente");
-            navigate('/admin/gestionar-usuarios');
+            navigate('/jefe-operaciones/gestionar-usuarios');
         } catch (error) {
             console.error("Error al guardar cambios:", error);
             alert("Error al actualizar asesor.");

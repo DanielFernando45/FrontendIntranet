@@ -45,11 +45,11 @@ const ListarAsesor = () => {
   };
 
   const handlerAgregarAsesor = () => {
-    navigate("/admin/gestionar-usuarios/agregar-asesor");
+    navigate("/jefe-operaciones/gestionar-usuarios/agregar-asesor");
   };
 
   const handleEditarAsesor = (id) => {
-    navigate(`/admin/gestionar-usuarios/editar-asesor/${id}`);
+    navigate(`/jefe-operaciones/gestionar-usuarios/editar-asesor/${id}`);
   };
 
   const handleEliminarAsesor = async (id) => {
@@ -93,15 +93,14 @@ const ListarAsesor = () => {
           <div
             key={asesor.id}
             className={`flex justify-between items-center text-[#2B2829] font-normal p-[6px] rounded-md ${
-              index % 2 === 0 ? "bg-white" : "bg-[#E9E7E7]"
-            }`}
+              index % 2 === 0 ? "bg-white" : "bg-[#E9E7E7]" }`}
           >
             <div className="w-[40px] flex justify-center">{asesor?.id}</div>
             <div className="w-[300px] flex justify-start">
               {asesor?.nombre} {asesor?.apellido}
             </div>
             <div className="w-[150px] flex justify-center">
-              {asesor?.areaAsesor.nombre}
+              {asesor?.area.nombre}
             </div>
             <div className="w-[250px] flex justify-start">
               {asesor?.especialidad}

@@ -57,7 +57,10 @@ import JefeOperaciones from '../pages/JefeOperacion/GestionUser';
 import ListarEstudiante from '../pages/JefeOperacion/GestionarUsuario/ListarEstudiante';
 import ListarAsesor from '../pages/JefeOperacion/GestionarUsuario/ListarAsesor';
 import JefeOpeAsignar from '../pages/JefeOperacion/JefeOpeAsignar';
-
+import AgregarCliente from '../pages/JefeOperacion/GestionarUsuario/AgregarEstudiante';
+import EditarCliente from '../pages/JefeOperacion/GestionarUsuario/EditarEstudiante';
+import AñadirAsesor from '../pages/JefeOperacion/GestionarUsuario/AgregarAsesor';
+import ModificarAsesor from '../pages/JefeOperacion/GestionarUsuario/EditarAsesor';
 //Rutas Supervisor
 import SupervisorAsig from '../pages/Supervisor/Asignacion';
 import NuevaAsesoria from '../pages/Supervisor/SupervisorAsignar/NuevaAsesoria';
@@ -189,6 +192,10 @@ const RouterApp = () => {
           <Route path="listar-asesores" element={<ListarAsesor />} />
         </Route>
         <Route path="/jefe-operaciones/supervisor-asig" element={<JefeOpeAsignar />} />
+        <Route path="/jefe-operaciones/gestionar-usuarios/agregar-estudiante" element={<AgregarCliente/>}/>
+        <Route path="/jefe-operaciones/gestionar-usuarios/editar-estudiante/:id" element={<EditarCliente/>}/>
+        <Route path="/jefe-operaciones/gestionar-usuarios/agregar-asesor" element={<AñadirAsesor/>}/>
+        <Route path="/jefe-operaciones/gestionar-usuarios/editar-asesor/:id" element={<ModificarAsesor/>}/>
       </Route>
 
       {/* RUTAS SUPERVISOR  */}
@@ -215,12 +222,10 @@ const RouterApp = () => {
 
       </Route>
 
-
       {/* RUTAS MODULO DE MARKETING  */}
       <Route element={<ProtectedRoutes allowedRoles={['marketing']} />}>
         <Route path="/marketing/ConfigIntra" element={<MarketingConf />} />
       </Route>
-
 
       {/* RUTAS SOPORTE TI  */}
       <Route element={<ProtectedRoutes allowedRoles={['soporte']} />}>

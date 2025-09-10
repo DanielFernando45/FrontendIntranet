@@ -115,7 +115,7 @@ const AsesorSidebar = () => {
                     isExpanded ? "w-[266px]" : "w-[100px]"
                   } h-[77px]  cursor-pointer  bg-white z-30 transition-all duration-300 
                 hover:bg-[#F0EFEF] ${
-                  active ? "bg-[#EFEFEF] border-l-[5px] border-[#000]" : ""
+                  active ? "bg-[#efefee] border-l-[5px] border-[#000]" : ""
                 }`}
                   onClick={handleItemClick}
                 >

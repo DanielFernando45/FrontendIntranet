@@ -10,7 +10,7 @@ const EditarAsesor = () => {
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
-    areaAsesor: null,
+    area: "",
     especialidad: "",
     universidad: "",
     gradoAcademico: null,
@@ -28,7 +28,7 @@ const EditarAsesor = () => {
         const asesor = response.data;
         setFormData({
           ...asesor,
-          areaAsesor: asesor.areaAsesor?.id || "",
+          area: asesor.area?.id || "",
           gradoAcademico: asesor.gradoAcademico?.id || ""
         });
       } catch (error) {
@@ -41,10 +41,11 @@ const EditarAsesor = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue = ["areaAsesor", "gradoAcademico", "telefono"].includes(name)
+    // Convertimos a número los campos que lo requieren
+    const parsedValue = ["telefono", "gradoAcademico"].includes(name)
       ? parseInt(value) || ""
       : value;
-  
+
     setFormData(prev => ({ ...prev, [name]: parsedValue }));
   };
 
@@ -57,25 +58,25 @@ const EditarAsesor = () => {
       email: formData.email,
       telefono: formData.telefono,
       url_imagen: formData.url_imagen,
-      areaAsesor: formData.areaAsesor,
+      area:  formData.area ,
       especialidad: formData.especialidad,
-      gradoAcademico: formData.gradoAcademico,
+      gradoAcademico:  formData.gradoAcademico ,
       universidad: formData.universidad
     };
-  
+
     try {
       await axios.patch(`${import.meta.env.VITE_API_PORT_ENV}/asesor/update/${id}`, payload);
       alert("Asesor actualizado correctamente");
-      navigate('/admin/gestionar-usuarios/listar-asesores');
+      navigate('/jefe-operaciones/gestionar-usuarios/listar-asesores');
     } catch (error) {
       console.error("Error al guardar cambios:", error);
       alert("Error al actualizar asesor.");
     }
   };
-  
+
 
   const handlerAtras = () => {
-    navigate('/admin/gestionar-usuarios/listar-asesores');
+    navigate('/jefe-operaciones/gestionar-usuarios/listar-asesores');
   };
 
   return (
@@ -113,17 +114,17 @@ const EditarAsesor = () => {
               <div className='flex flex-col gap-3 w-full'>
                 <p className='pl-[1px]'>Área</p>
                 <select
-                  name="areaAsesor"
-                  value={formData.areaAsesor || ""}
+                  name="area"
+                  value={formData.area || ""}
                   onChange={handleChange}
                   className='bg-[#F9F9F9] w-full h-[55px] rounded-lg text-[#808080] p-4'
                 >
                   <option value="">Seleccione Área</option>
-                  <option value={1}>Negocio</option>
-                  <option value={2}>Social</option>
-                  <option value={3}>Salud</option>
-                  <option value={4}>Ingeniería</option>
-                  <option value={5}>Legal</option>
+                  <option value="145b58f1-b41f-4eeb-a196-a01fa9f43aa7">Salud</option>
+                  <option value="58e1231d-180a-4c6c-add1-990af1dcf4f7">Negocio</option>
+                  <option value="d307e9b1-9f62-40ba-989e-e9f7d4344324">Social</option>
+                  <option value="daf3c634-7cc7-4a99-a002-dddf4f7864e8">Legal</option>
+                  <option value="f0551441-7c5d-4765-aa3d-35530497250d">Ingeneria</option>
                 </select>
               </div>
 
@@ -204,16 +205,7 @@ const EditarAsesor = () => {
                   className='bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4'
                 />
               </div>
-              <div className='flex flex-col gap-3 w-full'>
-                <p className='pl-[1px]'>Perfil (URL imagen)</p>
-                <input
-                  name="url_imagen"
-                  value={formData.url_imagen}
-                  onChange={handleChange}
-                  placeholder='Ingresa Imagen Perfil'
-                  className='bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4'
-                />
-              </div>
+              
 
               <div className='flex w-full h-full gap-[50px] justify-center'>
                 <button onClick={handlerAtras} className='h-[46px] w-[180px] flex justify-center items-center p-4 rounded-lg border border-black'>

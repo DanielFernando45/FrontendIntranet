@@ -24,11 +24,11 @@ const ListarEstudiante = () => {
   }, []);
 
   const handlerAgregarEstudiante = () => {
-    navigate("/admin/gestionar-usuarios/agregar-estudiante");
+    navigate("/jefe-operaciones/gestionar-usuarios/agregar-estudiante");
   };
 
   const handlerEditarEstudiante = (id) => {
-    navigate(`/admin/gestionar-usuarios/editar-estudiante/${id}`);
+    navigate(`/jefe-operaciones/gestionar-usuarios/editar-estudiante/${id}`);
   };
 
   const formatearFecha = (fecha) => {
@@ -143,9 +143,9 @@ const ListarEstudiante = () => {
 
       <button
         onClick={handlerAgregarEstudiante}
-        className="flex justify-between text-white w-[230px] h-8 rounded font-semibold bg-[#1B435D] px-6 py-1 mt-5"
+        className="flex justify-between text-white w-[210px] h-8 rounded font-semibold bg-[#1B435D] px-6 py-1 mt-5"
       >
-        <p>Agregar Estudiante</p>
+        <p>Agregar Cliente</p>
       </button>
     </div>
   );
