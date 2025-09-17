@@ -13,6 +13,15 @@ const asesorias = async () => {
   
 };
 
+const listarContratosAsignados = async() =>{
+  try {
+    const {data } = await api.get(`/asesoramiento/listarContratosAsignados`)
+    return data;
+  } catch (error) {
+    console.log("Error al obtener contratos asignados")
+  }
+}
+
 const asignacionesContratos = async() =>{
   try {
     const {data} = await api.get(`/asesoramiento/listarAsignados`)
@@ -73,6 +82,7 @@ export const asesoriasService = {
   asignacionesContratos,
   asesoriasPorEstudiante,
   asesorias,
+  listarContratosAsignados,
   asesorinducciones,
   asesoramientoById,
   obtenerDelegado,

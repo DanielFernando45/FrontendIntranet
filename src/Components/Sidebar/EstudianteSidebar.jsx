@@ -100,7 +100,7 @@ const EstudianteSidebar = () => {
                   <Link to={link.path}>
                     <li
                       className={`flex items-center ${isExpanded ? "w-[266px]" : "w-[100px]"} h-[77px] px-[20px] py-[25px] cursor-pointer flex-shrink-0
-                                  z-30 transition-all duration-300 ease-in-out hover:bg-[#F0EFEE] ${active ? "bg-[#F0EFEE] border-l-[5px] border-[#000]" : ""}`}
+                                  z-30 transition-all duration-300 ease-in-out hover:bg-[#F0EFEE] ${active ? "bg-[#f0efee] border-l-[5px] border-[#000]" : ""}`}
                       onClick={handleItemClick}
                     >
                       <div className="flex items-center gap-4 w-full transition-all duration-300 ease-in-out">

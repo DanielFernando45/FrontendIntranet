@@ -3,54 +3,26 @@ import flechaabajo from "../../../assets/icons/Flecha.svg";
 import flechaarriba from "../../../assets/icons/arrow-up.svg";
 import eliminar from "../../../assets/icons/IconAdmin/tachoblanco.svg";
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { asesoriasService } from '../../../services/asesoriasService';
 
-const Contratos = [
-  {
-    id_asesoramiento: 1,
-    fechaAsignacion: "2025-05-11T09:00:00.000Z",
-    asesor: "Diana Alexandra Solis Rios",
-    delegado: "Juan Carlos Tinoco Ramírez",
-    estudiantes: [] // Caso sin estudiantes, solo delegado
-  },
-  {
-    id_asesoramiento: 2,
-    fechaAsignacion: "2025-05-11T09:00:00.000Z",
-    asesor: "Diana Alexandra Solis Rios",
-    delegado: "JGabriel Alejandro Vargas León",
-    estudiantes: [
-      {
-        id_estudiante: 1,
-        estudiante: "Juan Carlos Tinoco Ramírez"
-      },
-      {
-        id_estudiante: 2,
-        estudiante: "Gabriel Alejandro Vargas León"
-      },
-      {
-        id_estudiante: 4,
-        estudiante: "Carlos Enrique Méndez Suárez"
-      }
-    ]
-  },
-  {
-    id_asesoramiento: 3,
-    fechaAsignacion: "2025-05-11T09:00:00.000Z",
-    asesor: "Diana Alexandra Solis Rios",
-    delegado: "Carlos Enrique Méndez Suárez",
-    estudiantes: [
-      {
-        id_estudiante: 5,
-        estudiante: "Luis Fernando Ramírez"
-      }
-    ]
-  },
-];
 const Asignados = () => {
   const [eliminando, setEliminando] = useState(false);
   const [expandedIds, setExpandedIds] = useState([]);
 
   const Navigate = useNavigate();
-  
+
+  const {data: asesoria} = useQuery({
+      queryKey: ["asesoria"],
+      queryFn: async () => {
+        const res = await asesoriasService.asignacionesContratos();
+        return res
+      },
+      refetchOnWindowFocus: false,
+      initialData: [],
+    }); // Aquí iría la lógica de React Query para obtener los datos reales
+
+
   const toggleExpand = (id) => {
     if (expandedIds.includes(id)) {
       setExpandedIds(expandedIds.filter(item => item !== id));
@@ -88,14 +60,14 @@ const Asignados = () => {
           <div className='w-[200px] text-center'>Asig.Contrato</div>
         </div>
         <div className='flex flex-col gap-1 px-1'>
-          {Contratos.map((contrato, index) => (
+          {asesoria.map((contrato, index) => (
             <React.Fragment key={contrato.id_asesoramiento}>
               <div className={`flex justify-between px-1 rounded-md ${index % 2 === 0 ? 'bg-[#E9E7E7]' : ''} py-2`}>
                 <div className='w-[100px]'>{contrato.id_asesoramiento.toString().padStart(4, '0')}</div>
                 <div className='w-[300px]'>{contrato.delegado}</div>
                 <div className='w-[200px]'>{formatDate(contrato.fechaAsignacion)}</div>
                 <div className='w-[300px]'>
-                  {displayStudents(contrato.estudiantes)}
+                  {displayStudents(contrato.cliente)}
                 </div>
                 <div className='w-[300px]'>{contrato.asesor}</div>
                 <div className='flex w-[200px] justify-between px-3'>
@@ -123,10 +95,10 @@ const Asignados = () => {
               {expandedIds.includes(contrato.id_asesoramiento) && (
                 <div className={`px-4 py-2 rounded-b-md ${index % 2 === 0 ? 'bg-[#E9E7E7]' : 'bg-white'}`}>
                   <div className='font-medium mb-2'>Estudiantes :</div>
-                  {contrato.estudiantes.length > 0 ? (
+                  {contrato.cliente.length > 0 ? (
                     <ul className='list-disc pl-5'>
-                      {contrato.estudiantes.map(estudiante => (
-                        <li key={estudiante.id_estudiante}>{estudiante.estudiante}</li>
+                      {contrato.cliente.map(cliente => (
+                        <li key={cliente.id_estudiante}>{cliente.estudiante}</li>
                       ))}
                     </ul>
                   ) : (

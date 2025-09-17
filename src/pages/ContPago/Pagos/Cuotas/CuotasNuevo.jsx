@@ -45,10 +45,10 @@ const CuotasNuevo = () => {
         <>
             <div className="flex flex-col">
                 <div className="flex justify-between text-[#495D72] font-medium p-[6px] pr-10 rounded-md">
-                    <div className="w-[100px] flex justify-center">IdAsesoria</div>
-                    <div className="w-[300px] flex justify-center">Delegado</div>
+                    <div className="w-[100px] flex justify-center">IdContrato</div>
+                    <div className="w-[300px] flex justify-center">Cliente(Delegado)</div>
                     <div className="w-[210px] flex justify-center">Contrato</div>
-                    <div className="w-[360px] flex justify-center">Profesión Asesoría</div>
+                    <div className="w-[360px] flex justify-center">Referencia</div>
                     <div className="w-[140px] flex justify-center ml-5">Acción</div>
                 </div>
 

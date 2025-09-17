@@ -2,48 +2,30 @@ import React, { useState } from 'react'
 import editar from "../../../assets/icons/Flecha.svg";
 import { FaRegEdit } from 'react-icons/fa';
 import { IoTrash } from 'react-icons/io5';
+import { useQuery } from '@tanstack/react-query';
+import { asesoriasService } from '../../../services/asesoriasService';
 
-const contrato = [
-  {
-    id_contrato: 1,
-    id_asesoramiento: 1,
-    trabajo_investigacion: "Tesis Pregrado",
-    delegado: "Juan Carlos Tinoco Ramírez",
-    fecha_registro: "2025-05-11T09:00:00.000Z",
-    modalidad: "Avance",
-    tipo_pago: "Al contado",
-  },
-  {
-    id_contrato: 2,
-    id_asesoramiento: 2,
-    trabajo_investigacion: "Tesis Maestría",
-    delegado: "Gabriel Alejandro Vargas León",
-    fecha_registro: "2025-05-11T09:00:00.000Z",
-    modalidad: "Avance",
-    tipo_pago: "Cuotas",
-  },
-  {
-    id_contrato: 3,
-    id_asesoramiento: 3,
-    trabajo_investigacion: "Tesis Maestría",
-    delegado: "Carlos Enrique Méndez Suárez",
-    fecha_registro: "2025-05-11T09:00:00.000Z",
-    modalidad: "Plazo",
-    tipo_pago: "Al contado",
-  },
-];
 
 const ContratoAsignado = () => {
   const [editContrato, setEditContrato] = useState(false);
   const [eliminar, setEliminar] = useState(false);
   const [servicio, setServicio] = useState(false);
 
+  const {data:contrato} =  useQuery({
+    queryKey: ["contrato"],
+    queryFn: async () => { 
+      const res = await asesoriasService.listarContratosAsignados();
+      return res;
+    },
+    refetchOnWindowFocus: false,
+    initialData: [],  
+  });
+
   return (
     <div className='flex flex-col gap-5'>
       <h1 className='text-[25px] font-medium'>Contratos Asignados </h1>
       <div className='flex flex-col gap-2'>
         <div className='flex justify-between px-1 text-[#495D72] font-medium'>
-          <div className='w-[200px] text-center'>IdContrato</div>
           <div className='w-[200px] text-center'>IdAsesoramiento</div>
           <div className='w-[350px] text-center'>Trab.Investigacion</div>
           <div className='w-[300px] text-center'>Delegado</div>
@@ -54,7 +36,6 @@ const ContratoAsignado = () => {
         </div>
         {contrato.map((contrato, index) => (
           <div key={index} className='flex justify-between px-1'>
-            <div className='w-[200px] text-center'>{contrato.id_contrato}</div>
             <div className='w-[200px] text-center'>{contrato.id_asesoramiento}</div>
             <div className='w-[350px] text-center'>{contrato.trabajo_investigacion}</div>
             <div className='w-[300px] text-center'>{contrato.delegado}</div>
