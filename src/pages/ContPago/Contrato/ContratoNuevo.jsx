@@ -69,7 +69,7 @@ const ContratoNuevo = () => {
 
   return (
     <div className='flex flex-col gap-5'>
-      <h1 className='text-[25px] font-medium'>Asignar Contratos Nuevos </h1>
+      <h1 className='text-[25px] font-medium'>Crear Contrato </h1>
       <div className='flex flex-col gap-2'>
         <div className='flex justify-between px-1 text-[#495D72] font-medium'>
           <div className='w-[100px]'>IdAsesoria</div>
