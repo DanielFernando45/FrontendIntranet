@@ -88,7 +88,7 @@ const JefeOpeAsignar = () => {
               <div className='flex justify-between px-1 text-[#495D72] text-center font-medium'>
                 <div className='w-[100px]'>IdAsesoria</div>
                 <div className='w-[300px]'>Delegado</div>
-                <div className='w-[200px]'>Fecha asignación</div>
+                <div className='w-[200px]'>Fin Contrato</div>
                 <div className='w-[200px]'>Tipo trabajo</div>
                 <div className='w-[200px]'>Área</div>
                 <div className='w-[300px]'>Alumnos</div>
@@ -102,8 +102,8 @@ const JefeOpeAsignar = () => {
                     <div className={`flex items-center text-center justify-between px-1 rounded-md ${index % 2 === 0 ? 'bg-[#E9E7E7]' : ''} py-2`}>
                       <div className='w-[100px]'>{contrato.id_asesoramiento.toString().padStart(4, '0')}</div>
                       <div className='w-[300px]'>{contrato.delegado}</div>
-                      <div className='w-[200px]'>{formatDate(contrato.fechaAsignacion)}</div>
-                      <div className='w-[200px]'>{contrato.tipotrabajo}</div>
+                      <div className='w-[200px]'>{!formatDate(contrato.finContrato) ? "Por Asignar": formatDate(contrato.finContrato)}</div>
+                      <div className='w-[200px]'>{!contrato.tipotrabajo ? "Por Asignar" : contrato.tipotrabajo}</div>
                       <div className='w-[200px]'>{contrato.area}</div>
                       <div className='w-[300px]'>{displayStudents(contrato.cliente)}</div>
                       <div className='w-[300px]'>{contrato.asesor}</div>
