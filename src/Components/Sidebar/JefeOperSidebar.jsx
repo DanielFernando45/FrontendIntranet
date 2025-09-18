@@ -8,7 +8,6 @@ import MenuRetraido from "../../assets/icons/menuRetra.svg";
 import Gestion from "../../assets/icons/IconAsesor/gestionAlum.svg";
 import Asignaciones from "../../assets/icons/IconAdmin/asignar.svg";
 
-
 const LINKS = [
   {
     icono: Gestion,
@@ -32,7 +31,6 @@ const LINKS = [
     title: "Asignados",
   },
 ];
-
 
 const JefeOperSidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -64,15 +62,15 @@ const JefeOperSidebar = () => {
 
   return (
     <>
-          {isExpanded && (
-            <div
-              className="fixed inset-0 bg-black/30 z-20"
-              onClick={() => setIsExpanded(false)}
-            />
-          )}
-    
-          <nav
-            className={`fixed left-0 top-0
+      {isExpanded && (
+        <div
+          className="fixed inset-0 bg-black/30 z-20"
+          onClick={() => setIsExpanded(false)}
+        />
+      )}
+
+      <nav
+        className={`fixed left-0 top-0
                 ${
                   isMobile
                     ? isExpanded
@@ -82,64 +80,66 @@ const JefeOperSidebar = () => {
                     ? "w-[266px] h-full"
                     : "w-[100px] h-full"
                 } flex-shrink-0 bg-white z-30 transition-[width] duration-500 ease-in-out overflow-hidden`}
-          >
-            {!isMobile || isExpanded ? (
-              <div className="flex flex-col items-center  gap-[30px] py-5 px-5">
-                <img src={LogoAleja} alt="Logo" />
-                <button onClick={toggleMenu}>
-                  <img src={isExpanded ? Menu : MenuRetraido} alt="Toggle Menu" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center pt-2 sm:pt-3 md:pt-[20px]">
-                <button onClick={toggleMenu} className="p-2">
-                  <img
-                    src={MenuRetraido}
-                    alt="Toggle Menu"
-                    className="w-5 md:w-6"
-                  />
-                </button>
-              </div>
-            )}
-    
-            {(!isMobile || isExpanded) && (
-              <ul className="flex flex-col gap-1 items-start">
-                {LINKS.map((link) => {
-                  // Verifica si la ruta principal o alguna de sus subrutas está activa
-                  const active = isActive(link.path);
-                  return (
-                    <div key={link.title}>
-                      {/* Solo renderizamos la ruta principal */}
-                      <Link to={link.path}>
-                        <li
-                          className={`flex items-center ${
-                            isExpanded ? "w-[266px]" : "w-[100px]"
-                          } h-[77px] px-[20px] py-[25px] cursor-pointer flex-shrink-0 bg-white z-30 transition-all duration-300 
-                        hover:bg-[#F0EFEF] ${
-                          active ? "bg-[#EFEFEE] border-l-[5px] border-[#000]" : ""
-                        }`}
-                          onClick={handleItemClick}
-                        >
-                          <div className="flex items-center gap-4 w-full">
-                            <img src={link.icono} className="w-6 h-6" />
-                            {isExpanded && (
-                              <span className="text-[17px] font-medium text-gray-800">
-                                {link.title}
-                              </span>
-                            )}
-                          </div>
-                        </li>
-                      </Link>
-    
-                      {/* Las subrutas ya no se renderizan en el sidebar */}
-                    </div>
-                  );
-                })}
-              </ul>
-            )}
-          </nav>
-    </>
-  )
-}
+      >
+        {!isMobile || isExpanded ? (
+          <div className="flex flex-col items-center  gap-[30px] py-5 px-5">
+            <img src={LogoAleja} alt="Logo" />
+            <button onClick={toggleMenu}>
+              <img src={isExpanded ? Menu : MenuRetraido} alt="Toggle Menu" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center pt-2 sm:pt-3 md:pt-[20px]">
+            <button onClick={toggleMenu} className="p-2">
+              <img
+                src={MenuRetraido}
+                alt="Toggle Menu"
+                className="w-5 md:w-6"
+              />
+            </button>
+          </div>
+        )}
 
-export default JefeOperSidebar
+        {(!isMobile || isExpanded) && (
+          <ul className="flex flex-col gap-1 items-start">
+            {LINKS.map((link) => {
+              // Verifica si la ruta principal o alguna de sus subrutas está activa
+              const active = isActive(link.path);
+              return (
+                <div key={link.title}>
+                  {/* Solo renderizamos la ruta principal */}
+                  <Link to={link.path}>
+                    <li
+                      className={`flex items-center ${
+                        isExpanded ? "w-[266px]" : "w-[100px]"
+                      } h-[77px] px-[20px] py-[25px] cursor-pointer flex-shrink-0 bg-white z-30 transition-all duration-300 
+                        hover:bg-[#F0EFEF] ${
+                          active
+                            ? "bg-[#EFEFEE] border-l-[5px] border-[#000]"
+                            : ""
+                        }`}
+                      onClick={handleItemClick}
+                    >
+                      <div className="flex items-center gap-4 w-full">
+                        <img src={link.icono} className="w-6 h-6" />
+                        {isExpanded && (
+                          <span className="text-[17px] font-medium text-gray-800">
+                            {link.title}
+                          </span>
+                        )}
+                      </div>
+                    </li>
+                  </Link>
+
+                  {/* Las subrutas ya no se renderizan en el sidebar */}
+                </div>
+              );
+            })}
+          </ul>
+        )}
+      </nav>
+    </>
+  );
+};
+
+export default JefeOperSidebar;
