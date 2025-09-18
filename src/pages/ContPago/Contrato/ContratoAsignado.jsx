@@ -26,7 +26,7 @@ const ContratoAsignado = () => {
       <h1 className='text-[25px] font-medium'>Contratos Asignados </h1>
       <div className='flex flex-col gap-2'>
         <div className='flex justify-between px-1 text-[#495D72] font-medium'>
-          <div className='w-[200px] text-center'>IdAsesoramiento</div>
+          <div className='w-[200px] text-center'>IdContratos</div>
           <div className='w-[350px] text-center'>Trab.Investigacion</div>
           <div className='w-[300px] text-center'>Delegado</div>
           <div className='w-[200px] text-center'>FechaRegistro</div>

@@ -201,8 +201,8 @@ const RouterApp = () => {
       {/* RUTAS SUPERVISOR  */}
       <Route element={<ProtectedRoutes allowedRoles={['supervisor']} />}>
         <Route path="/supervisor/asignaciones" element={<SupervisorAsig />} />
-        <Route path="/supervisor/contrato/nueva-asesoria" element={<NuevaAsesoria />} />
-        <Route path="/supervisor/contrato/edit-asig/:id" element={<EditAsig />} />
+        <Route path="/supervisor/nueva-asesoria" element={<NuevaAsesoria />} />
+        <Route path="/supervisor/edit-asig/:id" element={<EditAsig />} />
       </Route>
 
       {/* RUTAS CONTRATO PAGO  */}

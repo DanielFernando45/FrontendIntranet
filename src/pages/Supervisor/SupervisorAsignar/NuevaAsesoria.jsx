@@ -111,7 +111,7 @@ const NuevaAsesoria = () => {
                 <div className='flex justify-end gap-10'>
                     <button
                         className='w-[200px] bg-[#1C1C34] text-white rounded-md  py-2 mt-4'
-                        onClick={() => navigate('/admin/supervisor-asig')}
+                        onClick={() => navigate('/supervisor/asignaciones')}
                     > Cancelar</button>
                     <button className='w-[200px] bg-[#1C1C34] text-white rounded-md  py-2 mt-4'>Asignar</button>
                 </div>

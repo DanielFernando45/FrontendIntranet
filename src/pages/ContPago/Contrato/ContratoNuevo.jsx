@@ -57,12 +57,6 @@ const ContratoNuevo = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    return date.toLocaleDateString('es-ES', options);
-  };
-
   const displayStudents = (estudiantes) => {
     if (estudiantes.length === 0) {
       return "----------";
@@ -80,7 +74,6 @@ const ContratoNuevo = () => {
         <div className='flex justify-between px-1 text-[#495D72] font-medium'>
           <div className='w-[100px]'>IdAsesoria</div>
           <div className='w-[300px] text-center'>Delegado</div>
-          <div className='w-[200px]'>Fecha asignación </div>
           <div className='w-[300px] text-center'>Alumnos </div>
           <div className='w-[300px] text-center'>Asesor</div>
           <div className='w-[200px] text-center'>Asig.Contrato</div>
@@ -91,7 +84,6 @@ const ContratoNuevo = () => {
               <div className={`flex justify-between px-1 rounded-md ${index % 2 === 0 ? 'bg-[#E9E7E7]' : ''} py-2`}>
                 <div className='w-[100px]'>{contrato.id_asesoramiento.toString().padStart(4, '0')}</div>
                 <div className='w-[300px]'>{contrato.delegado}</div>
-                <div className='w-[200px]'>{formatDate(contrato.fechaAsignacion)}</div>
                 <div className='w-[300px]'>
                   {displayStudents(contrato.estudiantes)}
                 </div>

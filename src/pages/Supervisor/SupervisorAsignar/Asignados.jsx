@@ -12,7 +12,7 @@ const Asignados = () => {
 
   const Navigate = useNavigate();
 
-  const {data: asesoria} = useQuery({
+  const {data: asesorias} = useQuery({
       queryKey: ["asesoria"],
       queryFn: async () => {
         const res = await asesoriasService.asignacionesContratos();
@@ -31,11 +31,6 @@ const Asignados = () => {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
-    return date.toLocaleDateString('es-ES', options);
-  };
 
   const displayStudents = (estudiantes) => {
     if (estudiantes.length === 0) {
@@ -54,26 +49,25 @@ const Asignados = () => {
         <div className='flex justify-between px-1 text-[#495D72] font-medium'>
           <div className='w-[100px]'>IdAsesoria</div>
           <div className='w-[300px] text-center'>Delegado</div>
-          <div className='w-[200px]'>Fecha asignación </div>
           <div className='w-[300px] text-center'>Alumnos </div>
           <div className='w-[300px] text-center'>Asesor</div>
           <div className='w-[200px] text-center'>Asig.Contrato</div>
         </div>
         <div className='flex flex-col gap-1 px-1'>
-          {asesoria.map((contrato, index) => (
-            <React.Fragment key={contrato.id_asesoramiento}>
+          {asesorias.map((asesoria, index) => (
+            <React.Fragment key={asesoria.id_asesoramiento}>
               <div className={`flex justify-between px-1 rounded-md ${index % 2 === 0 ? 'bg-[#E9E7E7]' : ''} py-2`}>
-                <div className='w-[100px]'>{contrato.id_asesoramiento.toString().padStart(4, '0')}</div>
-                <div className='w-[300px]'>{contrato.delegado}</div>
-                <div className='w-[200px]'>{formatDate(contrato.fechaAsignacion)}</div>
+                <div className='w-[100px]'>{asesoria.id_asesoramiento.toString().padStart(4, '0')}</div>
+                <div className='w-[300px]'>{asesoria.delegado}</div>
+                
                 <div className='w-[300px]'>
-                  {displayStudents(contrato.cliente)}
+                  {displayStudents(asesoria.cliente)}
                 </div>
-                <div className='w-[300px]'>{contrato.asesor}</div>
+                <div className='w-[300px]'>{asesoria.asesor}</div>
                 <div className='flex w-[200px] justify-between px-3'>
                   <button
                     className='bg-[#1C1C34] text-white font-medium px-7 rounded-md '
-                    onClick={() => Navigate(`/admin/contrato/edit-asig/${contrato.id_asesoramiento}`)}
+                    onClick={() => Navigate(`/supervisor/edit-asig/${asesoria.id_asesoramiento}`)}
                   >
                     Editar
                   </button>
@@ -83,21 +77,21 @@ const Asignados = () => {
                   >
                     <img className='size-7' src={eliminar} alt="Eliminar" />
                   </button>
-                  <button onClick={() => toggleExpand(contrato.id_asesoramiento)}>
+                  <button onClick={() => toggleExpand(asesoria.id_asesoramiento)}>
                     <img
-                      src={expandedIds.includes(contrato.id_asesoramiento) ? flechaarriba : flechaabajo}
-                      alt={expandedIds.includes(contrato.id_asesoramiento) ? "Cerrar" : "Expandir"}
+                      src={expandedIds.includes(asesoria.id_asesoramiento) ? flechaarriba : flechaabajo}
+                      alt={expandedIds.includes(asesoria.id_asesoramiento) ? "Cerrar" : "Expandir"}
                     />
                   </button>
                 </div>
               </div>
 
-              {expandedIds.includes(contrato.id_asesoramiento) && (
+              {expandedIds.includes(asesoria.id_asesoramiento) && (
                 <div className={`px-4 py-2 rounded-b-md ${index % 2 === 0 ? 'bg-[#E9E7E7]' : 'bg-white'}`}>
                   <div className='font-medium mb-2'>Estudiantes :</div>
-                  {contrato.cliente.length > 0 ? (
+                  {asesoria.cliente.length > 0 ? (
                     <ul className='list-disc pl-5'>
-                      {contrato.cliente.map(cliente => (
+                      {asesoria.cliente.map(cliente => (
                         <li key={cliente.id_estudiante}>{cliente.estudiante}</li>
                       ))}
                     </ul>
@@ -113,7 +107,7 @@ const Asignados = () => {
       <div className='flex justify-env mt-4'>
         <button 
           className='rounded-lg w-[180px] text-white bg-black py-1'
-          onClick={() => Navigate('/admin/contrato/nueva-asesoria')}
+          onClick={() => Navigate('/supervisor/nueva-asesoria')}
           >
           Agregar Asesoría
         </button>
