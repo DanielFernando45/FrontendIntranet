@@ -19,7 +19,7 @@ const SoporteEstudiante = () => {
         const user = JSON.parse(usuario);
         setFormData(prev => ({
           ...prev,
-          id_cliente: user.id
+          id_cliente: user.id_cliente
         }));
         setUserLoaded(true);
       } catch (error) {

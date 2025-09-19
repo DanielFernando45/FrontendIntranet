@@ -11,7 +11,7 @@ const Activos = () => {
         // Obtener el ID del usuario del localStorage
         const userString = localStorage.getItem('user');
         const user = JSON.parse(userString);
-        const id = user.id;
+        const id = user.id_asesor;
 
         // Hacer la petición a la API
         const response = await fetch(`${import.meta.env.VITE_API_PORT_ENV}/asesoramiento/misAsesoriasActivas/${id}`);

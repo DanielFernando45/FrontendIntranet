@@ -13,7 +13,7 @@ const Induccion = () => {
 
   const asesor = localStorage.getItem("user");
   const user = JSON.parse(asesor)
-  const id = user.id
+  const id = user.id_asesor
 
   const { data: asesoramientos, isLoading } = useQuery({
     queryKey: ["asesoramientos"],

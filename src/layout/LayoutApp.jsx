@@ -1,10 +1,6 @@
-// src/layout/LayoutApp.jsx
-// import { useContext } from "react";
-// import { AuthContext } from "../context/authContext";
 
 import EstudianteSidebar from "../Components/Sidebar/EstudianteSidebar";
 import AsesorSidebar from "../Components/Sidebar/AsesorSidebar";
-import AdminSidebar from "../Components/Sidebar/AdminSidebar";
 import JefeOperSidebar from "../Components/Sidebar/JefeOperSidebar";
 import SupervisorSidebar from "../Components/Sidebar/SupervisorSidebar";
 import MarketingSidebar from "../Components/Sidebar/MarketingSidebar";
@@ -27,8 +23,6 @@ const LayoutApp = ({ children }) => {
         return <EstudianteSidebar />;
       case 'asesor':
         return <AsesorSidebar />;
-      case 'admin':
-        return <AdminSidebar />;
       case 'jefe_operaciones':
         return <JefeOperSidebar />;
       case 'supervisor':

@@ -33,24 +33,6 @@ import Proximos from '../pages/Asesor/Reunion/ReunionProximo';
 import Anteriores from '../pages/Asesor/Reunion/ReunionAnteriores';
 import Induccion from '../pages/Asesor/Inducciones';
 import InduccionById from '../pages/Asesor/Induccion/InduccionById';
-//Paginas Admin
-import GestionarUsuarios from '../pages/Administrador/GestionUser';
-import Asignaciones from '../pages/Administrador/Asignaciones';
-import Pagos from '../pages/Administrador/Pagos';
-import AlContado from '../pages/Administrador/Pagos/AlContado';
-import ServiciosExtra from '../pages/Administrador/Pagos/ServiciosExtra';
-import Cuotas from '../pages/Administrador/Pagos/Cuotas';
-import EditarAsignacion from '../pages/Administrador/Asignaciones/EditarAsignado'
-import AgregarEstudiante from '../pages/Administrador/GestionarUsuario/AgregarEstudiante';
-import AgregarAsesor from '../pages/Administrador/GestionarUsuario/AgregarAsesor';
-import EditarEstudiante from '../pages/Administrador/GestionarUsuario/EditarEstudiante';
-import EditarAsesor from '../pages/Administrador/GestionarUsuario/EditarAsesor';
-import ListarSinAsignar from '../pages/Administrador/Asignaciones/ListarSinAsignar';
-import ListarAsignado from '../pages/Administrador/Asignaciones/ListarAsignados';
-import AsesoriaNueva from '../pages/Administrador/Asignaciones/AsesoriaNueva';
-import GestionarSoporte from '../pages/Administrador/GestionSoporte';
-import ConfigIntra from '../pages/Administrador/ConfigIntra';
-
 
 //Rutas Jefe Operaciones
 import JefeOperaciones from '../pages/JefeOperacion/GestionUser';
@@ -149,40 +131,7 @@ const RouterApp = () => {
 
       </Route>
 
-      {/* RUTAS ADMIN */}
-      <Route element={<ProtectedRoutes allowedRoles={['admin']} />}>
-
-        <Route path="/admin/gestionar-usuarios" element={<GestionarUsuarios />}>
-          <Route index element={<Navigate to="listar-estudiantes" replace />} />
-          <Route path="listar-estudiantes" element={<ListarEstudiante />} />
-          <Route path="listar-asesores" element={<ListarAsesor />} />
-        </Route>
-
-        <Route path="/admin/asignaciones" element={<Asignaciones />}>
-          <Route index element={<Navigate to="listar-asignar" replace />} />
-          <Route path="listar-asignar" element={<ListarSinAsignar />} />
-          <Route path="listar-asignado" element={<ListarAsignado />} />
-        </Route>
-
-        <Route path="/admin/asignaciones/asesoria-nueva" element={<AsesoriaNueva />} />
-        <Route path="/admin/asignaciones/editar-asesoria/:id" element={<EditarAsignacion />} />
-
-        <Route path="/admin/gestionar-usuarios/agregar-estudiante" element={<AgregarEstudiante />} />
-        <Route path="/admin/gestionar-usuarios/agregar-asesor" element={<AgregarAsesor />} />
-        <Route path="/admin/gestionar-usuarios/editar-estudiante/:id" element={<EditarEstudiante />} />
-        <Route path="/admin/gestionar-usuarios/editar-asesor/:id" element={<EditarAsesor />} />
-
-        <Route path="/admin/pagos" element={<Pagos />}>
-          <Route index element={<Navigate to="cuotas" replace />} />
-          <Route path="cuotas" element={<Cuotas />} />
-          <Route path="al-contado" element={<AlContado />} />
-          <Route path="servicio-extra" element={<ServiciosExtra />} />
-        </Route>
-
-        <Route path="/admin/confIntra" element={<ConfigIntra />} />
-        <Route path="/admin/soporte" element={<GestionarSoporte />} />
-
-      </Route>
+   
 
       {/* RUTAS JEFE OPERACIONES  */}
       <Route element={<ProtectedRoutes allowedRoles={['jefe_operaciones']} />}>

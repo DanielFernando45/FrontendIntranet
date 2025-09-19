@@ -27,7 +27,7 @@ const HomeEstudiante = () => {
 
   const usuario = localStorage.getItem('user');
   const user = useSelector((state) => state.auth.user);
-  const id = user.id;
+  const id = user.id_cliente;
 
   // Obtener asesorías del usuario
   const { data: asesorias, isLoading } = useQuery({
@@ -213,7 +213,7 @@ const HomeEstudiante = () => {
             <p className="text-[12px] sm:text-[18px] md:text-[22px] lg:text-[35px] text-[#B5B5B5] xl:text-[20px] ">{dia} de {mes}, {año}</p>
             <div className="xl:w-[620px]">
               <h2 className="  text-[15px] sm:text-[25px] md:text-[30px] lg:text-[40px] xl:text-[30px] 1xl:text-[35px] font-semibold mt-2 md:mt-1 ">
-                Bienvenido aso {clienteNombre.nombre} al Intranet de asesoría de tesis
+                Bienvenido  {clienteNombre.nombre} al Intranet de asesoría de tesis
               </h2>
             </div>
 
@@ -248,7 +248,7 @@ const HomeEstudiante = () => {
           <div className="flex justify-between w-full items-center">
             <button
               onClick={() => navigate('prev')}
-              className="pr-2 hover:bg-[#1C1C34] rounded-full transition-colors 5xl:p-0"
+              className="pr-2  rounded-full transition-colors 5xl:p-0"
               disabled={NoticiasRecientes.length === 0 || loadingNoticias}
             >
               <img src={FeclaIzqui} alt="Anterior" className="w-6" />
@@ -297,7 +297,7 @@ const HomeEstudiante = () => {
 
             <button
               onClick={() => navigate('next')}
-              className="pl-2 hover:bg-[#1C1C34] rounded-full transition-colors 5xl:p-0"
+              className="pl-2  rounded-full transition-colors 5xl:p-0"
               disabled={NoticiasRecientes.length === 0 || loadingNoticias}
             >
               <img src={FechaDerec} alt="Siguiente" />
@@ -315,7 +315,7 @@ const HomeEstudiante = () => {
               <div className="flex justify-between w-full items-center">
                 <button
                   onClick={() => navigate('prev')}
-                  className="p-2 hover:bg-[#1C1C34] rounded-full transition-colors"
+                  className="p-2  rounded-full transition-colors"
                   disabled={NoticiasRecientes.length === 0 || loadingNoticias}
                 >
                   <img src={FeclaIzqui} alt="Anterior" className="w-6" />
@@ -364,7 +364,7 @@ const HomeEstudiante = () => {
 
                 <button
                   onClick={() => navigate('next')}
-                  className="p-2 hover:bg-[#1C1C34] rounded-full transition-colors"
+                  className="p-2  rounded-full transition-colors"
                   disabled={NoticiasRecientes.length === 0 || loadingNoticias}
                 >
                   <img src={FechaDerec} alt="Siguiente" />

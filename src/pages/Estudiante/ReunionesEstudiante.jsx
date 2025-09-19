@@ -31,7 +31,7 @@ const ReunionesEstudiante = () => {
     const usuario = localStorage.getItem("user");
     if (usuario) {
       const user = JSON.parse(usuario);
-      const id = user.id;
+      const id = user.id_cliente;
 
       fetch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/miAsesoramiento/${id}`)
         .then((res) => res.json())
