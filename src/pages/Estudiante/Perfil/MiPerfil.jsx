@@ -13,7 +13,7 @@ const MiPerfil = () => {
         const userString = localStorage.getItem('user');
         if (userString) {
             const user = JSON.parse(userString);
-            const id = user.id;
+            const id = user.id_usuario;
 
             // Llamada a la API
             axios.get(`${import.meta.env.VITE_API_PORT_ENV}/cliente/${id}`)
@@ -25,10 +25,6 @@ const MiPerfil = () => {
                 });
         }
     }, []);
-
-    const handlerEdit = () => {
-        navigate('/estudiante/miperfiledit');
-    };
 
     if (!perfilData) {
         return <LayoutApp><main className="m-20">Cargando perfil...</main></LayoutApp>;

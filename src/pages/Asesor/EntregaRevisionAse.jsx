@@ -21,7 +21,7 @@ const EntregaRevisionAse = () => {
     const userString = localStorage.getItem('user');
     if (userString) {
       const user = JSON.parse(userString);
-      const id = user.id;
+      const id = user.id_asesor;
 
       fetch(`${import.meta.env.VITE_API_PORT_ENV}/asesor/asesoramientosYDelegado/${id}`)
         .then(res => res.json())

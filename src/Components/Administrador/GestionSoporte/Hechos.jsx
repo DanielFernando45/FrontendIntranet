@@ -74,7 +74,7 @@ const Hechos = () => {
                     <div className="w-[250px] flex justify-start truncate whitespace-nowrap overflow-hidden">{item.descripcion}</div>
                     <div className="w-[180px] flex justify-center">{formatDate(item.fecha_envio)}</div>
                     <div className="w-[180px] flex justify-center">{formatDate(item.fecha_revision)}</div>
-                    <div className="w-[250px] rounded-md px-3 flex justify-center">{item.delegado}</div>
+                    <div className="w-[250px] rounded-md px-3 flex justify-center">{item.cliente}</div>
                     <button 
                         className='w-[100px] flex justify-center'
                         onClick={() => handlerEliminar(item.id_soporte)}
