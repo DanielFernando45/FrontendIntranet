@@ -120,7 +120,18 @@ const obtenerAsesoramiento = async (id) => {
   }
 };
 
+const listarAsignadosJefeOpe = async () => {
+  try {
+    const { data } = await api.get(`/asesoramiento/listarAsignadosJefeOpe`)
+    return data;
+  } catch (error) {
+    console.log("Error al obtener asignados")
+    throw error;
+  }
+}
+
 export const asesoriasService = {
+  listarAsignadosJefeOpe,
   asignacionesContratos,
   asesoriasPorEstudiante,
   asesorias,

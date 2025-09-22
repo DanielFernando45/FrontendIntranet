@@ -52,7 +52,7 @@ const JefeOpeAsignar = () => {
   const { data: asesoria = [], refetch } = useQuery({
     queryKey: ["asesoria"],
     queryFn: async () => {
-      const res = await asesoriasService.asignacionesContratos();
+      const res = await asesoriasService.listarAsignadosJefeOpe();
       // Normaliza estado a boolean
       return res.map((c) => ({
         ...c,
