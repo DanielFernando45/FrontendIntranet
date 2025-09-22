@@ -22,7 +22,7 @@ const ReunionProximo = () => {
   // Obtener el ID del asesor del localStorage
   const userString = localStorage.getItem('user');
   const user = JSON.parse(userString);
-  const idAsesor = user.id;
+  const idAsesor = user.id_asesor;
 
   // Obtener el delegado correspondiente al asesoramiento seleccionado
   const delegado = asesorias.find(a => a.id === selectedAsesoriaId)?.delegado || '';
