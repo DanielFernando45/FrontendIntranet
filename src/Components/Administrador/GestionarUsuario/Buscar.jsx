@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import busqueda from "../../../assets/icons/busqueda.svg";
 
 const Buscar = ({ onBuscar, onReset }) => {
@@ -27,7 +27,7 @@ const Buscar = ({ onBuscar, onReset }) => {
         <input
           className="bg-transparent w-full focus:outline-none text-black placeholder:text-[#888]"
           type="text"
-          placeholder="Buscar por ID, DNI o nombre..."
+          placeholder="Buscar por ID o nombre..."
           value={query}
           onChange={handleInputChange}
         />

@@ -48,9 +48,9 @@ const ListarEstudiante = () => {
     const filtro = query.toLowerCase();
     const resultado = estudiantesBase.filter((est) => {
       return (
-        est.id.toString().includes(filtro) ||
+        est.id?.toString().includes(filtro) ||
         est.dni?.toString().includes(filtro) ||
-        `${est.nombre} ${est.apellido}`.toLowerCase().includes(filtro)
+        est.cliente?.toLowerCase().includes(filtro)
       );
     });
     setEstudiantes(resultado);
@@ -120,10 +120,10 @@ const ListarEstudiante = () => {
               {estudiante.carrera}
             </div>
             <div className="w-[100px] flex justify-start">
-              { !estudiante.modalidad ? "Por Asignar" : estudiante.modalidad }
+              {!estudiante.modalidad ? "Por Asignar" : estudiante.modalidad}
             </div>
             <div className="w-[100px] flex justify-start">
-              { !estudiante.tipopago ? "Por Asignar" : estudiante.tipopago }
+              {!estudiante.tipopago ? "Por Asignar" : estudiante.tipopago}
             </div>
             <button
               onClick={() => handlerEditarEstudiante(estudiante.id)}

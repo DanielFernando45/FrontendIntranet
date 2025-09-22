@@ -20,7 +20,11 @@ const CalendarioAsesor = () => {
       const user = JSON.parse(userString);
       const id = user.id_asesor;
 
-      fetch(`${import.meta.env.VITE_API_PORT_ENV}/asesor/asesoramientosYDelegado/${id}`)
+      fetch(
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/asesor/asesoramientosYDelegado/${id}`
+      )
         .then((res) => res.json())
         .then((data) => {
           const asesoriasArray = Object.values(data).map((item) => ({
@@ -48,7 +52,9 @@ const CalendarioAsesor = () => {
 
   const fetchFechaVencimiento = () => {
     fetch(
-      `${import.meta.env.VITE_API_PORT_ENV}/asesoramiento/vencimiento/${selectedAsesoriaId}`
+      `${
+        import.meta.env.VITE_API_PORT_ENV
+      }/asesoramiento/vencimiento/${selectedAsesoriaId}`
     )
       .then((res) => res.json())
       .then((data) => {
@@ -71,7 +77,9 @@ const CalendarioAsesor = () => {
       selectedMonth + 1
     ).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
     fetch(
-      `${import.meta.env.VITE_API_PORT_ENV}/common/calendario_asesor/${selectedAsesoriaId}/${fechaSeleccionada}`
+      `${
+        import.meta.env.VITE_API_PORT_ENV
+      }/common/calendario_asesor/${selectedAsesoriaId}/${fechaSeleccionada}`
     )
       .then((res) => res.json())
       .then((data) => {

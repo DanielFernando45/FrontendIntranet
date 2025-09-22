@@ -66,7 +66,9 @@ const NuevaAsesoria = () => {
   const handleElegir = (cliente) => {
     const totalSeleccionados = 1 + estudiantes.length;
     if (totalSeleccionados >= 5) {
-      alert("Solo puedes seleccionar hasta 5 alumnos (incluyendo al delegado).");
+      alert(
+        "Solo puedes seleccionar hasta 5 alumnos (incluyendo al delegado)."
+      );
       return;
     }
 
@@ -82,7 +84,9 @@ const NuevaAsesoria = () => {
 
   const handleEliminarDelegado = () => {
     if (delegado) {
-      setClientesSeleccionados((prev) => prev.filter((id) => id !== delegado.id));
+      setClientesSeleccionados((prev) =>
+        prev.filter((id) => id !== delegado.id)
+      );
       setDelegado(null);
     }
   };
@@ -134,7 +138,10 @@ const NuevaAsesoria = () => {
             {delegado ? (
               <div className="flex items-center justify-between border gap-2 rounded px-2 py-[5px] bg-white shadow-sm">
                 <span className="text-sm">{delegado.nombre}</span>
-                <button onClick={handleEliminarDelegado} title="Quitar delegado">
+                <button
+                  onClick={handleEliminarDelegado}
+                  title="Quitar delegado"
+                >
                   <img src={eliminar} alt="Eliminar" />
                 </button>
               </div>
@@ -155,7 +162,10 @@ const NuevaAsesoria = () => {
                     className="flex items-center justify-between border gap-1 rounded px-2 py-[5px] bg-white shadow-sm mt-1"
                   >
                     <span className="text-sm">{e.nombre}</span>
-                    <button onClick={() => handleEliminarEstudiante(e.id)} title="Quitar estudiante">
+                    <button
+                      onClick={() => handleEliminarEstudiante(e.id)}
+                      title="Quitar estudiante"
+                    >
                       <img src={eliminar} alt="Eliminar" />
                     </button>
                   </div>
@@ -181,7 +191,9 @@ const NuevaAsesoria = () => {
           <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
             <div className="w-[40px] flex justify-center">ID</div>
             <div className="w-[300px] flex justify-center">Alumno</div>
-            <div className="w-[160px] flex justify-center">Fecha de Creación</div>
+            <div className="w-[160px] flex justify-center">
+              Fecha de Creación
+            </div>
             <div className="w-[360px] flex justify-center">Carrera</div>
             <div className="w-[180px] flex justify-center">Acción</div>
           </div>
@@ -194,17 +206,24 @@ const NuevaAsesoria = () => {
               } p-[6px] rounded-md`}
             >
               <div className="w-[40px] flex justify-center">{cliente.id}</div>
-              <div className="w-[300px] flex justify-center">{cliente.nombre}</div>
+              <div className="w-[300px] flex justify-center">
+                {cliente.nombre}
+              </div>
               <div className="w-[160px] flex justify-center">
                 {cliente.fecha_creacion
-                  ? new Date(cliente.fecha_creacion).toLocaleDateString("es-PE", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })
+                  ? new Date(cliente.fecha_creacion).toLocaleDateString(
+                      "es-PE",
+                      {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      }
+                    )
                   : "—"}
               </div>
-              <div className="w-[360px] flex justify-center">{cliente.carrera || "—"}</div>
+              <div className="w-[360px] flex justify-center">
+                {cliente.carrera || "—"}
+              </div>
               <button
                 className="w-[180px] rounded-md bg-[#1C1C34] flex justify-center text-white"
                 onClick={() => handleElegir(cliente)}
@@ -242,7 +261,9 @@ const NuevaAsesoria = () => {
             value={asesorSeleccionado?.id || ""}
             onChange={(e) => {
               const idSel = parseInt(e.target.value, 10);
-              const selected = areaSeleccionada?.asesores?.find((a) => a.id === idSel);
+              const selected = areaSeleccionada?.asesores?.find(
+                (a) => a.id === idSel
+              );
               setAsesorSeleccionado(selected || null);
             }}
             disabled={!areaSeleccionada}

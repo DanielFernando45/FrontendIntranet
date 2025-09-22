@@ -12,9 +12,9 @@ const ContratoAsignado = () => {
   const [formData, setFormData] = useState({
     modalidad: "",
     servicio: "",
-    idCategoria: "", // Se asume que esto es un UUID
-    idTipoTrabajo: "", // Número para el tipo de trabajo
-    idTipoPago: "", // Número para el tipo de pago
+    idCategoria: "",
+    idTipoTrabajo: "",
+    idTipoPago: "",
     fechaInicio: "",
     fechaFin: "",
   });
@@ -29,14 +29,20 @@ const ContratoAsignado = () => {
     initialData: [],
   });
 
-  // Mutación para editar el contrato
+  const formatDateToInput = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date)) return "";
+    return date.toISOString().split("T")[0];
+  };
+
   const mutationEditar = useMutation({
-    mutationFn: (idContrato) =>
-      contratosService.actualizarContrato(idContrato, { ...formData }),
+    mutationFn: (idContrato, payload) =>
+      contratosService.actualizarContrato(idContrato, payload),
     onSuccess: () => {
       alert("Contrato editado exitosamente");
-      setEditContrato(false); // Cerrar el modal
-      refetch(); // Refrescamos los datos sin necesidad de recargar la página
+      setEditContrato(false);
+      refetch();
     },
     onError: (error) => {
       console.error("Error al editar el contrato:", error.response?.data);
@@ -48,13 +54,12 @@ const ContratoAsignado = () => {
     },
   });
 
-  // Mutación para eliminar el contrato
   const mutationEliminar = useMutation({
     mutationFn: (idContrato) => contratosService.eliminarContrato(idContrato),
     onSuccess: () => {
       alert("Contrato eliminado exitosamente");
-      setEliminar(false); // Cerrar el modal
-      refetch(); // Refrescamos los datos sin necesidad de recargar la página
+      setEliminar(false);
+      refetch();
     },
     onError: (error) => {
       console.error("Error al eliminar el contrato:", error.response?.data);
@@ -62,7 +67,6 @@ const ContratoAsignado = () => {
     },
   });
 
-  // Función para manejar la edición del contrato
   const handleEditSubmit = () => {
     const fechaInicio = new Date(formData.fechaInicio);
     const fechaFin = new Date(formData.fechaFin);
@@ -77,7 +81,6 @@ const ContratoAsignado = () => {
       return;
     }
 
-    // Formatear las fechas para MySQL
     const formattedFechaInicio = fechaInicio
       .toISOString()
       .slice(0, 19)
@@ -87,41 +90,43 @@ const ContratoAsignado = () => {
       .slice(0, 19)
       .replace("T", " ");
 
-    setFormData({
-      ...formData,
-      fechaInicio: formattedFechaInicio,
-      fechaFin: formattedFechaFin,
-    });
-
     if (currentContrato) {
-      console.log("Enviando contrato con ID:", currentContrato.id_contrato);
-      mutationEditar.mutate(currentContrato.id_contrato); // Llamamos la mutación para editar el contrato
+      mutationEditar.mutate(currentContrato.id_contrato, {
+        modalidad: formData.modalidad,
+        servicio: formData.servicio,
+        idCategoria: formData.idCategoria,
+        idTipoTrabajo: formData.idTipoTrabajo,
+        idTipoPago: formData.idTipoPago,
+        fecha_inicio: formattedFechaInicio,
+        fecha_fin: formattedFechaFin,
+      });
     } else {
       alert("No se ha seleccionado un contrato.");
     }
   };
 
-  // Función para manejar la eliminación del contrato
   const handleDeleteSubmit = () => {
     if (currentContrato) {
-      mutationEliminar.mutate(currentContrato.id_contrato); // Llamamos la mutación para eliminar el contrato
+      mutationEliminar.mutate(currentContrato.id_contrato);
     } else {
       alert("No se ha seleccionado un contrato.");
     }
   };
 
-  // Función que se ejecuta al hacer clic en el botón de "Editar"
   const handleEditClick = (contrato) => {
     setEditContrato(true);
-    setCurrentContrato(contrato); // Guardamos el contrato seleccionado para editar
+    setCurrentContrato(contrato);
+
+    console.log("Contrato seleccionado:", contrato); // Para depuración
+
     setFormData({
-      modalidad: contrato.modalidad,
-      servicio: contrato.servicio,
-      idCategoria: contrato.id_categoria,
-      idTipoTrabajo: contrato.id_tipoTrabajo,
-      idTipoPago: contrato.id_tipoPago,
-      fechaInicio: contrato.fecha_inicio,
-      fechaFin: contrato.fecha_fin,
+      modalidad: contrato.modalidad || "",
+      servicio: contrato.servicio || "",
+      idCategoria: contrato.id_categoria || "",
+      idTipoTrabajo: contrato.id_tipoTrabajo || "",
+      idTipoPago: contrato.id_tipoPago || "",
+      fechaInicio: formatDateToInput(contrato.fecha_inicio),
+      fechaFin: formatDateToInput(contrato.fecha_fin),
     });
   };
 
@@ -148,7 +153,7 @@ const ContratoAsignado = () => {
             </div>
             <div className="w-[300px] text-center">{contrato.delegado}</div>
             <div className="w-[200px] text-center">
-              {new Date(contrato.fecha_registro).toLocaleDateString()}
+              {new Date(contrato.fecha_inicio).toLocaleDateString()}
             </div>
             <div className="w-[200px] text-center">{contrato.modalidad}</div>
             <div className="w-[200px] text-center">{contrato.tipo_pago}</div>

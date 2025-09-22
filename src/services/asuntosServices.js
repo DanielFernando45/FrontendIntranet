@@ -18,7 +18,11 @@ const eliminarAsunto = async (id) => {
 };
 
 const editarAsunto = async ({ idAsunto, formData }) => {
-  const { data } = await api.put(`/asuntos/${idAsunto}`, formData);
+  const { data } = await api.patch(`/asuntos/${idAsunto}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data;
 };
 
