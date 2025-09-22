@@ -19,15 +19,18 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_PORT_ENV}/auth/login`, {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_PORT_ENV}/auth/login`,
+        {
+          username,
+          password,
+        }
+      );
 
       const { access_token, datos_usuario } = res.data;
-      dispatch(loginSuccess({datos_usuario, access_token}));
+      dispatch(loginSuccess({ datos_usuario, access_token }));
 
-      console.log('Login successful:', datos_usuario.role.nombre);
+      console.log("Login successful:", datos_usuario.role.nombre);
       // Guardamos en AuthContext
       // login({ ...datos_usuario, access_token });
 
@@ -49,12 +52,12 @@ const Login = () => {
           navigate("/supervisor/asignaciones");
           break;
         case "contrato_pago":
-          navigate("/cont-pago/contratos"); 
+          navigate("/cont-pago/contratos");
           break;
-        case "marketing":   
-          navigate("/marketing/ConfigIntra"); 
+        case "marketing":
+          navigate("/marketing/ConfigIntra");
           break;
-        case "soporte":   
+        case "soporte":
           navigate("/soporte-ti");
           break;
         default:

@@ -7,20 +7,23 @@ const ResetPassword = () => {
   const [emailInput, setEmailInput] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
-
   const mutate = useMutation({
     mutationFn: (email) => mailService.sendResetPasswordEmail(email),
   });
 
   const handleSendEmail = async () => {
-    if (!emailInput || !/\S+@\S+\.\S+/.test(emailInput) || emailInput.length == 0)
+    if (
+      !emailInput ||
+      !/\S+@\S+\.\S+/.test(emailInput) ||
+      emailInput.length == 0
+    )
       return alert("Por favor, ingrese un correo electrónico válido.");
-    
+
     mutate.mutate(emailInput);
     setEmailInput("");
     setShowMessage(true);
     setTimeout(() => {
-      setShowMessage(false)
+      setShowMessage(false);
     }, 3000);
   };
 
@@ -51,10 +54,9 @@ const ResetPassword = () => {
             ENVIAR
           </button>
         </div>
-        {
-          showMessage && 
+        {showMessage && (
           <p className="text-center">Se ha enviado un correo de recuperación</p>
-        }
+        )}
       </div>
     </main>
   );

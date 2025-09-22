@@ -6,7 +6,6 @@ const obtenerAreasPorSupervisor = async (idSupervisor) => {
   return data;
 };
 
-
 // ✅ Exporta como objeto
 export const supervisorService = {
   obtenerAreasPorSupervisor,

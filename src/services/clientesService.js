@@ -1,9 +1,7 @@
 import api from "./api";
 
 const estudiantesPorAsignacion = async (idAsesoramiento) => {
-  const { data } = await api.get(
-    `/cliente/listar/${idAsesoramiento}`
-  );
+  const { data } = await api.get(`/cliente/listar/${idAsesoramiento}`);
   return data;
 };
 
@@ -17,9 +15,8 @@ const listarClientesAll = async () => {
   return data;
 };
 
-
 export const clientesService = {
   estudiantesPorAsignacion,
   clientesSinAsignar,
-  listarClientesAll
+  listarClientesAll,
 };

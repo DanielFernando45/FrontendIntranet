@@ -75,7 +75,6 @@ const Asignados = () => {
                   {asesoria.delegado || "—"}
                 </div>
 
-             
                 <div className="w-[160px] text-center">
                   {asesoria.area || "—"}
                 </div>
@@ -90,8 +89,6 @@ const Asignados = () => {
                 <div className="w-[220px] text-center">
                   {asesoria.asesor || "—"}
                 </div>
-
-              
 
                 <div className="flex w-[220px] justify-around px-3">
                   <button
