@@ -12,29 +12,29 @@ const Induccion = () => {
   const navigate = useNavigate();
 
   const asesor = localStorage.getItem("user");
-  const user = JSON.parse(asesor)
-  const id = user.id_asesor
+  const user = JSON.parse(asesor);
+  const id = user.id_asesor;
 
   const { data: asesoramientos, isLoading } = useQuery({
     queryKey: ["asesoramientos"],
-    queryFn:() => asesoriasService.asesorinducciones(id),
+    queryFn: () => asesoriasService.asesorinducciones(id),
     refetchOnWindowFocus: false,
-    initialData:[],
-    enabled:!!id,
+    initialData: [],
+    enabled: !!id,
   });
 
   const navigateInduccion = (id) => {
     navigate(`/asesor/induccion/${id}`);
   };
 
-const formatDate = (dateString) => {
+  const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
     const options = { month: "short", day: "numeric", year: "numeric" };
     return date.toLocaleDateString("es-PE", options);
   };
 
-   console.log(asesoramientos);
+  console.log(asesoramientos);
 
   return (
     // <div className="bg-red-400 absolute top-0 left-0 z-[99]">
@@ -44,16 +44,13 @@ const formatDate = (dateString) => {
           Agregar Inducciones a asesorias
         </h2>
 
-
         <div className="w-full overflow-auto">
           <div className="min-w-[1200px] w-full table-auto ">
             <div className="flex flex-col gap-[10px] pt-3  px-[30px] py-[10px] w-full  bg-white border-b border-slate-300 rounded-t-lg shadow-lg">
               <div className="flex flex-col">
                 <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
                   <div className="w-[40px] flex justify-center">Id</div>
-                  <div className="flex-1 flex justify-center ">
-                    Delegado
-                  </div>
+                  <div className="flex-1 flex justify-center ">Delegado</div>
                   <div className="flex-1 flex justify-center max-w-[250px]">
                     Referencia
                   </div>
@@ -87,9 +84,7 @@ const formatDate = (dateString) => {
                     </div>
                     <div className="flex-1 flex items-center gap-2">
                       <button
-                        onClick={() =>
-                          navigateInduccion(asesoria?.asesoriaId)
-                        }
+                        onClick={() => navigateInduccion(asesoria?.asesoriaId)}
                         className="rounded-sm px-3 py-1 bg-[#1C1C34] flex justify-center text-white flex-1"
                       >
                         Ver inducciones

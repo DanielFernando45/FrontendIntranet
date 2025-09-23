@@ -126,35 +126,39 @@ const SidebarResponsive = ({ showResponsive, setShowResponsive }) => {
 
   return (
     <div
-      className={`${
-        showResponsive ? "translate-x-0" : "-translate-x-full"
-      } w-full sm:w-[300px] transition-all duration-100 ease-linear h-full bg-white absolute top-0 z-[60]`}
+      className={`fixed top-0 left-0 h-full z-[60] bg-white shadow-lg transform transition-transform duration-300 ease-in-out
+        ${showResponsive ? "translate-x-0" : "-translate-x-full"}
+        w-[260px] sm:w-[280px]
+      `}
     >
-      <div
-        className={`border flex flex-col items-center h-full py-6 transition-all`}
-      >
-        <div className="flex flex-col items-center mb-10 gap-y-4">
-          <img className="w-[60px] h-[60px]" src={LogoAleja} alt="Logo" />
-          <button onClick={toggleMenu}>
-            <img src={MenuRetraido} alt="Toggle Menu" />
-          </button>
-        </div>
+      {/* Encabezado con logo y botón cerrar */}
+      <div className="flex items-center justify-between px-4 py-4 border-b">
+        <img className="w-[50px] h-[50px]" src={LogoAleja} alt="Logo" />
+        <button onClick={toggleMenu}>
+          <img src={MenuRetraido} alt="Cerrar menú" className="w-6 h-6" />
+        </button>
+      </div>
 
-        {/* PATHS */}
-        <div className="space-y-10">
-          {rutasPorRoles[rol].map((ruta, index) => (
-            <Link
-              className="flex items-center gap-2 relative overflow-hidden"
-              to={ruta.path}
-              key={index}
-              onClick={() => setExpand(!expand)}
-            >
-              <img className={`w-[30px]`} src={ruta.icono} alt="icono-ruta" />
-              <p>{ruta.title}</p>
-            </Link>
+      {/* Menú de navegación */}
+      <div className="px-4 pt-6 pb-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <ul className="flex flex-col gap-4">
+          {rutasPorRoles[rol]?.map((ruta, index) => (
+            <li key={index}>
+              <Link
+                to={ruta.path}
+                className="flex items-center gap-3 text-sm text-gray-800 hover:text-blue-600 transition-colors"
+                onClick={toggleMenu}
+              >
+                <img
+                  src={ruta.icono}
+                  alt={`Icono de ${ruta.title}`}
+                  className="w-5 h-5 object-contain"
+                />
+                <span>{ruta.title}</span>
+              </Link>
+            </li>
           ))}
-        </div>
-        {/* PATHS */}
+        </ul>
       </div>
     </div>
   );

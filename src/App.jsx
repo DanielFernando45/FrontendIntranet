@@ -31,7 +31,7 @@ export const App = () => {
               </PublicRoute>
             }
           />
-            {/* <Route path="/" element={<Login />} /> */}
+          {/* <Route path="/" element={<Login />} /> */}
         </Routes>
       </Suspense>
     </BrowserRouter>

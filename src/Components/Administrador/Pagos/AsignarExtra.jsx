@@ -7,20 +7,16 @@ const AsignarExtra = ({ close }) => {
   const [showResults, setShowResults] = useState(false);
   const [selectedAlumno, setSelectedAlumno] = useState(null);
   const [allAlumnos, setAllAlumnos] = useState([]);
-
-  // Referencias para manejar clicks fuera
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
 
-  // Datos del formulario
   const [formData, setFormData] = useState({
     titulo: "",
     pago_total: "",
     fecha_pago: "",
-    id_asesoramiento: "", // id_asesoramiento será el ID del alumno seleccionado
+    id_asesoramiento: "",
   });
 
-  // Cargar todos los alumnos al montar el componente
   useEffect(() => {
     fetch(
       `${
@@ -32,19 +28,14 @@ const AsignarExtra = ({ close }) => {
         setAllAlumnos(data);
         setSearchResults(data);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+      .catch((error) => console.error("Error fetching data:", error));
 
-    // Agregar event listener para clicks fuera
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Limpiar event listener
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  // Manejar clicks fuera del input y dropdown
   const handleClickOutside = (event) => {
     if (inputRef.current && !inputRef.current.contains(event.target)) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,7 +44,6 @@ const AsignarExtra = ({ close }) => {
     }
   };
 
-  // Filtrar alumnos según término de búsqueda
   useEffect(() => {
     if (searchTerm === "") {
       setSearchResults(allAlumnos);
@@ -64,12 +54,10 @@ const AsignarExtra = ({ close }) => {
             item.id_asesoramiento.toString().includes(searchTerm)) ||
           item.delegado.toLowerCase().includes(searchTerm.toLowerCase())
       );
-
       setSearchResults(filtered);
     }
   }, [searchTerm, allAlumnos]);
 
-  // Manejar selección de alumno
   const handleSelectAlumno = (alumno) => {
     setSelectedAlumno(alumno);
     setSearchTerm(`${alumno.delegado} (ID: ${alumno.id_asesoramiento})`);
@@ -80,36 +68,25 @@ const AsignarExtra = ({ close }) => {
     setShowResults(false);
   };
 
-  // Manejar focus en el input
-  const handleInputFocus = () => {
-    setShowResults(true);
-  };
+  const handleInputFocus = () => setShowResults(true);
 
-  // Manejar cambios en los inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (name === "search") {
       setSearchTerm(value);
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  // Manejar envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch(
         "http://localhost:3001/pagos/otrosServicios",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             titulo: formData.titulo,
             pago_total: parseFloat(formData.pago_total),
@@ -135,38 +112,37 @@ const AsignarExtra = ({ close }) => {
   };
 
   return (
-    <div className="flex flex-col absolute gap-[15px] top-60 left-96 px-10 pt-12 w-[875px] rounded-lg bg-white border border-[#D2CECF]">
-      <h1 className="text-xl font-medium">Asignar servicios extra</h1>
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-lg w-[95%] max-w-lg md:max-w-2xl lg:max-w-3xl p-6 relative">
+        <h1 className="text-xl font-semibold mb-4">Asignar servicios extra</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div className="flex justify-between">
-          <div className="flex flex-col w-full h-[82px] gap-[15px] relative">
-            <h2 className="font-medium">Alumno:</h2>
-            <div className="flex gap-3 items-center">
-              <div className="flex w-full h-8 rounded-md px-[10px] py-[6px] justify-between bg-[#E4E2E2] relative">
-                <input
-                  ref={inputRef}
-                  className="bg-transparent w-full focus:outline-none text-black placeholder:text-[#888]"
-                  type="text"
-                  name="search"
-                  placeholder="Buscar por IdAsesoria o nombre..."
-                  value={searchTerm}
-                  onChange={handleInputChange}
-                  onFocus={handleInputFocus}
-                  onClick={handleInputFocus}
-                />
-                <img src={busqueda} alt="Buscar" />
-              </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Alumno */}
+          <div className="flex flex-col gap-2 relative">
+            <label className="font-medium">Alumno:</label>
+            <div className="flex items-center bg-[#E4E2E2] rounded-md px-2 py-1">
+              <input
+                ref={inputRef}
+                className="bg-transparent flex-1 focus:outline-none text-black placeholder:text-[#888]"
+                type="text"
+                name="search"
+                placeholder="Buscar por IdAsesoria o nombre..."
+                value={searchTerm}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                onClick={handleInputFocus}
+              />
+              <img src={busqueda} alt="Buscar" />
             </div>
 
             {showResults && searchResults.length > 0 && (
               <div
                 ref={dropdownRef}
-                className="absolute z-10 top-[70px] w-full max-h-60 overflow-auto bg-white border border-gray-300 rounded-md shadow-lg"
+                className="absolute top-full mt-1 w-full max-h-60 overflow-auto bg-white border border-gray-300 rounded-md shadow-lg z-20"
               >
                 {searchResults.map((alumno) => (
                   <div
-                    key={alumno.id_asesoramiento} // Aquí asignamos un key único
+                    key={alumno.id_asesoramiento}
                     className="p-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => handleSelectAlumno(alumno)}
                   >
@@ -179,66 +155,65 @@ const AsignarExtra = ({ close }) => {
               </div>
             )}
           </div>
-        </div>
 
-        <div className="flex justify-between">
-          <div className="flex flex-col w-full h-[82px] gap-[15px]">
-            <h2 className="font-medium">Servicio:</h2>
+          {/* Servicio */}
+          <div className="flex flex-col gap-2">
+            <label className="font-medium">Servicio:</label>
             <input
               name="titulo"
               placeholder="Digite el Servicio extra"
-              className="flex items-center rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
+              className="rounded-md text-[#1C1C34] w-full bg-[#E9E7E7] px-3 py-2 font-medium"
               value={formData.titulo}
               onChange={handleInputChange}
               required
             />
           </div>
-        </div>
 
-        <div className="flex justify-between gap-[15px]">
-          <div className="flex flex-col w-full h-[82px] gap-[15px]">
-            <h2 className="font-medium">Monto:</h2>
-            <input
-              name="pago_total"
-              type="number"
-              placeholder="Monto total"
-              className="flex items-center rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-              value={formData.pago_total}
-              onChange={handleInputChange}
-              required
-            />
+          {/* Monto y Fecha */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col flex-1 gap-2">
+              <label className="font-medium">Monto:</label>
+              <input
+                name="pago_total"
+                type="number"
+                placeholder="Monto total"
+                className="rounded-md text-[#1C1C34] w-full bg-[#E9E7E7] px-3 py-2 font-medium"
+                value={formData.pago_total}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="flex flex-col flex-1 gap-2">
+              <label className="font-medium">Fecha Pago:</label>
+              <input
+                name="fecha_pago"
+                type="date"
+                className="rounded-md text-[#1C1C34] w-full bg-[#E9E7E7] px-3 py-2 font-medium"
+                value={formData.fecha_pago}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col w-full h-[82px] gap-[15px]">
-            <h2 className="font-medium">Fecha Pago:</h2>
-            <input
-              name="fecha_pago"
-              type="date"
-              placeholder="Ingrese una fecha"
-              className="flex items-center rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-              value={formData.fecha_pago}
-              onChange={handleInputChange}
-              required
-            />
+          {/* Botones */}
+          <div className="flex justify-end gap-3 mt-4">
+            <button
+              type="button"
+              onClick={close}
+              className="px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-100"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-black text-white rounded-md text-sm font-medium hover:bg-gray-800"
+            >
+              Agregar
+            </button>
           </div>
-        </div>
-
-        <div className="flex w-full py-4 px-1 h-[68px] justify-end gap-4">
-          <button
-            type="button"
-            onClick={close}
-            className="h-7 w-[100px] border rounded-[4px] text-[11px] font-bold"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="h-7 w-[100px] border bg-black rounded-[4px] text-[11px] font-bold text-white"
-          >
-            Agregar
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

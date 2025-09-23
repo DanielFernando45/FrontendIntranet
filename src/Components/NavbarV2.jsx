@@ -39,15 +39,14 @@ const NavbarV2 = ({ user, showResponsive, setShowResponsive }) => {
   return (
     <nav className="bg-white flex justify-between items-center px-5 min-h-[80px]">
       <div className="flex gap-3">
-        <button onClick={ () => setShowResponsive(!showResponsive) } className="flex items-center">
-          <img
-            className={`xl:hidden block`}
-            src={MenuRetraido}
-            alt=""
-            />
+        <button
+          onClick={() => setShowResponsive(!showResponsive)}
+          className="flex items-center"
+        >
+          <img className={`xl:hidden block`} src={MenuRetraido} alt="" />
         </button>
         {/* <p className="text-xl">Alejandria</p> */}
-            <img src={logoaleja} alt="Logo Aleja" className="" />
+        <img src={logoaleja} alt="Logo Aleja" className="" />
       </div>
 
       <div className="inline-flex items-center gap-2 relative">

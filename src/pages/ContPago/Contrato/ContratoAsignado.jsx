@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { IoTrash } from "react-icons/io5";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { asesoriasService } from "../../../services/asesoriasService"; // Importamos el servicio
-import { contratosService } from "../../../services/contratosService"; // Importamos el servicio
+import { asesoriasService } from "../../../services/asesoriasService";
+import { contratosService } from "../../../services/contratosService";
 
 const ContratoAsignado = () => {
   const [editContrato, setEditContrato] = useState(false);
@@ -19,12 +19,9 @@ const ContratoAsignado = () => {
     fechaFin: "",
   });
 
-  const { data: contrato, refetch } = useQuery({
+  const { data: contrato = [], refetch } = useQuery({
     queryKey: ["contrato"],
-    queryFn: async () => {
-      const res = await asesoriasService.listarContratosAsignados();
-      return res;
-    },
+    queryFn: asesoriasService.listarContratosAsignados,
     refetchOnWindowFocus: false,
     initialData: [],
   });
@@ -37,15 +34,14 @@ const ContratoAsignado = () => {
   };
 
   const mutationEditar = useMutation({
-    mutationFn: (idContrato, payload) =>
-      contratosService.actualizarContrato(idContrato, payload),
+    mutationFn: (data) =>
+      contratosService.actualizarContrato(data.id, data.payload),
     onSuccess: () => {
       alert("Contrato editado exitosamente");
       setEditContrato(false);
       refetch();
     },
     onError: (error) => {
-      console.error("Error al editar el contrato:", error.response?.data);
       alert(
         `Error al editar el contrato: ${
           error.response?.data?.message || error.message
@@ -62,63 +58,47 @@ const ContratoAsignado = () => {
       refetch();
     },
     onError: (error) => {
-      console.error("Error al eliminar el contrato:", error.response?.data);
       alert(`Error al eliminar el contrato: ${error.response?.data?.message}`);
     },
   });
 
   const handleEditSubmit = () => {
-    const fechaInicio = new Date(formData.fechaInicio);
-    const fechaFin = new Date(formData.fechaFin);
-
     if (!formData.fechaInicio || !formData.fechaFin) {
       alert("Ambas fechas son obligatorias.");
       return;
     }
-
+    const fechaInicio = new Date(formData.fechaInicio);
+    const fechaFin = new Date(formData.fechaFin);
     if (fechaInicio > fechaFin) {
       alert("La fecha de inicio no puede ser mayor que la fecha de fin.");
       return;
     }
-
-    const formattedFechaInicio = fechaInicio
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
-    const formattedFechaFin = fechaFin
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
-
     if (currentContrato) {
-      mutationEditar.mutate(currentContrato.id_contrato, {
-        modalidad: formData.modalidad,
-        servicio: formData.servicio,
-        idCategoria: formData.idCategoria,
-        idTipoTrabajo: formData.idTipoTrabajo,
-        idTipoPago: formData.idTipoPago,
-        fecha_inicio: formattedFechaInicio,
-        fecha_fin: formattedFechaFin,
+      mutationEditar.mutate({
+        id: currentContrato.id_contrato,
+        payload: {
+          modalidad: formData.modalidad,
+          servicio: formData.servicio,
+          idCategoria: formData.idCategoria,
+          idTipoTrabajo: formData.idTipoTrabajo,
+          idTipoPago: formData.idTipoPago,
+          fecha_inicio: fechaInicio
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
+          fecha_fin: fechaFin.toISOString().slice(0, 19).replace("T", " "),
+        },
       });
-    } else {
-      alert("No se ha seleccionado un contrato.");
     }
   };
 
   const handleDeleteSubmit = () => {
-    if (currentContrato) {
-      mutationEliminar.mutate(currentContrato.id_contrato);
-    } else {
-      alert("No se ha seleccionado un contrato.");
-    }
+    if (currentContrato) mutationEliminar.mutate(currentContrato.id_contrato);
   };
 
   const handleEditClick = (contrato) => {
     setEditContrato(true);
     setCurrentContrato(contrato);
-
-    console.log("Contrato seleccionado:", contrato); // Para depuración
-
     setFormData({
       modalidad: contrato.modalidad || "",
       servicio: contrato.servicio || "",
@@ -132,69 +112,81 @@ const ContratoAsignado = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <h1 className="text-[25px] font-medium">Contratos Asignados</h1>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between px-1 text-[#495D72] font-medium">
-          <div className="w-[200px] text-center">IdContratos</div>
-          <div className="w-[350px] text-center">Trab.Investigacion</div>
-          <div className="w-[300px] text-center">Delegado</div>
-          <div className="w-[200px] text-center">FechaRegistro</div>
-          <div className="w-[200px] text-center">Modalidad</div>
-          <div className="w-[200px] text-center">Tipo de Pago</div>
-          <div className="w-[100px] text-center">Accion</div>
-        </div>
-        {contrato.map((contrato, index) => (
-          <div key={index} className="flex justify-between px-1">
-            <div className="w-[200px] text-center">
-              {"CT-" + (index + 1).toString().padStart(3, "0")}
-            </div>
-            <div className="w-[350px] text-center">
-              {contrato.trabajo_investigacion}
-            </div>
-            <div className="w-[300px] text-center">{contrato.delegado}</div>
-            <div className="w-[200px] text-center">
-              {new Date(contrato.fecha_inicio).toLocaleDateString()}
-            </div>
-            <div className="w-[200px] text-center">{contrato.modalidad}</div>
-            <div className="w-[200px] text-center">{contrato.tipo_pago}</div>
-            <div className="w-[100px] flex justify-between px-2">
-              <button
-                className="p-1 bg-[#353563] rounded-md text-white"
-                onClick={() => handleEditClick(contrato)} // Llamamos a handleEditClick
-              >
-                <FaRegEdit size={20} />
-              </button>
-              <button
-                className="p-1 bg-[#353563] rounded-md text-white"
-                onClick={() => {
-                  setEliminar(true);
-                  setCurrentContrato(contrato); // Guardamos el contrato seleccionado para eliminar
-                }}
-              >
-                <IoTrash size={20} />
-              </button>
-            </div>
+      <h1 className="text-xl sm:text-2xl font-medium">Contratos Asignados</h1>
+
+      {/* Contenedor con scroll horizontal */}
+      <div className="overflow-x-auto">
+        <div className="min-w-[800px]">
+          {/* Encabezado */}
+          <div className="grid grid-cols-7 text-sm sm:text-base font-medium text-[#495D72] p-2">
+            <div className="text-center">ID Contrato</div>
+            <div className="text-center">Trab. Investigación</div>
+            <div className="text-center">Delegado</div>
+            <div className="text-center">Fecha Registro</div>
+            <div className="text-center">Modalidad</div>
+            <div className="text-center">Tipo de Pago</div>
+            <div className="text-center">Acción</div>
           </div>
-        ))}
+
+          {/* Filas */}
+          {contrato.map((c, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-7 text-sm sm:text-base items-center p-2 border-b"
+            >
+              <div className="text-center">
+                {"CT-" + (index + 1).toString().padStart(3, "0")}
+              </div>
+              <div className="text-center">{c.trabajo_investigacion}</div>
+              <div className="text-center">{c.delegado}</div>
+              <div className="text-center">
+                {new Date(c.fecha_inicio).toLocaleDateString()}
+              </div>
+              <div className="text-center">{c.modalidad}</div>
+              <div className="text-center">{c.tipo_pago}</div>
+              <div className="flex justify-center gap-2">
+                <button
+                  className="p-1 bg-[#353563] rounded-md text-white"
+                  onClick={() => handleEditClick(c)}
+                >
+                  <FaRegEdit size={18} />
+                </button>
+                <button
+                  className="p-1 bg-red-600 rounded-md text-white"
+                  onClick={() => {
+                    setEliminar(true);
+                    setCurrentContrato(c);
+                  }}
+                >
+                  <IoTrash size={18} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Modal para Editar Contrato */}
+      {/* Modal Editar */}
       {editContrato && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setEditContrato(false)}
         >
           <div
-            className="flex flex-col gap-8 w-[800px] bg-white shadow-md rounded-xl p-10 border border-[#E9E7E7]"
+            className="w-[95%] max-w-4xl bg-white shadow-md rounded-xl p-6 sm:p-10 overflow-y-auto max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            <h1 className="text-[25px] font-semibold">Editar Contrato</h1>
-            <div className="flex flex-col gap-5">
-              <div className="flex justify-start gap-14">
-                <div className="flex flex-col gap-1 w-[200px] ">
-                  <label className="text-[17px] font-medium">Modalidad:</label>
+            <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+              Editar Contrato
+            </h1>
+
+            <div className="flex flex-col gap-6">
+              {/* Modalidad y Servicio */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col w-full md:w-1/2">
+                  <label className="text-sm font-medium">Modalidad:</label>
                   <select
-                    className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
+                    className="bg-[#E9E7E7] rounded-lg p-2"
                     value={formData.modalidad}
                     onChange={(e) =>
                       setFormData({ ...formData, modalidad: e.target.value })
@@ -205,10 +197,10 @@ const ContratoAsignado = () => {
                     <option value="Plazo">Plazo</option>
                   </select>
                 </div>
-                <div className="flex flex-col gap-1 w-[200px]">
-                  <label className="text-[17px] font-medium">Servicio:</label>
+                <div className="flex flex-col w-full md:w-1/2">
+                  <label className="text-sm font-medium">Servicio:</label>
                   <select
-                    className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
+                    className="bg-[#E9E7E7] rounded-lg p-2"
                     value={formData.servicio}
                     onChange={(e) =>
                       setFormData({ ...formData, servicio: e.target.value })
@@ -220,43 +212,33 @@ const ContratoAsignado = () => {
                     <option value="Completo">Completo</option>
                   </select>
                 </div>
-                {formData.servicio === "Completo" && (
-                  <div className="flex flex-col gap-1 w-[200px]">
-                    <label className="text-[17px] font-medium">
-                      Categoría:
-                    </label>
-                    <select
-                      className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
-                      value={formData.idCategoria}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          idCategoria: e.target.value,
-                        })
-                      }
-                    >
-                      <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
-                        Oro
-                      </option>
-                      <option value="c4ad9ec9-2631-47fb-92e3-5493e2cc1703">
-                        Bronce
-                      </option>
-                      <option value="cdf0ac54-a9f1-4f06-bcfe-f4f5a1d5b4d1">
-                        Plata
-                      </option>
-                    </select>
-                  </div>
-                )}
               </div>
 
-              {/* Resto del formulario similar a la edición */}
-              <div className="flex justify-start gap-20">
-                <div className="flex flex-col gap-1 w-[300px]">
-                  <label className="text-[17px] font-medium">
-                    Tipo Trabajo:
-                  </label>
+              {/* Categoría */}
+              {formData.servicio === "Completo" && (
+                <div className="flex flex-col">
+                  <label className="text-sm font-medium">Categoría:</label>
                   <select
-                    className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
+                    className="bg-[#E9E7E7] rounded-lg p-2"
+                    value={formData.idCategoria}
+                    onChange={(e) =>
+                      setFormData({ ...formData, idCategoria: e.target.value })
+                    }
+                  >
+                    <option disabled>Seleccionar</option>
+                    <option value="oro">Oro</option>
+                    <option value="plata">Plata</option>
+                    <option value="bronce">Bronce</option>
+                  </select>
+                </div>
+              )}
+
+              {/* Tipo trabajo y pago */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col w-full md:w-1/2">
+                  <label className="text-sm font-medium">Tipo Trabajo:</label>
+                  <select
+                    className="bg-[#E9E7E7] rounded-lg p-2"
                     value={formData.idTipoTrabajo}
                     onChange={(e) =>
                       setFormData({
@@ -270,21 +252,12 @@ const ContratoAsignado = () => {
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
                     <option value={4}>Tesis Maestría</option>
-                    <option value={5}>Tesis Doctorado</option>
-                    <option value={6}>Plan de Negocios</option>
-                    <option value={7}>Revisión Sistemática</option>
-                    <option value={8}>Artículo Científico</option>
-                    <option value={9}>Estudio de Prefactibilidad</option>
-                    <option value={10}>Suficiencia Profesional</option>
-                    <option value={11}>Tesis Segunda Especialidad</option>
                   </select>
                 </div>
-                <div className="flex flex-col gap-1 w-[300px]">
-                  <label className="text-[17px] font-medium">
-                    Tipo de Pago:
-                  </label>
+                <div className="flex flex-col w-full md:w-1/2">
+                  <label className="text-sm font-medium">Tipo de Pago:</label>
                   <select
-                    className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
+                    className="bg-[#E9E7E7] rounded-lg p-2"
                     value={formData.idTipoPago}
                     onChange={(e) =>
                       setFormData({ ...formData, idTipoPago: e.target.value })
@@ -297,27 +270,24 @@ const ContratoAsignado = () => {
                 </div>
               </div>
 
-              <div className="flex justify-start gap-20">
-                <div className="flex flex-col gap-1 w-[300px]">
-                  <label className="text-[17px] font-medium">
-                    Fecha Inicio:
-                  </label>
+              {/* Fechas */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex flex-col w-full md:w-1/2">
+                  <label className="text-sm font-medium">Fecha Inicio:</label>
                   <input
                     type="date"
-                    className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
+                    className="bg-[#E9E7E7] rounded-lg p-2"
                     value={formData.fechaInicio}
                     onChange={(e) =>
                       setFormData({ ...formData, fechaInicio: e.target.value })
                     }
                   />
                 </div>
-                <div className="flex flex-col gap-1 w-[300px]">
-                  <label className="text-[17px] font-medium">
-                    Fecha Final:
-                  </label>
+                <div className="flex flex-col w-full md:w-1/2">
+                  <label className="text-sm font-medium">Fecha Final:</label>
                   <input
                     type="date"
-                    className="bg-[#E9E7E7] rounded-2xl p-3 h-[50px]"
+                    className="bg-[#E9E7E7] rounded-lg p-2"
                     value={formData.fechaFin}
                     onChange={(e) =>
                       setFormData({ ...formData, fechaFin: e.target.value })
@@ -327,15 +297,16 @@ const ContratoAsignado = () => {
               </div>
             </div>
 
-            <div className="flex gap-5 justify-end">
+            {/* Botones */}
+            <div className="flex justify-end gap-4 mt-6">
               <button
-                className="border border-[#1C1C34] rounded-md px-10 py-2"
+                className="border border-[#1C1C34] rounded-md px-6 py-2 text-sm sm:text-base"
                 onClick={() => setEditContrato(false)}
               >
                 Cancelar
               </button>
               <button
-                className="bg-[#1C1C34] rounded-md px-14 py-2 text-white"
+                className="bg-[#1C1C34] rounded-md px-8 py-2 text-sm sm:text-base text-white"
                 onClick={handleEditSubmit}
               >
                 Guardar Cambios
@@ -345,31 +316,33 @@ const ContratoAsignado = () => {
         </div>
       )}
 
-      {/* Modal para Eliminar Contrato */}
+      {/* Modal Eliminar */}
       {eliminar && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={() => setEliminar(false)}
         >
           <div
-            className="flex flex-col gap-8 w-[500px] bg-white shadow-md rounded-xl p-10 border border-[#E9E7E7]"
+            className="w-[95%] max-w-md bg-white shadow-md rounded-xl p-6 sm:p-10"
             onClick={(e) => e.stopPropagation()}
           >
-            <h1 className="text-[25px] font-semibold">Eliminar Contrato</h1>
-            <p className="text-[18px]">
+            <h1 className="text-xl sm:text-2xl font-semibold mb-4">
+              Eliminar Contrato
+            </h1>
+            <p className="text-sm sm:text-base mb-6">
               ¿Estás seguro de que deseas eliminar este contrato? Esta acción no
               se puede deshacer.
             </p>
 
-            <div className="flex gap-5 justify-end">
+            <div className="flex justify-end gap-4">
               <button
-                className="border border-[#1C1C34] rounded-md px-10 py-2"
+                className="border border-[#1C1C34] rounded-md px-6 py-2"
                 onClick={() => setEliminar(false)}
               >
                 Cancelar
               </button>
               <button
-                className="bg-red-600 rounded-md px-14 py-2 text-white"
+                className="bg-red-600 rounded-md px-8 py-2 text-white"
                 onClick={handleDeleteSubmit}
               >
                 Eliminar

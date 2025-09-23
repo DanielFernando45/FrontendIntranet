@@ -15,7 +15,11 @@ import Soporte from "../../assets/icons/IconEstudiante/SoporteEstudiante.svg";
 
 const LINKS = [
   { icono: HomeEstu, path: "/estudiante/home", title: "Home" },
-  { icono: Reuniones, path: "/estudiante/reuniones", title: "Zoom / Inducciones" },
+  {
+    icono: Reuniones,
+    path: "/estudiante/reuniones",
+    title: "Zoom / Inducciones",
+  },
   {
     icono: EntreRev,
     path: "/estudiante/entrega",
@@ -23,7 +27,7 @@ const LINKS = [
     subLinks: [
       { path: "/estudiante/entrega/terminados" },
       { path: "/estudiante/entrega/pendientes" },
-    ]
+    ],
   },
   { icono: Calendario, path: "/estudiante/calendario", title: "Calendario" },
   { icono: Recursos, path: "/estudiante/recursos", title: "Recursos" },
@@ -44,8 +48,8 @@ const EstudianteSidebar = () => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const toggleMenu = () => {
@@ -64,56 +68,93 @@ const EstudianteSidebar = () => {
     <>
       {isExpanded && isMobile && (
         <div
-          className="fixed inset-0 bg-black/30 z-20 "
+          className="fixed inset-0 bg-black/30 z-20"
           onClick={() => setIsExpanded(false)}
         />
       )}
 
       <nav
-        className={`fixed left-0 top-0
-            ${isMobile
-            ? (isExpanded ? "w-[266px] h-full" : "w-[50px] h-[56px] md:w-[80px] sm:h-[65px] md:h-[85px] shadow-md")
-            : (isExpanded ? "w-[266px] h-full" : "w-[100px] h-full")
-          } flex-shrink-0 bg-white z-30 transition-[width] duration-500 ease-in-out overflow-hidden`}
+        className={`fixed left-0 top-0 flex-shrink-0 bg-white z-30 transition-all duration-300 ease-in-out overflow-hidden
+          ${
+            isMobile
+              ? isExpanded
+                ? "w-[220px] h-full"
+                : "w-[60px] h-[56px] md:w-[80px] sm:h-[65px] md:h-[85px]"
+              : isExpanded
+              ? "w-[266px] h-full"
+              : "w-[100px] h-full"
+          }
+        `}
       >
+        {/* Header */}
         {!isMobile || isExpanded ? (
-          <div className="flex flex-col items-center  gap-[30px] py-5 px-5">
-            <img src={LogoAleja} alt="Logo" />
-            <button onClick={toggleMenu}  >
-              <img src={isExpanded ? Menu : MenuRetraido} alt="Toggle Menu"  />
+          <div className="flex flex-col items-center gap-[24px] py-5 px-4">
+            <img
+              src={LogoAleja}
+              alt="Logo"
+              className="w-[40px] h-[40px] xl:w-[50px] xl:h-[50px]"
+            />
+            <button onClick={toggleMenu}>
+              <img
+                src={isExpanded ? Menu : MenuRetraido}
+                alt="Toggle Menu"
+                className="w-6 h-6"
+              />
             </button>
           </div>
         ) : (
           <div className="flex flex-col items-center pt-2 sm:pt-3 md:pt-[20px]">
             <button onClick={toggleMenu} className="p-2">
-              <img src={MenuRetraido} alt="Toggle Menu" className="w-5 md:w-6" />
+              <img
+                src={MenuRetraido}
+                alt="Toggle Menu"
+                className="w-5 md:w-6"
+              />
             </button>
           </div>
         )}
 
+        {/* Lista de navegación */}
         {(!isMobile || isExpanded) && (
-          <ul className="flex flex-col gap-1 items-start ">
+          <ul className="flex flex-col gap-1 ">
             {LINKS.map((link) => {
               const active = isActive(link.path);
               return (
                 <div key={link.title}>
                   <Link to={link.path}>
                     <li
-                      className={`flex items-center ${isExpanded ? "w-[266px]" : "w-[100px]"} h-[77px] px-[20px] py-[25px] cursor-pointer flex-shrink-0
-                                  z-30 transition-all duration-300 ease-in-out hover:bg-[#F0EFEE] ${active ? "bg-[#f0efee] border-l-[5px] border-[#000]" : ""}`}
+                      className={`flex items-center cursor-pointer transition-all duration-300 ease-in-out
+                        ${
+                          isMobile
+                            ? "w-full px-3 py-3"
+                            : isExpanded
+                            ? "w-[266px] px-[20px] py-[25px]"
+                            : "w-[100px] px-[20px] py-[25px]"
+                        }
+                        h-[60px] xl:h-[77px]
+                        hover:bg-[#F0EFEE] ${
+                          active
+                            ? "bg-[#f0efee] border-l-[5px] border-[#000]"
+                            : ""
+                        }
+                      `}
                       onClick={handleItemClick}
                     >
-                      <div className="flex items-center gap-4 w-full transition-all duration-300 ease-in-out">
-                        <img src={link.icono} className="w-6 h-6 transition-all duration-300 ease-in-out" />
+                      <div className="flex items-center justify-stretch gap-4 w-full">
+                        <img
+                          src={link.icono}  
+                          className="w-5 h-5 xl:w-6 xl:h-6"
+                          alt={link.title}
+                        />
                         <span
-                          className={`text-[17px] font-normal text-black transition-opacity duration-300 ease-in-out ${isExpanded ? "opacity-100 ml-1" : "opacity-0 ml-[-10px]"
-                            }`}
+                          className={`text-[15px] xl:text-[17px] font-normal text-black whitespace-nowrap transition-all duration-300
+    ${isExpanded ? "opacity-100 ml-1" : "opacity-0 ml-[-12px]"}
+  `}
                         >
                           {link.title}
                         </span>
                       </div>
                     </li>
-
                   </Link>
                 </div>
               );

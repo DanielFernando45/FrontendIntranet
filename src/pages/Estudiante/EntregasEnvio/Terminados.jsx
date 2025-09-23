@@ -137,7 +137,7 @@ const Terminados = () => {
         ) : (
           // Mostrar cuando no hay datos
           <div className="flex justify-center">
-            <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.25)]">
+            <div className="flex flex-col text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A] ">
               <img src={documentosVacios} alt="" />
               No hay envíos realizados
             </div>

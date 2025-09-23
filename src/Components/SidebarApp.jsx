@@ -1,6 +1,5 @@
-import Menu from "../assets/icons/IconEstudiante/BotonMenu.svg";
 import LogoAleja from "../assets/icons/IconEstudiante/LogoOscuro.svg";
-import MenuRetraido from "../assets/icons/menuRetra.svg";
+
 //Logos
 import Asignaciones from "../assets/icons/IconAdmin/asignar.svg";
 import ConfIntranet from "../assets/icons/IconAdmin/configurar.svg";
@@ -13,11 +12,10 @@ import Reuniones from "../assets/icons/IconEstudiante/ReunionEstudiante.svg";
 import EntreRev from "../assets/icons/IconEstudiante/EnvioEstudiante.svg";
 import Calendario from "../assets/icons/IconEstudiante/CalendarEstudiante.svg";
 import Gestion from "../assets/icons/IconAsesor/gestionAlum.svg";
-
 import Recursos from "../assets/icons/IconEstudiante/RecursosEstudiante.svg";
-import { Link } from "react-router-dom";
+
+import { NavLink } from "react-router-dom";
 import { IoMenuSharp } from "react-icons/io5";
-import { FaUserCog } from "react-icons/fa";
 
 const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
   const rutasPorRoles = {
@@ -26,38 +24,17 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
         icono: Gestion,
         path: "/admin/gestionar-usuarios",
         title: "Gestionar Usuarios",
-        // SubLinks ya no se renderizan en la barra lateral
-        subLinks: [
-          {
-            path: "/admin/gestionar-usuarios/listar-estudiantes",
-            title: "Listar Estudiantes",
-          },
-          {
-            path: "/admin/gestionar-usuarios/listar-asesores",
-            title: "Listar Asesores",
-          },
-        ],
       },
       {
         icono: Asignaciones,
         path: "/admin/asignaciones",
         title: "Asignaciones",
-        subLinks: [
-          {
-            path: "/admin/asignaciones/listar-asignar",
-            title: "Listar Sin Asignar",
-          },
-          {
-            path: "/admin/asignaciones/listar-asignado",
-            title: "Listar Asignados",
-          },
-        ],
       },
       { icono: Pagos, path: "/admin/pagos", title: "Pagos" },
       {
         icono: ConfIntranet,
         path: "/admin/confIntra",
-        title: "Configuración de Intranet",
+        title: "Config. Intranet",
       },
       {
         icono: InduccionIconSideBar,
@@ -67,7 +44,7 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
       {
         icono: GestionSoporte,
         path: "/admin/soporte",
-        title: "Gestion Soporte Tecnico",
+        title: "Soporte Técnico",
       },
     ],
     estudiante: [
@@ -80,11 +57,7 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
       {
         icono: EntreRev,
         path: "/estudiante/entrega",
-        title: "Entrega/Revisión",
-        subLinks: [
-          { path: "/estudiante/entrega/terminados" },
-          { path: "/estudiante/entrega/pendientes" },
-        ],
+        title: "Entrega / Revisión",
       },
       {
         icono: Calendario,
@@ -101,15 +74,7 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
         path: "/asesor/reuniones",
         title: "Zoom / Inducciones",
       },
-      {
-        icono: EntreRev,
-        path: "/asesor/entrega",
-        title: "Entrega/Revisión",
-        subLinks: [
-          { path: "/asesor/entrega/terminados" },
-          { path: "/asesor/entrega/pendientes" },
-        ],
-      },
+      { icono: EntreRev, path: "/asesor/entrega", title: "Entrega / Revisión" },
       { icono: Calendario, path: "/asesor/calendario", title: "Calendario" },
       {
         icono: Gestion,
@@ -120,61 +85,90 @@ const SidebarApp = ({ activeSidebar, role, setActiveSidebar }) => {
   };
 
   return (
-    <div
-      className={`bg-white h-screen ${
-        activeSidebar ? "w-[300px]" : "w-[88px]"
-      } py-4 space-y-6 absolute left-0 transition-all z-[51] xl:translate-x-0 -translate-x-full overflow-hidden`}
-    >
-      <img
-        className="w-[50px] h-[50px] mx-auto"
-        draggable="false"
-        src={LogoAleja}
-        alt="logo"
+    <>
+      {/* Overlay para pantallas pequeñas */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity xl:hidden 
+        ${activeSidebar ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setActiveSidebar(false)}
       />
-      <button
-        className="mx-auto block cursor-pointer z-30"
-        onClick={() => {
-          setActiveSidebar(!activeSidebar);
-        }}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed top-0 left-0 h-screen bg-white border-r z-50 shadow-md transition-all duration-300
+        ${activeSidebar ? "w-[260px]" : "w-[72px]"}
+        ${
+          activeSidebar ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
+        }`}
       >
-        <IoMenuSharp size={30} />
-      </button>
-      {/* ICONOS */}
-      <div className="">
-        <ul className="flex flex-col items-center gap-4">
-          {rutasPorRoles[role].map((item) => (
-            <li className="w-full relative ">
-              <Link
-                to={item.path}
-                className="flex h-[70px] items-center border-l-4 border-transparent  hover:border-l-gray-500 group"
-              >
-                <div className=" flex min-w-[80px] justify-center ">
-                  <img
-                    src={item.icono}
-                  />
-                </div>
-                <p
-                  className={`text-[14px] min-w-[220px] flex-1 flex ${
-                    activeSidebar
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-10 "
-                  } transition-all `}
+        {/* Logo + Toggle */}
+        <div className="flex items-center justify-between px-4 py-3 border-b">
+          <img src={LogoAleja} alt="logo" className="w-10 h-10" />
+          <button
+            className="text-gray-700 xl:hidden"
+            onClick={() => setActiveSidebar(!activeSidebar)}
+          >
+            <IoMenuSharp size={24} />
+          </button>
+        </div>
+
+        {/* Menú */}
+        <nav className="mt-4">
+          <ul className="flex flex-col gap-1">
+            {rutasPorRoles[role]?.map((item) => (
+              <li key={item.title} className="group relative">
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 h-[50px] px-4 text-sm font-medium transition-colors
+                    border-l-4 ${
+                      isActive
+                        ? "bg-gray-100 border-[#1C1C34] text-[#1C1C34]"
+                        : "border-transparent text-gray-600 hover:bg-gray-50"
+                    }`
+                  }
                 >
-                  {item.title}
-                </p>
-              </Link>
-              {/* <p
-                className={`absolute left-full ${
-                  activeSidebar ? "invisible" : "group-hover:visible"
-                } ml-2  top-1/2 z-20 bg-indigo-600 text-white rounded-md px-3 py-1 group-hover:opacity-100 opacity-0 transition-all group-hover:-translate-y-1/2   -translate-y-1/5 whitespace-nowrap`}
-              >
-                {item.title}
-              </p> */}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+                  <div className="min-w-[24px] flex justify-center">
+                    <img
+                      src={item.icono}
+                      alt={item.title}
+                      className="w-5 h-5"
+                    />
+                  </div>
+                  <span
+                    className={`whitespace-nowrap transition-all duration-200
+                      ${
+                        activeSidebar
+                          ? "opacity-100"
+                          : "opacity-0 xl:opacity-100"
+                      }
+                      ${
+                        activeSidebar
+                          ? "translate-x-0"
+                          : "-translate-x-4 xl:translate-x-0"
+                      }
+                    `}
+                  >
+                    {item.title}
+                  </span>
+                </NavLink>
+
+                {/* Tooltip en colapsado */}
+                {!activeSidebar && (
+                  <span
+                    className="absolute left-full top-1/2 -translate-y-1/2 ml-2 
+                    bg-gray-800 text-white text-xs rounded px-2 py-1 shadow-lg
+                    opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                  >
+                    {item.title}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+    </>
   );
 };
 

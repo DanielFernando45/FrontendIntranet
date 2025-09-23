@@ -19,17 +19,12 @@ const ServiciosExtra = () => {
   const cargarServicios = () => {
     axios
       .get(`${import.meta.env.VITE_API_PORT_ENV}/pagos/listServicios`)
-      .then((res) => {
-        setServicios(res.data);
-      })
-      .catch((error) => {
-        console.error("Error al cargar los datos", error);
-      });
+      .then((res) => setServicios(res.data))
+      .catch((error) => console.error("Error al cargar los datos", error));
   };
 
   const formatearFecha = (fecha) => {
     const date = new Date(fecha);
-    // Forzamos UTC en el formato
     return date.toLocaleDateString("es-PE", {
       timeZone: "UTC",
       year: "numeric",
@@ -45,7 +40,6 @@ const ServiciosExtra = () => {
 
   const confirmDelete = () => {
     if (!servicioToDelete) return;
-
     axios
       .delete(
         `${import.meta.env.VITE_API_PORT_ENV}/pagos/delete/${
@@ -53,7 +47,6 @@ const ServiciosExtra = () => {
         }`
       )
       .then(() => {
-        // Actualizar la lista de servicios después de eliminar
         cargarServicios();
         setShowDeleteModal(false);
         setServicioToDelete(null);
@@ -71,68 +64,75 @@ const ServiciosExtra = () => {
 
   return (
     <>
-      <div className="flex flex-col bg-white rounded-b-lg p-5 min-w-[1100px]">
-        <div className="flex w-full justify-between items-center">
-          <h1 className="text-[20px] font-medium">Servicos Extra</h1>
+      <div className="flex flex-col bg-white rounded-lg p-5 w-full">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row w-full justify-between items-start sm:items-center gap-4">
+          <h1 className="text-lg sm:text-xl font-medium">Servicios Extra</h1>
           <button
             onClick={() => setOpen(true)}
-            className="flex justify-between items-center bg-[#1C1C34] rounded-3xl px-2 text-white text-[16px] w-48 h-10 "
+            className="flex items-center justify-center gap-2 bg-[#1C1C34] rounded-3xl px-4 text-white text-sm sm:text-base w-full sm:w-48 h-10"
           >
             Agregar servicio
-            <img src={agregar} alt="" className="h-8" />
+            <img src={agregar} alt="" className="h-6 sm:h-8" />
           </button>
         </div>
 
-        <div className="mt-10">
-          <div className="flex justify-between text-[#495D72] font-medium p-[6px] pr-10 rounded-md gap-6">
-            <div className="w-[40px] flex justify-center">IdPago</div>
-            <div className="w-[300px] flex justify-start">Delegado/Cliente</div>
-            <div className="w-[300px] flex justify-start">Servicio Extra</div>
-            <div className="w-[160px] flex justify-center">Fecha Pago</div>
-            <div className="w-[90px] flex justify-center">Pago</div>
-            <div className="w-[280px] flex justify-center ">Accion</div>
-          </div>
-          {servicios.map((servicio, index) => (
-            <div
-              key={servicio.id}
-              className={`flex justify-between text-[#2B2829] font-normal p-[6px] pr-10 rounded-md gap-6 ${
-                index % 2 === 0 ? "bg-white" : "bg-[#E9E7E7]"
-              }`}
-            >
-              <div className="w-[40px] flex justify-center">{servicio.id}</div>
-              <div className="w-[300px] flex justify-start">
-                {servicio.delegado}
-              </div>
-              <div className="w-[300px] flex justify-start">
-                {servicio.titulo}
-              </div>
-              <div className="w-[160px] flex justify-center">
-                {formatearFecha(servicio.fecha_pago)}
-              </div>
-              <div className="w-[90px] flex justify-center">
-                S/. {servicio.pago_total}.00
-              </div>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => {
-                    setServicioSeleccionado(servicio);
-                    setEdit(true);
-                  }}
-                  className="w-[140px] font-medium rounded-md px-3 py-1 bg-[#1C1C34] flex justify-center text-white text-[14px]"
+        {/* Tabla con scroll horizontal */}
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full min-w-[900px] border-collapse">
+            <thead>
+              <tr className="text-[#495D72] font-medium border-b">
+                <th className="py-2 px-3 text-center">IdPago</th>
+                <th className="py-2 px-3 text-left">Delegado/Cliente</th>
+                <th className="py-2 px-3 text-left">Servicio Extra</th>
+                <th className="py-2 px-3 text-center">Fecha Pago</th>
+                <th className="py-2 px-3 text-center">Pago</th>
+                <th className="py-2 px-3 text-center">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {servicios.map((servicio, index) => (
+                <tr
+                  key={servicio.id}
+                  className={`text-[#2B2829] text-sm md:text-base ${
+                    index % 2 === 0 ? "bg-white" : "bg-[#F5F5F5]"
+                  }`}
                 >
-                  Editar
-                </button>
-                <button
-                  onClick={() => handleDeleteClick(servicio)}
-                  className="w-[140px] font-medium rounded-md px-3 py-1 bg-[#E32323] flex justify-center text-white text-[14px]"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
-          ))}
+                  <td className="py-2 px-3 text-center">{servicio.id}</td>
+                  <td className="py-2 px-3">{servicio.delegado}</td>
+                  <td className="py-2 px-3">{servicio.titulo}</td>
+                  <td className="py-2 px-3 text-center">
+                    {formatearFecha(servicio.fecha_pago)}
+                  </td>
+                  <td className="py-2 px-3 text-center">
+                    S/. {servicio.pago_total}.00
+                  </td>
+                  <td className="py-2 px-3 text-center">
+                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                      <button
+                        onClick={() => {
+                          setServicioSeleccionado(servicio);
+                          setEdit(true);
+                        }}
+                        className="px-3 py-1 bg-[#1C1C34] text-white rounded-md text-sm"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(servicio)}
+                        className="px-3 py-1 bg-[#E32323] text-white rounded-md text-sm"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+
       {open && <AsignarExtra close={() => setOpen(false)} />}
       {edit && (
         <EditarExtra
@@ -144,7 +144,7 @@ const ServiciosExtra = () => {
       {/* Modal de confirmación para eliminar */}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
+          <div className="bg-white p-6 rounded-lg w-[95%] max-w-md">
             <h3 className="text-xl font-bold mb-4">Confirmar Eliminación</h3>
             <p className="mb-6">
               ¿Estás seguro que deseas eliminar el servicio "

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import arrowIcon from "../../../assets/icons/IconEstudiante/arriba.svg";
 import axios from "axios";
 import documentosVacios from "../../../assets/icons/documentosVacios.png";
 import { useOutletContext } from "react-router-dom";
@@ -23,18 +22,11 @@ const DocTerminado = () => {
             import.meta.env.VITE_API_PORT_ENV
           }/asuntos/terminados/${idAsesoramiento}`
         )
-        .then((response) => {
-          setTerminado(() => {
-            console.log(response.data);
-            return response.data;
-          });
-        })
+        .then((response) => setTerminado(response.data))
         .catch((error) => {
-          console.error("Error al obtener los pendientes:", error);
+          console.error("Error al obtener los terminados:", error);
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .finally(() => setLoading(false));
     } else {
       setLoading(false);
     }
@@ -50,104 +42,104 @@ const DocTerminado = () => {
   const formatTime = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-
-    // Obtener hora y minutos en UTC
     let horas = date.getUTCHours();
     const minutos = date.getUTCMinutes().toString().padStart(2, "0");
-
-    // Determinar AM/PM
     const ampm = horas >= 12 ? "PM" : "AM";
-
-    // Convertir a formato de 12 horas con dos dígitos
-    horas = horas % 12;
-    horas = horas ? horas.toString().padStart(2, "0") : "12"; // La hora 0 se convierte en 12
-
-    // Concatenar
-    const hora12ConAmPm = `${horas}:${minutos} ${ampm}`;
-
-    return hora12ConAmPm;
+    horas = horas % 12 || 12;
+    return `${horas.toString().padStart(2, "0")}:${minutos} ${ampm}`;
   };
 
-  // Componente Skeleton para filas
   const SkeletonRow = () => (
-    <div className="flex justify-between bg-[#E9E7E7] p-[6px] rounded-md animate-pulse">
-      <div className="w-[300px] h-6 bg-gray-300 rounded"></div>
-      <div className="w-[300px] h-6 bg-gray-300 rounded"></div>
-      <div className="w-[300px] h-6 bg-gray-300 rounded"></div>
-      <div className="w-[300px] h-6 bg-gray-300 rounded"></div>
-      <div className="w-[102px] h-6 bg-gray-300 rounded"></div>
-      <div className="w-[102px] h-6 bg-gray-300 rounded"></div>
+    <div className="grid grid-cols-1 sm:grid-cols-5 lg:grid-cols-7 gap-2 bg-[#E9E7E7] p-2 rounded-md animate-pulse">
+      <div className="h-6 bg-gray-300 rounded"></div>
+      <div className="h-6 bg-gray-300 rounded"></div>
+      <div className="hidden sm:block h-6 bg-gray-300 rounded"></div>
+      <div className="hidden sm:block lg:hidden h-6 bg-gray-300 rounded"></div>
+      <div className="hidden lg:block h-6 bg-gray-300 rounded"></div>
+      <div className="hidden lg:block h-6 bg-gray-300 rounded"></div>
+      <div className="h-6 bg-gray-300 rounded"></div>
     </div>
   );
 
   return (
     <>
-      <div className="flex justify-between font-medium text-[#495D72] text-[14px]  gap-4  p-[6px] rounded-md">
-        <div className="flex">Nombre Entregas</div>
-        <div className="w-[300px] flex justify-center">Envio Tesista</div>
-        <div className="w-[300px] flex justify-center">
-          En Desarrollo Asesor
-        </div>
-        <div className="w-[300px] flex justify-center">
-          Actividad Finalizada
-        </div>
-        <div className="w-[102px] flex justify-center">Hora</div>
-        <div className="w-[138px] px-3  flex justify-center ">Estado</div>
-        <div className="px-3  flex justify-center flex-1"></div>
+      {/* Encabezado grande (solo en desktop) */}
+      <div className="hidden lg:grid grid-cols-7 font-medium text-[#495D72] text-[14px] gap-2 p-2 rounded-md">
+        <div>Nombre Entregas</div>
+        <div className="text-center">Envio Tesista</div>
+        <div className="text-center">En Desarrollo Asesor</div>
+        <div className="text-center">Actividad Finalizada</div>
+        <div className="text-center">Hora</div>
+        <div className="text-center">Estado</div>
+        <div className="text-center">Editar</div>
       </div>
+
+      {/* Lista */}
       <div className="flex flex-col gap-2 text-[14px] h-[180px] overflow-auto">
         {loading ? (
-          // Mostrar skeletons mientras carga
           <>
             <SkeletonRow />
             <SkeletonRow />
             <SkeletonRow />
           </>
         ) : terminados.length > 0 ? (
-          // Mostrar datos cuando ya están cargados
-          terminados.map((terminado, index) => (
+          terminados.map((terminado) => (
             <div
               key={terminado.id}
-              className="flex justify-between text-[#2B2829] gap-4 font-normal bg-[#E9E7E7] p-[6px] rounded-md"
+              className="grid grid-cols-1 sm:grid-cols-5 lg:grid-cols-7 gap-2 text-[#2B2829] font-normal bg-[#E9E7E7] p-2 rounded-md items-center"
             >
-              <div className="flex">{terminado.titulo}</div>
-              <div className="w-[300px] flex justify-center">
-                Entrega: {formatDate(terminado.fecha_entregado)}
+              {/* Col 1: Título */}
+              <div>{terminado.titulo}</div>
+
+              {/* Col 2: Entrega */}
+              <div className="text-center">
+                {formatDate(terminado.fecha_entregado)}
               </div>
-              <div className="w-[300px] flex justify-center">
-                Proceso: {formatDate(terminado.fecha_proceso)}
+
+              {/* Col 3: Proceso (tablet y +) */}
+              <div className="hidden sm:block text-center">
+                {formatDate(terminado.fecha_proceso)}
               </div>
-              <div className="w-[300px] flex justify-center">
-                Terminado: {formatDate(terminado.fecha_terminado)}
+
+              {/* Col 4: Terminado (desktop) */}
+              <div className="hidden lg:block text-center">
+                {formatDate(terminado.fecha_terminado)}
               </div>
-              <div className="w-[102px] flex justify-center">
+
+              {/* Col 5: Hora (desktop) */}
+              <div className="hidden lg:block text-center">
                 {formatTime(terminado.fecha_terminado)}
               </div>
+
+              {/* Col 6: Estado */}
               <div className="rounded-md px-3 bg-[#353563] flex justify-center text-white">
                 {terminado.estado}
               </div>
-              <div className="rounded-md px-3 flex flex-1 justify-center text-white">
+
+              {/* Col 7: Botón Editar */}
+              <div className="flex justify-center">
                 <button
                   onClick={() => {
-                    setIdAsunto(terminado.id), setShowEditarModal(true);
+                    setIdAsunto(terminado.id);
+                    setShowEditarModal(true);
                   }}
-                  className="p-2 bg-[#353563] rounded-md"
+                  className="p-2 bg-[#353563] rounded-md text-white"
                 >
-                  <FaRegEdit size={20} />
+                  <FaRegEdit size={18} />
                 </button>
               </div>
             </div>
           ))
         ) : (
-          // Mostrar cuando no hay datos
           <div className="flex justify-center">
-            <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.25)]">
+            <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A] shadow">
               <img src={documentosVacios} alt="" />
               No hay envíos realizados
             </div>
           </div>
         )}
       </div>
+
       {showEditarModal && (
         <ModalEditarDoc
           idAsunto={idAsunto}

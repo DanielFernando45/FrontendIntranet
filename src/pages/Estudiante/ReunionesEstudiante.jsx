@@ -5,7 +5,7 @@ import download_icon from "../../assets/icons/download.png";
 import play_icon from "../../assets/icons/play-white.png";
 import { useQuery } from "@tanstack/react-query";
 import { induccionesService } from "../../services/induccionesService";
-import ReactPlayer from 'react-player';
+import ReactPlayer from "react-player";
 import VideoPlayer from "../../Components/VideoPlayer";
 
 const ReunionesEstudiante = () => {
@@ -16,7 +16,6 @@ const ReunionesEstudiante = () => {
 
   const [showModalVideo, setShowModalVideo] = useState(false);
   const [urlVideo, setUrlVideo] = useState(null);
-
 
   const { data: inducciones, isLoading: induccionesLoading } = useQuery({
     queryKey: ["inducciones", selectedAsesoriaId],
@@ -33,10 +32,11 @@ const ReunionesEstudiante = () => {
       const user = JSON.parse(usuario);
       const id = user.id_cliente;
 
-      fetch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/miAsesoramiento/${id}`)
+      fetch(
+        `${import.meta.env.VITE_API_PORT_ENV}/cliente/miAsesoramiento/${id}`
+      )
         .then((res) => res.json())
         .then((data) => {
-
           if (data.isEmpty) {
             console.warn(data.message);
             setAsesorias([]);
@@ -47,8 +47,8 @@ const ReunionesEstudiante = () => {
             profesion: item.profesion_asesoria,
           }));
           setAsesorias(() => {
-            console.log(data)
-            return asesoriasArray
+            console.log(data);
+            return asesoriasArray;
           });
 
           if (asesoriasArray.length > 0) {
@@ -64,7 +64,11 @@ const ReunionesEstudiante = () => {
   useEffect(() => {
     if (selectedAsesoriaId) {
       // Obtener reuniones en espera
-      fetch(`${import.meta.env.VITE_API_PORT_ENV}/reuniones/espera/${selectedAsesoriaId}`)
+      fetch(
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/reuniones/espera/${selectedAsesoriaId}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setProximasReuniones(data);
@@ -73,19 +77,6 @@ const ReunionesEstudiante = () => {
           console.error("Error al obtener reuniones próximas:", error)
         )
         .finally(() => setLoading(false));
-      // Obtener reuniones terminadas
-      // fetch(
-      //   `${import.meta.env.VITE_API_PORT_ENV}/inducciones/induccionesByAsesoria/${selectedAsesoriaId}`
-      // )
-      //   .then((res) => res.json())
-      //   .then((data) => {
-      //     console.log(data);
-      //     setInducciones(data);
-      //   })
-      //   .catch((error) =>
-      //     console.error("Error al obtener reuniones terminadas:", error)
-      //   )
-      //   .finally(() => setLoading(false));
     }
   }, [selectedAsesoriaId]);
 
@@ -108,19 +99,6 @@ const ReunionesEstudiante = () => {
     };
   };
 
-  const downloadFile = async (induccion) => {
-    const response = await fetch(induccion.url);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "video.mp4";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
-
   return (
     <LayoutApp>
       <main className="flex justify-center ">
@@ -133,12 +111,16 @@ const ReunionesEstudiante = () => {
                 value={selectedAsesoriaId || ""}
                 className="border rounded-t-md border-[#b4a6aa]"
               >
-                <option value="" disabled>Seleccione una opción</option>
-                {asesorias && asesorias.length > 0 && asesorias.map((asesoria, index) => (
-                  <option key={index} value={asesoria.id}>
-                    {asesoria.profesion}
-                  </option>
-                ))}
+                <option value="" disabled>
+                  Seleccione una opción
+                </option>
+                {asesorias &&
+                  asesorias.length > 0 &&
+                  asesorias.map((asesoria, index) => (
+                    <option key={index} value={asesoria.id}>
+                      {asesoria.profesion}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -193,9 +175,9 @@ const ReunionesEstudiante = () => {
               </div>
 
               <div className="flex flex-col gap-[12px]">
-                <div className="flex w-full border-b-[3px] gap-3 border-[#0CB2D5] font-normal">
-                  <button className="px-3 rounded-t-[5px] w-[105px] bg-[#0CB2D5] text-white">
-                    Anteriores
+                <div className="flex w-full border-b-[3px] border-[#0CB2D5] font-normal">
+                  <button className="px-4 py-1 rounded-t-[5px] bg-[#0CB2D5] text-white">
+                    Inducciones
                   </button>
                 </div>
               </div>
@@ -221,18 +203,6 @@ const ReunionesEstudiante = () => {
                             <div className="absolute w-full h-full top-0 flex flex-col justify-between p-2">
                               <p className="text-white">{induccion?.titulo}</p>
                               <div className="flex justify-between text-white">
-                                {/* <button
-                                  onClick={() => downloadFile(induccion)}
-                                  className="text-sm border border-white rounded-md  p-2 flex gap-1"
-                                >
-                                  Descargar
-                                  <span>
-                                    <img
-                                      src={download_icon}
-                                      alt="download-icon"
-                                    />
-                                  </span>
-                                </button> */}
                                 <button
                                   onClick={() => {
                                     setUrlVideo(induccion.url);
@@ -261,8 +231,14 @@ const ReunionesEstudiante = () => {
         </div>
 
         {showModalVideo && (
-          <div onClick={() => setShowModalVideo(false)} className="fixed bg-black/50 top-0 left-0 w-full h-full flex items-center justify-center z-50 px-4">
-            <div onClick={(event) => event.stopPropagation()} className="bg-white p-6 rounded-lg w-full shadow-lg lg:w-[500px] lg:h-[500px] max-w-[800px] max-h-[500px]">
+          <div
+            onClick={() => setShowModalVideo(false)}
+            className="fixed bg-black/50 top-0 left-0 w-full h-full flex items-center justify-center z-50 px-4"
+          >
+            <div
+              onClick={(event) => event.stopPropagation()}
+              className="bg-white p-6 rounded-lg w-full shadow-lg lg:w-[500px] lg:h-[500px] max-w-[800px] max-h-[500px]"
+            >
               <VideoPlayer urlVideo={urlVideo} />
               {/* <video
                 src={urlVideo}
