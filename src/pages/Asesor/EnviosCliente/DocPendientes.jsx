@@ -6,7 +6,7 @@ import documentosVacios from "../../../assets/icons/documentosVacios.png";
 import FechaEstimada from "../../../Components/Asesor/FechaEstimada";
 import EnviarAvance from "../../../Components/Asesor/EnviarAvance";
 import { FaRegEdit } from "react-icons/fa";
-import ModalEditarFechaPendientes from "./components/ModalEditarFechaPendientes";
+import ModalEditarFechaPendientes from "../../../Components/Asesor/EnviosCliente/ModalEditarFechaPendientes"
 
 const DocPendientes = () => {
   const [pendientes, setPendientes] = useState([]);

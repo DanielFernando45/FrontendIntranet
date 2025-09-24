@@ -91,61 +91,72 @@ const ContratoNuevo = () => {
       </div>
 
       {/* Lista */}
+      {/* Lista */}
       <div className="flex flex-col gap-2">
-        {contratosNoAsignados.map((contrato, index) => (
-          <React.Fragment key={contrato.id_asesoramiento}>
-            <div
-              className={`grid grid-cols-1 md:grid-cols-5 gap-2 items-center p-2 rounded-md ${
-                index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
-              }`}
-            >
-              <div className="text-sm">
-                {contrato.id_asesoramiento.toString().padStart(4, "0")}
+        {contratosNoAsignados.length === 0 ? (
+          <div className="text-center text-gray-500 py-6">
+            No hay contratos nuevos por asignar
+          </div>
+        ) : (
+          contratosNoAsignados.map((contrato, index) => (
+            <React.Fragment key={contrato.id_asesoramiento}>
+              <div
+                className={`grid grid-cols-1 md:grid-cols-5 gap-2 items-center p-2 rounded-md ${
+                  index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
+                }`}
+              >
+                <div className="text-sm">
+                  {contrato.id_asesoramiento.toString().padStart(4, "0")}
+                </div>
+                <div>{contrato.delegado}</div>
+                <div>{displayStudents(contrato.estudiantes)}</div>
+                <div>{contrato.asesor}</div>
+                <div className="flex justify-between md:justify-center gap-2">
+                  <button
+                    className="bg-[#1C1C34] text-white text-sm px-4 py-1 rounded-md"
+                    onClick={() => {
+                      setAsigContrato(true);
+                      setCurrentIdAsesoramiento(contrato.id_asesoramiento);
+                    }}
+                  >
+                    Contrato
+                  </button>
+                  <button
+                    onClick={() => toggleExpand(contrato.id_asesoramiento)}
+                  >
+                    <img
+                      src={
+                        expandedIds[contrato.id_asesoramiento]
+                          ? flechaarriba
+                          : flechaabajo
+                      }
+                      alt="toggle"
+                      className="w-5 h-5"
+                    />
+                  </button>
+                </div>
               </div>
-              <div>{contrato.delegado}</div>
-              <div>{displayStudents(contrato.estudiantes)}</div>
-              <div>{contrato.asesor}</div>
-              <div className="flex justify-between md:justify-center gap-2">
-                <button
-                  className="bg-[#1C1C34] text-white text-sm px-4 py-1 rounded-md"
-                  onClick={() => {
-                    setAsigContrato(true);
-                    setCurrentIdAsesoramiento(contrato.id_asesoramiento);
-                  }}
-                >
-                  Contrato
-                </button>
-                <button onClick={() => toggleExpand(contrato.id_asesoramiento)}>
-                  <img
-                    src={
-                      expandedIds[contrato.id_asesoramiento]
-                        ? flechaarriba
-                        : flechaabajo
-                    }
-                    alt="toggle"
-                    className="w-5 h-5"
-                  />
-                </button>
-              </div>
-            </div>
 
-            {/* Expandible */}
-            {expandedIds[contrato.id_asesoramiento] && (
-              <div className="px-4 py-2 text-sm bg-gray-50 rounded-md">
-                <div className="font-medium mb-1">Estudiantes:</div>
-                {contrato.estudiantes?.length > 0 ? (
-                  <ul className="list-disc pl-5">
-                    {contrato.estudiantes.map((e) => (
-                      <li key={e.id_estudiante}>{e.estudiante}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className="text-gray-500">Solo tienes 1 estudiante</div>
-                )}
-              </div>
-            )}
-          </React.Fragment>
-        ))}
+              {/* Expandible */}
+              {expandedIds[contrato.id_asesoramiento] && (
+                <div className="px-4 py-2 text-sm bg-gray-50 rounded-md">
+                  <div className="font-medium mb-1">Estudiantes:</div>
+                  {contrato.estudiantes?.length > 0 ? (
+                    <ul className="list-disc pl-5">
+                      {contrato.estudiantes.map((e) => (
+                        <li key={e.id_estudiante}>{e.estudiante}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="text-gray-500">
+                      Solo tienes 1 estudiante
+                    </div>
+                  )}
+                </div>
+              )}
+            </React.Fragment>
+          ))
+        )}
       </div>
 
       {/* Modal */}
@@ -211,9 +222,15 @@ const ContratoNuevo = () => {
                     }
                   >
                     <option disabled>Seleccionar</option>
-                    <option value="oro">Oro</option>
-                    <option value="plata">Plata</option>
-                    <option value="bronce">Bronce</option>
+                    <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
+                      Oro
+                    </option>
+                    <option value="cdf0ac54-a9f1-4f06-bcfe-f4f5a1d5b4d1">
+                      Plata
+                    </option>
+                    <option value="c4ad9ec9-2631-47fb-92e3-5493e2cc1703">
+                      Bronce
+                    </option>
                   </select>
                 </div>
               )}

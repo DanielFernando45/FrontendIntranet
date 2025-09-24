@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import { induccionesService } from "../../../../services/induccionesService"
+import { induccionesService } from "../../services/induccionesService";
 import { useQueryClient } from '@tanstack/react-query';
 
 const ModalBorrarInduccion = ({ id, openModalDelete, setOpenModalDelete }) => {

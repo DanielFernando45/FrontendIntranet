@@ -70,7 +70,7 @@ const ServiciosExtra = () => {
           <h1 className="text-lg sm:text-xl font-medium">Servicios Extra</h1>
           <button
             onClick={() => setOpen(true)}
-            className="flex items-center justify-center gap-2 bg-[#1C1C34] rounded-3xl px-4 text-white text-sm sm:text-base w-full sm:w-48 h-10"
+            className="flex items-center justify-center gap-2 bg-[#1C1C34] rounded-3xl px-4 text-white text-sm sm:text-xs w-full sm:w-48 h-10"
           >
             Agregar servicio
             <img src={agregar} alt="" className="h-6 sm:h-8" />

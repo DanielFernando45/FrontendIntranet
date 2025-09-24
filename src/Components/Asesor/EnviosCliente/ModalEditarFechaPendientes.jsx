@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { asuntosService } from "../../../../services/asuntosServices";
+import { asuntosService } from "../../../services/asuntosServices";
 
 const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
   const [fecha, setFecha] = useState("");

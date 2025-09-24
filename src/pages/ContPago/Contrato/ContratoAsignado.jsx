@@ -67,27 +67,39 @@ const ContratoAsignado = () => {
       alert("Ambas fechas son obligatorias.");
       return;
     }
+
     const fechaInicio = new Date(formData.fechaInicio);
     const fechaFin = new Date(formData.fechaFin);
+
     if (fechaInicio > fechaFin) {
       alert("La fecha de inicio no puede ser mayor que la fecha de fin.");
       return;
     }
+
+    // Si el servicio es Completo, la categoría es obligatoria
+    if (formData.servicio === "Completo" && !formData.idCategoria) {
+      alert("Selecciona una categoría.");
+      return;
+    }
+
     if (currentContrato) {
+      const payload = {
+        modalidad: formData.modalidad,
+        servicio: formData.servicio,
+        idTipoTrabajo: Number(formData.idTipoTrabajo),
+        idTipoPago: Number(formData.idTipoPago),
+        fechaInicio: fechaInicio.toISOString().slice(0, 19).replace("T", " "),
+        fechaFin: fechaFin.toISOString().slice(0, 19).replace("T", " "),
+      };
+
+      // Solo agregar idCategoria si aplica y tiene valor
+      if (formData.servicio === "Completo" && formData.idCategoria) {
+        payload.idCategoria = formData.idCategoria;
+      }
+
       mutationEditar.mutate({
-        id: currentContrato.id_contrato,
-        payload: {
-          modalidad: formData.modalidad,
-          servicio: formData.servicio,
-          idCategoria: formData.idCategoria,
-          idTipoTrabajo: formData.idTipoTrabajo,
-          idTipoPago: formData.idTipoPago,
-          fecha_inicio: fechaInicio
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " "),
-          fecha_fin: fechaFin.toISOString().slice(0, 19).replace("T", " "),
-        },
+        id: currentContrato.id_contrato, // mantenemos tu key tal cual
+        payload,
       });
     }
   };
@@ -102,9 +114,9 @@ const ContratoAsignado = () => {
     setFormData({
       modalidad: contrato.modalidad || "",
       servicio: contrato.servicio || "",
-      idCategoria: contrato.id_categoria || "",
-      idTipoTrabajo: contrato.id_tipoTrabajo || "",
-      idTipoPago: contrato.id_tipoPago || "",
+      idCategoria: contrato.idCategoria || "", // usa el nombre que viene del back
+      idTipoTrabajo: contrato.idTipoTrabajo || "",
+      idTipoPago: contrato.idTipoPago || "",
       fechaInicio: formatDateToInput(contrato.fecha_inicio),
       fechaFin: formatDateToInput(contrato.fecha_fin),
     });
@@ -226,9 +238,15 @@ const ContratoAsignado = () => {
                     }
                   >
                     <option disabled>Seleccionar</option>
-                    <option value="oro">Oro</option>
-                    <option value="plata">Plata</option>
-                    <option value="bronce">Bronce</option>
+                    <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
+                      Oro
+                    </option>
+                    <option value="cdf0ac54-a9f1-4f06-bcfe-f4f5a1d5b4d1">
+                      Plata
+                    </option>
+                    <option value="c4ad9ec9-2631-47fb-92e3-5493e2cc1703">
+                      Bronce
+                    </option>
                   </select>
                 </div>
               )}

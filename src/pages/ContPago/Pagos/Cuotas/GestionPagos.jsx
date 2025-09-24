@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ActualizarPago from "../../../../Components/Administrador/Pagos/ActualizarPago";
-import tachoelimanar from "../../../../assets/icons/tacho.svg";
+import tachoeliminar from "../../../../assets/icons/tacho.svg";
 
 const GestionPagos = () => {
   const [actualizar, setActualizar] = useState(false);
@@ -33,7 +33,6 @@ const GestionPagos = () => {
   }, []);
 
   const handleActualizarClick = (pagoInfo) => {
-    // Preparar los datos para enviar a ActualizarPago
     const pagoData = {
       id_infoPago: pagoInfo.id_infopago,
       delegado: pagoInfo.delegado,
@@ -42,7 +41,7 @@ const GestionPagos = () => {
       total_pagar: calculateTotal(pagoInfo.pagos),
       cuotas: pagoInfo.pagos
         .sort((a, b) => a.nombre.localeCompare(b.nombre))
-        .map((pago, index) => ({
+        .map((pago) => ({
           nombre: pago.nombre,
           monto: pago.monto,
           fecha_pago: pago.fecha_pago ? pago.fecha_pago.split("T")[0] : "",
@@ -73,7 +72,6 @@ const GestionPagos = () => {
         throw new Error("Error al eliminar el pago");
       }
 
-      // Actualizar la lista de pagos después de eliminar
       const updatedPagos = pagos.filter(
         (pago) => pago.id_infopago !== pagoToDelete
       );
@@ -89,7 +87,6 @@ const GestionPagos = () => {
 
   const formatDate = (fecha) => {
     const date = new Date(fecha);
-    // Forzamos UTC en el formato
     return date.toLocaleDateString("es-PE", {
       timeZone: "UTC",
       year: "numeric",
@@ -102,83 +99,139 @@ const GestionPagos = () => {
     return pagosArray.reduce((total, pago) => total + pago.monto, 0);
   };
 
-  if (loading) {
-    return <div>Cargando datos de pagos...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  if (loading) return <div>Cargando datos de pagos...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <>
-      <div className="flex flex-col">
-        <div className="flex justify-between text-[#495D72] font-medium p-[6px] pr-10 rounded-md">
+      <div className="flex flex-col gap-3">
+        {/* Cabecera solo en desktop */}
+        <div className="hidden md:flex justify-between text-[#495D72] font-medium p-[6px] pr-10 rounded-md">
           <div className="w-[100px] flex justify-center">IdPago</div>
           <div className="w-[300px] flex justify-center">Delegado</div>
           <div className="w-[100px] flex justify-center">Contrato</div>
           <div className="w-[510px] flex justify-center">Pagos</div>
           <div className="w-[150px] flex justify-center">Monto Total</div>
-          <div className="w-[200px] flex justify-center ">Acción</div>
+          <div className="w-[200px] flex justify-center">Acción</div>
         </div>
 
-        {pagos.map((pagoInfo) => (
-          <div
-            key={pagoInfo.id_infopago}
-            className={`flex justify-between items-center text-[#575051] font-normal p-[6px] pr-10 rounded-2xl ${
-              pagos.indexOf(pagoInfo) % 2 === 0 ? "bg-[#E9E7E7]" : ""
-            }`}
-          >
-            <div className="w-[100px] flex justify-center">
-              {pagoInfo.id_infopago}
-            </div>
-            <div className="w-[300px] flex justify-center">
-              {pagoInfo.delegado}
-            </div>
-            <div className="w-[100px] flex justify-center">
-              {pagoInfo.contrato}
-            </div>
-            <div className="w-[510px] flex justify-start gap-3 text-[#575051]">
-              {[...pagoInfo.pagos]
-                .sort((a, b) => a.nombre.localeCompare(b.nombre))
-                .map((pago) => (
-                  <div
-                    key={pago.id}
-                    className={`flex flex-col h-[50px] ${
-                      pagos.indexOf(pagoInfo) % 2 === 0
-                        ? "bg-white"
-                        : "bg-[#E9E7E7]"
-                    } text-[13px] rounded-3xl justify-between px-5 py-1 items-center`}
-                  >
-                    <p className="font-semibold">
-                      {pago.nombre}: S/. {pago.monto}
-                    </p>
-                    {pago.estado_pago === "pagado" ? (
-                      <p>Fecha: {formatDate(pago.fecha_pago)}</p>
-                    ) : (
-                      <p className="flex justify-center text-[#FF1E00] border border-[#FF1E00] rounded-2xl px-3">
-                        Por pagar
+        {pagos.map((pagoInfo, idx) => (
+          <div key={pagoInfo.id_infopago}>
+            {/* Vista Desktop */}
+            <div
+              className={`hidden md:flex justify-between items-center text-[#575051] font-normal p-[6px] pr-10 rounded-2xl ${
+                idx % 2 === 0 ? "bg-[#E9E7E7]" : ""
+              }`}
+            >
+              <div className="w-[100px] flex justify-center">
+                {pagoInfo.id_infopago}
+              </div>
+              <div className="w-[300px] flex justify-center">
+                {pagoInfo.delegado}
+              </div>
+              <div className="w-[100px] flex justify-center">
+                {pagoInfo.contrato}
+              </div>
+              <div className="w-[510px] flex flex-wrap justify-start gap-2 text-[#575051]">
+                {pagoInfo.pagos
+                  .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                  .map((pago) => (
+                    <div
+                      key={pago.id}
+                      className="flex flex-col bg-white text-[13px] rounded-2xl px-3 py-1"
+                    >
+                      <p className="font-semibold">
+                        {pago.nombre}: S/. {pago.monto}
                       </p>
-                    )}
-                  </div>
-                ))}
+                      {pago.estado_pago === "pagado" ? (
+                        <p>Fecha: {formatDate(pago.fecha_pago)}</p>
+                      ) : (
+                        <p className="text-[#FF1E00] border border-[#FF1E00] rounded-2xl px-2">
+                          Por pagar
+                        </p>
+                      )}
+                    </div>
+                  ))}
+              </div>
+              <div className="flex w-[150px] justify-center">
+                S/. {calculateTotal(pagoInfo.pagos)}
+              </div>
+              <div className="flex w-[200px] justify-center gap-2">
+                <button
+                  className="px-2 py-1 bg-[#1C1C34] text-white text-xs rounded-md"
+                  onClick={() => handleActualizarClick(pagoInfo)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="px-2 py-1 bg-red-500 text-white text-xs rounded-md"
+                  onClick={() => handleEliminarClick(pagoInfo)}
+                >
+                  Eliminar
+                </button>
+              </div>
             </div>
-            <div className="flex w-[150px] justify-center">
-              S/. {calculateTotal(pagoInfo.pagos)}
-            </div>
-            <div className="flex w-[200px] justify-between">
-              <button
-                className="font-medium rounded-md px-1 py-1 bg-[#1C1C34] flex justify-center text-white text-[14px]"
-                onClick={() => handleActualizarClick(pagoInfo)}
-              >
-                Actualizar Pagos
-              </button>
-              <button
-                className=""
-                onClick={() => handleEliminarClick(pagoInfo)}
-              >
-                <img src={tachoelimanar} alt="Eliminar" />
-              </button>
+
+            {/* Vista Mobile/Tablet */}
+            <div
+              className={`md:hidden flex flex-col gap-2 text-[#575051] font-normal p-4 rounded-2xl ${
+                idx % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
+              }`}
+            >
+              <div>
+                <span className="font-semibold">IdPago:</span>{" "}
+                {pagoInfo.id_infopago}
+              </div>
+              <div>
+                <span className="font-semibold">Delegado:</span>{" "}
+                {pagoInfo.delegado}
+              </div>
+              <div>
+                <span className="font-semibold">Contrato:</span>{" "}
+                {pagoInfo.contrato}
+              </div>
+              <div>
+                <span className="font-semibold">Pagos:</span>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {pagoInfo.pagos
+                    .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                    .map((pago) => (
+                      <div
+                        key={pago.id}
+                        className="bg-gray-100 rounded-lg px-2 py-1 text-xs"
+                      >
+                        <p>
+                          {pago.nombre}: S/. {pago.monto}
+                        </p>
+                        {pago.estado_pago === "pagado" ? (
+                          <p className="text-green-600 text-[10px]">
+                            {formatDate(pago.fecha_pago)}
+                          </p>
+                        ) : (
+                          <p className="text-[#FF1E00] text-[10px]">Por pagar</p>
+                        )}
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div>
+                <span className="font-semibold">Monto Total:</span> S/.{" "}
+                {calculateTotal(pagoInfo.pagos)}
+              </div>
+              <div className="flex gap-2 mt-2">
+                <button
+                  className="flex-1 px-1 py-1 bg-[#1C1C34] text-white text-[10px] rounded-md"
+                  onClick={() => handleActualizarClick(pagoInfo)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="flex-1 px-1 py-1 border border-red-500 text-red-500 text-[10px] rounded-md"
+                  onClick={() => handleEliminarClick(pagoInfo)}
+                >
+                  Eliminar
+                </button>
+              </div>
             </div>
           </div>
         ))}

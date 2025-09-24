@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import LayoutApp from "../../layout/LayoutApp";
 import { asesoriasService } from "../../services/asesoriasService";
-import ModalSubirInduccion from "./Induccion/components/ModalSubirInduccion";
+import ModalSubirInduccion from "../../Components/Induccion/ModalSubirInduccion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,6 @@ const Induccion = () => {
   console.log(asesoramientos);
 
   return (
-    // <div className="bg-red-400 absolute top-0 left-0 z-[99]">
     <LayoutApp>
       <main className="flex flex-col xl:mx-32  items-start">
         <h2 className="text-3xl font-bold mb-5">

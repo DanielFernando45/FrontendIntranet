@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import { GoPlusCircle } from "react-icons/go";
 import { TiDelete } from "react-icons/ti";
-import { asuntosService } from "../../../../services/asuntosServices";
+import { asuntosService } from "../../../services/asuntosServices";
 
 const ModalEditarDoc = ({ idAsunto, onClose }) => {
   const userAuth = JSON.parse(localStorage.getItem("user"));

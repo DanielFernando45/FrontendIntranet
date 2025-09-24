@@ -3,7 +3,7 @@ import axios from "axios";
 import documentosVacios from "../../../assets/icons/documentosVacios.png";
 import { useOutletContext } from "react-router-dom";
 import { FaRegEdit } from "react-icons/fa";
-import ModalEditarDoc from "./components/ModalEditarDoc";
+import ModalEditarDoc from "../../../Components/Asesor/EnviosCliente/ModalEditarDoc";
 
 const DocTerminado = () => {
   const [terminados, setTerminado] = useState([]);

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { induccionesService } from "../../../../services/induccionesService";
+import { induccionesService } from "../../services/induccionesService";
 import { useRef, useState } from "react";
 
 const ModalSubirInduccion = ({
