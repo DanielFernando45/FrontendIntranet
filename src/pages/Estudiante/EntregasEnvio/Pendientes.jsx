@@ -182,15 +182,15 @@ const Pendientes = () => {
                   onClick={() => {
                     setIdAsunto(pendiente.id_asunto), setShowEditarModal(true);
                   }}
-                  className="p-2 bg-[#353563] rounded-md"
+                  className="text-[#353563]"
                 >
                   <FaRegEdit size={20} />
                 </button>
                 <button
                   onClick={() => handleDeleteAsunto(pendiente.id_asunto)}
-                  className="p-2 bg-[#353563] rounded-md"
+                  className="text-[#353563]"
                 >
-                  <IoTrash size={20} className="bg-[#353563]" />
+                  <IoTrash size={20}  />
                 </button>
               </div>
               <button

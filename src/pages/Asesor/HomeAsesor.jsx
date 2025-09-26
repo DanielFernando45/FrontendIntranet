@@ -146,13 +146,9 @@ const HomeAsesor = () => {
           {/*Envio Asesor*/}
           <div className="bg-[#F5F5F5] rounded-xl p-4 mt-5 w-full xl:w-[780px] 1xl:w-[863px] 2xl:w-[1050px] 3xl:w-[1150px] 4xl:w-[1250px] 6xl:w-[1450px]">
             <div className="flex justify-between">
-              <h2 className="text-2xl font-semibold">
+              <h2 className=" sm:text-2xl  font-semibold">
                 Ultimos Envios del Cliente
               </h2>
-              <span className="flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <a href=""></a>
-                <img src={flechaAzul} alt="" />
-              </span>
             </div>
 
             <div>
@@ -176,17 +172,13 @@ const HomeAsesor = () => {
 
             <div className=" bg-[#F5F5F5] rounded-xl p-4 h-[230px] overflow-auto ">
               <div className="  flex justify-between ">
-                <h2 className="text-2xl font-semibold ">Reuniones</h2>
-                <span className="flex  justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                  <a href="">Ver todo</a>
-                  <img src={flechaAzul} alt="" />
-                </span>
+                <h2 className="sm:text-2xl font-semibold ">Reuniones</h2>
               </div>
 
               {reuniones.map((reunion) => (
                 <div
                   key={reunion.id}
-                  className="flex w-auto mt-4 h-[120px] mn:w-[300px] mn:h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[150px]  md:w-[400px] mx-auto lg:w-auto items-center"
+                  className="flex w-auto mt-4  mn:w-[300px] h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[150px]  md:w-[400px] mx-auto lg:w-auto items-center"
                 >
                   <div className="flex flex-col h-full justify-between gap-[45px] items-center rounded-l-xl w-[80px] mn:w-[104px] bg-[#17162E] p-4 text-white">
                     <div className="flex flex-col justify-center items-center gap-5">

@@ -65,7 +65,9 @@ const Activos = () => {
       <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
         <div className="w-[100px] flex justify-center">IDAsesoria</div>
         <div className="w-[300px] flex justify-center">Delegado</div>
-        <div className="w-[250px] flex justify-center">Contrato Asesoria</div>
+        <div className="w-[300px] flex justify-center">Tipo Trabajo</div>
+        <div className="w-[300px] flex justify-center">Modalidad</div>
+        <div className="w-[300px] flex justify-center">Referencia</div>
         <div className="w-[250px] flex justify-center">F.inicio</div>
         <div className="w-[250px] flex justify-center">F.vencimiento</div>
       </div>
@@ -81,7 +83,13 @@ const Activos = () => {
           <div className="w-[300px] flex justify-center">
             {asesoria.delegado}
           </div>
-          <div className="w-[250px] flex justify-center">
+          <div className="w-[300px] flex justify-center">
+            {asesoria.tipo_trabajo}
+          </div>
+          <div className="w-[300px] flex justify-center">
+            {asesoria.modalidad}
+          </div>
+          <div className="w-[300px] flex justify-center">
             {asesoria.profesion_asesoria}
           </div>
           <div className="w-[250px] flex justify-center">

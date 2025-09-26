@@ -123,7 +123,7 @@ const DocTerminado = () => {
                     setIdAsunto(terminado.id);
                     setShowEditarModal(true);
                   }}
-                  className="p-2 bg-[#353563] rounded-md text-white"
+                  className=" rounded-md text-[#353563]"
                 >
                   <FaRegEdit size={18} />
                 </button>
