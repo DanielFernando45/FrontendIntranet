@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import LayoutApp from "../../layout/LayoutApp";
 import Zoom from "../../assets/images/zoom.svg";
+import {
+  CalendarCheck2,
+  Clock,
+  Video,
+  FileText,
+  NotepadText,
+  ClipboardX,
+} from "lucide-react";
 
 const CalendarioAsesor = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -13,13 +21,17 @@ const CalendarioAsesor = () => {
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState(null);
   const [eventosDia, setEventosDia] = useState([]);
   const [fechaVencimiento, setFechaVencimiento] = useState(null);
+  const [eventos, setEventos] = useState({
+    reuniones: [],
+    contratos: [],
+    asuntos: [],
+  });
 
   useEffect(() => {
     const userString = localStorage.getItem("user");
     if (userString) {
       const user = JSON.parse(userString);
       const id = user.id_asesor;
-
       fetch(
         `${
           import.meta.env.VITE_API_PORT_ENV
@@ -33,10 +45,8 @@ const CalendarioAsesor = () => {
             delegado: item.delegado,
           }));
           setAsesorias(asesoriasArray);
-
           if (asesoriasArray.length > 0) {
-            const primeraAsesoriaId = asesoriasArray[0].id;
-            setSelectedAsesoriaId(primeraAsesoriaId);
+            setSelectedAsesoriaId(asesoriasArray[0].id);
           }
         })
         .catch((error) => console.error("Error al obtener asesorías:", error));
@@ -73,27 +83,73 @@ const CalendarioAsesor = () => {
   };
 
   const fetchEventosDia = () => {
-    const fechaSeleccionada = `${selectedYear}-${String(
-      selectedMonth + 1
-    ).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
     fetch(
       `${
         import.meta.env.VITE_API_PORT_ENV
-      }/common/calendario_asesor/${selectedAsesoriaId}/${fechaSeleccionada}`
+      }/common/calendario_asesor/${selectedAsesoriaId}`
     )
       .then((res) => res.json())
       .then((data) => {
-        setEventosDia(data);
+        if (data) {
+          const reuniones = data.reuniones || [];
+          const contratos = data.contratos || [];
+          const asuntos = data.asuntos || [];
+          setEventos({ reuniones, contratos, asuntos });
+          const eventosDelDia = [
+            ...reuniones.filter(
+              (evento) =>
+                new Date(evento.fecha).getDate() === selectedDay &&
+                new Date(evento.fecha).getMonth() === selectedMonth &&
+                new Date(evento.fecha).getFullYear() === selectedYear
+            ),
+            ...contratos.filter(
+              (evento) =>
+                (new Date(evento.fecha_inicio).getDate() === selectedDay &&
+                  new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
+                  new Date(evento.fecha_inicio).getFullYear() ===
+                    selectedYear) ||
+                (evento.fecha_fin &&
+                  new Date(evento.fecha_fin).getDate() === selectedDay &&
+                  new Date(evento.fecha_fin).getMonth() === selectedMonth &&
+                  new Date(evento.fecha_fin).getFullYear() === selectedYear)
+            ),
+            ...asuntos.filter(
+              (evento) =>
+                (evento.fecha_entregado &&
+                  new Date(evento.fecha_entregado).getDate() === selectedDay &&
+                  new Date(evento.fecha_entregado).getMonth() ===
+                    selectedMonth &&
+                  new Date(evento.fecha_entregado).getFullYear() ===
+                    selectedYear) ||
+                (evento.fecha_revision &&
+                  new Date(evento.fecha_revision).getDate() === selectedDay &&
+                  new Date(evento.fecha_revision).getMonth() ===
+                    selectedMonth &&
+                  new Date(evento.fecha_revision).getFullYear() ===
+                    selectedYear) ||
+                (evento.fecha_terminado &&
+                  new Date(evento.fecha_terminado).getDate() === selectedDay &&
+                  new Date(evento.fecha_terminado).getMonth() ===
+                    selectedMonth &&
+                  new Date(evento.fecha_terminado).getFullYear() ===
+                    selectedYear) ||
+                (evento.fecha_estimada &&
+                  new Date(evento.fecha_estimada).getDate() === selectedDay &&
+                  new Date(evento.fecha_estimada).getMonth() ===
+                    selectedMonth &&
+                  new Date(evento.fecha_estimada).getFullYear() ===
+                    selectedYear)
+            ),
+          ];
+          setEventosDia(eventosDelDia);
+        }
       })
       .catch((error) =>
         console.error("Error al obtener eventos del día:", error)
       );
   };
 
-  const handleChange = (e) => {
-    const asesoriaId = e.target.value;
-    setSelectedAsesoriaId(asesoriaId);
-  };
+  const handleChange = (e) => setSelectedAsesoriaId(e.target.value);
 
   const months = [
     "Enero",
@@ -109,7 +165,6 @@ const CalendarioAsesor = () => {
     "Noviembre",
     "Diciembre",
   ];
-
   const daysOfWeek = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
 
   useEffect(() => {
@@ -119,54 +174,31 @@ const CalendarioAsesor = () => {
   const generateCalendar = () => {
     const firstDay = new Date(selectedYear, selectedMonth, 1);
     const lastDay = new Date(selectedYear, selectedMonth + 1, 0);
-
     const startDay = firstDay.getDay();
     const totalDays = lastDay.getDate();
-
     const prevMonthDays = new Date(selectedYear, selectedMonth, 0).getDate();
-
     let days = [];
-
-    // Días del mes anterior
-    for (let i = startDay - 1; i >= 0; i--) {
-      days.push({
-        day: prevMonthDays - i,
-        currentMonth: false,
-        date: new Date(selectedYear, selectedMonth - 1, prevMonthDays - i),
-      });
-    }
-
-    // Días del mes actual
+    for (let i = startDay - 1; i >= 0; i--)
+      days.push({ day: prevMonthDays - i, currentMonth: false });
     for (let i = 1; i <= totalDays; i++) {
-      const date = new Date(selectedYear, selectedMonth, i);
       const isVencimiento =
         fechaVencimiento &&
         i === fechaVencimiento.day &&
         selectedMonth === fechaVencimiento.month &&
         selectedYear === fechaVencimiento.year;
-
       days.push({
         day: i,
         currentMonth: true,
-        date: date,
         isToday:
           i === new Date().getDate() &&
           selectedMonth === new Date().getMonth() &&
           selectedYear === new Date().getFullYear(),
-        isVencimiento: isVencimiento,
+        isVencimiento,
       });
     }
-
-    // Días del siguiente mes
     const remainingCells = 42 - days.length;
-    for (let i = 1; i <= remainingCells; i++) {
-      days.push({
-        day: i,
-        currentMonth: false,
-        date: new Date(selectedYear, selectedMonth + 1, i),
-      });
-    }
-
+    for (let i = 1; i <= remainingCells; i++)
+      days.push({ day: i, currentMonth: false });
     setCalendarDays(days);
     setMonthName(months[selectedMonth]);
     updateSelectedDayInfo(selectedDay);
@@ -174,8 +206,9 @@ const CalendarioAsesor = () => {
 
   const updateSelectedDayInfo = (day) => {
     const date = new Date(selectedYear, selectedMonth, day);
-    const options = { weekday: "long" };
-    const dayName = new Intl.DateTimeFormat("es-ES", options).format(date);
+    const dayName = new Intl.DateTimeFormat("es-ES", {
+      weekday: "long",
+    }).format(date);
     setDayName(dayName.charAt(0).toUpperCase() + dayName.slice(1));
   };
 
@@ -188,149 +221,163 @@ const CalendarioAsesor = () => {
 
   const formatTime = (dateTimeString) => {
     const date = new Date(dateTimeString);
-    // Obtenemos las horas y minutos directamente (UTC)
-    const hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
-    // Formateamos a 2 dígitos cada componente
-    const formattedHours = String(hours).padStart(2, "0");
-    const formattedMinutes = String(minutes).padStart(2, "0");
-    return `${formattedHours}:${formattedMinutes}`;
-  };
-
-  const addOneHour = (dateTimeString) => {
-    const date = new Date(dateTimeString);
-    date.setUTCHours(date.getUTCHours() + 1);
-    return date.toISOString();
-  };
-
-  const renderEventos = () => {
-    if (eventosDia.length === 0) {
-      return (
-        <div className="bg-white flex w-full min-h-[121px] gap-2 p-4 border-2 border-[#E9E7E7] rounded-lg">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-center sm:text-[25px] font-bold text-[#575051]">
-              No hay eventos programados
-            </h2>
-          </div>
-        </div>
-      );
-    }
-
-    return eventosDia.map((evento, index) => {
-      if (evento.fecha) {
-        // Evento de reunión
-        return (
-          <div
-            key={index}
-            className="bg-white flex w-full min-h-[121px] gap-2 p-4 border-2 border-[#E9E7E7] rounded-lg"
-          >
-            <div className="flex items-start pt-1">
-              <div className="w-[15px] h-[15px] rounded-full bg-[#4E4E91]"></div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <p className="text-[#575051] font-medium">
-                {formatTime(evento.fecha)} -{" "}
-                {formatTime(addOneHour(evento.fecha))}
-              </p>
-              <h2 className="text-[25px] font-bold text-[#575051]">
-                {evento.delegado}
-              </h2>
-              <div className="flex gap-2 items-center">
-                {evento.enlace && (
-                  <a
-                    href={evento.enlace}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img src={Zoom} alt="Zoom" className="w-4 h-4" />
-                  </a>
-                )}
-                <p className="text-[#82777A]">{evento.titulo}</p>
-              </div>
-            </div>
-          </div>
-        );
-      } else if (evento.fecha_terminado) {
-        // Evento de mensaje con fecha
-        return (
-          <div
-            key={index}
-            className="bg-white flex w-full min-h-[121px] gap-2 p-4 border-2 border-[#E9E7E7] rounded-lg"
-          >
-            <div className="flex items-start pt-1">
-              <div className="w-[15px] h-[15px] rounded-full bg-[#4E4E91]"></div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h2 className="text-[25px] font-bold text-[#575051]">
-                {evento.titulo}
-              </h2>
-              <p className="text-[#82777A]">{evento.message}</p>
-              <p className="text-[#575051] font-medium">
-                {formatTime(evento.fecha_terminado)}
-              </p>
-            </div>
-          </div>
-        );
-      } else {
-        // Evento de mensaje sin fecha
-        return (
-          <div
-            key={index}
-            className="bg-white flex w-full min-h-[121px] gap-2 p-4 border-2 border-[#E9E7E7] rounded-lg"
-          >
-            <div className="flex items-start pt-1">
-              <div className="w-[15px] h-[15px] rounded-full bg-[#4E4E91]"></div>
-            </div>
-            <div className="flex flex-col gap-1">
-              <h2 className="text-[25px] font-bold text-[#575051]">
-                {evento.titulo}
-              </h2>
-              <p className="text-[#82777A]">{evento.message}</p>
-            </div>
-          </div>
-        );
-      }
-    });
+    return `${String(date.getUTCHours()).padStart(2, "0")}:${String(
+      date.getUTCMinutes()
+    ).padStart(2, "0")}`;
   };
 
   const renderCalendarDays = () => {
     const weeks = [];
-    for (let i = 0; i < calendarDays.length; i += 7) {
+    for (let i = 0; i < calendarDays.length; i += 7)
       weeks.push(calendarDays.slice(i, i + 7));
-    }
-
     return weeks.map((week, weekIndex) => (
       <div key={weekIndex} className="flex gap-2 w-full">
         {week.map((dayData, dayIndex) => {
           const isSelected =
             dayData.currentMonth && dayData.day === selectedDay;
+
           const isToday = dayData.isToday;
           const isVencimiento = dayData.isVencimiento;
+          const eventosEnElDia = eventos.reuniones.filter(
+            (evento) =>
+              new Date(evento.fecha).getDate() === dayData.day &&
+              new Date(evento.fecha).getMonth() === selectedMonth &&
+              new Date(evento.fecha).getFullYear() === selectedYear
+          );
 
+          const eventosDeContrato = eventos.contratos.filter(
+            (evento) =>
+              (new Date(evento.fecha_inicio).getDate() === dayData.day &&
+                new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
+                new Date(evento.fecha_inicio).getFullYear() === selectedYear) ||
+              (evento.fecha_fin &&
+                new Date(evento.fecha_fin).getDate() === dayData.day &&
+                new Date(evento.fecha_fin).getMonth() === selectedMonth &&
+                new Date(evento.fecha_fin).getFullYear() === selectedYear)
+          );
+          const eventosDeAsunto = eventos.asuntos.filter(
+            (evento) =>
+              (evento.fecha_entregado &&
+                new Date(evento.fecha_entregado).getDate() === dayData.day &&
+                new Date(evento.fecha_entregado).getMonth() === selectedMonth &&
+                new Date(evento.fecha_entregado).getFullYear() ===
+                  selectedYear) ||
+              (evento.fecha_revision &&
+                new Date(evento.fecha_revision).getDate() === dayData.day &&
+                new Date(evento.fecha_revision).getMonth() === selectedMonth &&
+                new Date(evento.fecha_revision).getFullYear() ===
+                  selectedYear) ||
+              (evento.fecha_terminado &&
+                new Date(evento.fecha_terminado).getDate() === dayData.day &&
+                new Date(evento.fecha_terminado).getMonth() === selectedMonth &&
+                new Date(evento.fecha_terminado).getFullYear() ===
+                  selectedYear) ||
+              (evento.fecha_estimada &&
+                new Date(evento.fecha_estimada).getDate() === dayData.day &&
+                new Date(evento.fecha_estimada).getMonth() === selectedMonth &&
+                new Date(evento.fecha_estimada).getFullYear() === selectedYear)
+          );
+          const hasEventos =
+            eventosEnElDia.length > 0 || eventosDeAsunto.length > 0;
+          let eventIcons = new Set();
+          let dayColor = "";
+          let dayText = "";
+          eventosDeContrato.forEach((evento) => {
+            if (
+              evento.fecha_fin &&
+              new Date(evento.fecha_fin).getDate() === dayData.day &&
+              new Date(evento.fecha_fin).getMonth() === selectedMonth &&
+              new Date(evento.fecha_fin).getFullYear() === selectedYear
+            ) {
+              dayColor = "bg-[#E9E7E7] text-red-500"; // cambia fondo y texto
+              dayText = { label: "Fin contrato", textColor: "text-red-500" };
+            } else if (
+              new Date(evento.fecha_inicio).getDate() === dayData.day &&
+              new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
+              new Date(evento.fecha_inicio).getFullYear() === selectedYear &&
+              dayColor !== "text-red-500"
+            ) {
+              dayColor = "bg-[#E9E7E7] text-green-500";
+              dayText = {
+                label: "Inicio contrato",
+                textColor: "text-green-500",
+              };
+            }
+          });
+          if (eventosEnElDia.length > 0)
+            eventIcons.add(<Video className="text-blue-500" />);
+          if (eventosDeAsunto.length > 0) {
+            for (let evento of eventosDeAsunto) {
+              let icon = null;
+              if (
+                evento.estado === "terminado" &&
+                evento.fecha_terminado &&
+                !icon
+              )
+                icon = <CalendarCheck2 className="text-gray-500" />;
+              else if (
+                evento.estado === "en proceso" &&
+                evento.fecha_revision &&
+                !icon
+              )
+                icon = <Clock className="text-gray-500" />;
+              else if (
+                evento.estado === "en proceso" &&
+                evento.fecha_estimada &&
+                !icon
+              )
+                icon = <Clock className="text-gray-500" />;
+              else if (
+                evento.estado === "entregado" &&
+                evento.fecha_entregado &&
+                !icon
+              )
+                icon = <NotepadText className="text-gray-500" />;
+              if (icon) {
+                eventIcons.add(icon);
+                break;
+              }
+            }
+          }
           return (
             <div
               key={dayIndex}
               onClick={() => handleDayClick(dayData.day, dayData.currentMonth)}
-              className={`
-                flex justify-center items-center rounded-full flex-1 lg:w-[60px] lg:h-[60px] xl:w-[85px] xl:h-[85px] xl:text-[25px] 
-                cursor-pointer transition-colors duration-200
-                ${
-                  dayData.currentMonth
-                    ? isSelected
-                      ? "bg-[#4BD7F5] text-white"
-                      : isToday
-                      ? "border-2 border-[#4BD7F5] text-[#4BD7F5]"
-                      : "text-[#575051] hover:bg-[#E9E7E7] hover:text-[#4BD7F5]"
-                    : "text-[#D2CECF] hover:bg-[#E9E7E7]"
-                }
-              `}
+              className={`flex justify-center items-center rounded-full flex-1 lg:w-[60px] lg:h-[60px] xl:w-[85px] xl:h-[85px] xl:text-[22px] cursor-pointer transition ${
+                dayData.currentMonth ? "bg-white" : "text-gray-300"
+              } relative`}
             >
-              {dayData.day}
+              <div
+                className={`text-[16px] font-semibold text-black rounded-full w-[40px] h-[40px] flex justify-center items-center
+                  ${isToday ? "bg-[#4BD7F5]" : ""}
+                  ${isSelected ? "bg-gray-300" : ""}
+                  ${!isToday && !isSelected && hasEventos ? "bg-[#E9E7E7]" : ""}
+                  ${!isToday && !isSelected && !hasEventos ? dayColor : ""}
+                `}
+              >
+                {dayData.day}
+              </div>
+              {dayText && (
+                <div
+                  className={`absolute bottom-0 text-sm font-semibold ${
+                    dayText.textColor || "text-gray-600"
+                  }`}
+                >
+                  {dayText.label}
+                </div>
+              )}
+              {eventIcons.size > 0 && (
+                <div className="absolute mt-12 flex gap-1 left-1/2 transform -translate-x-1/2">
+                  {[...eventIcons].map((icon, index) => (
+                    <div key={index} className="w-[20px] h-[20px]">
+                      {icon}
+                    </div>
+                  ))}
+                </div>
+              )}
               {isVencimiento && (
-                <div className="relative bottom-1 w-2 h-2 rounded-full  text-[10px] font-semibold text-red-500">
-                  <p className="absolute  top-7 right-[-10px]">
-                    Contrato Finalizado
-                  </p>
+                <div className="absolute mt-12 text-[10px] font-semibold text-red-500">
+                  Contrato Finalizado
                 </div>
               )}
             </div>
@@ -343,14 +390,30 @@ const CalendarioAsesor = () => {
   return (
     <LayoutApp>
       <main className="sm:m-5 flex flex-col lg:flex-row gap-10 xl:gap-[60px]">
-        <div className=" flex flex-col flex-1 lg:w-[60%] justify-center items-center ">
-          <div className="bg-white rounded-xl p-4 flex flex-col md:flex-row w-full justify-between mb-10 items-center">
-            <p className="font-semibold text-[20px] text-[#575051]">
+        <div className="flex flex-col flex-1 lg:w-[60%] justify-center items-center">
+        
+          <div className="bg-white rounded-xl p-4 flex flex-col gap-4 w-full shadow">
+            <div className="flex gap-2">
+              {daysOfWeek.map((day, index) => (
+                <div
+                  key={index}
+                  className="flex justify-center items-center rounded-full flex-1 lg:w-[60px] xl:w-[85px] xl:h-[35px] xl:text-[16px] font-semibold text-gray-600"
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
+            {renderCalendarDays()}
+          </div>
+        </div>
+        <div className="flex flex-col h-full justify-center p-5 gap-8 flex-1 xl:w-[40%] bg-white rounded-xl shadow-lg">
+            <div className="bg-white rounded-xl p-4 flex flex-col md:flex-row w-full justify-between mb-10 items-center shadow">
+            <p className="font-semibold text-[20px] text-gray-800">
               Calendario de actividades
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <select
-                className="bg-[#1C1C34] w-full p-[5px] rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
+                className="bg-gray-900 w-full p-[5px] rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               >
@@ -360,9 +423,8 @@ const CalendarioAsesor = () => {
                   </option>
                 ))}
               </select>
-
               <select
-                className="bg-[#1C1C34] p-[5px] w-full rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
+                className="bg-gray-900 p-[5px] w-full rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               >
@@ -372,9 +434,8 @@ const CalendarioAsesor = () => {
                   </option>
                 ))}
               </select>
-
               <select
-                className="border-2 rounded-md px-2 border-black"
+                className="border-2 rounded-md px-2 border-gray-700 font-medium"
                 onChange={handleChange}
                 value={selectedAsesoriaId || ""}
               >
@@ -386,36 +447,91 @@ const CalendarioAsesor = () => {
               </select>
             </div>
           </div>
-
-          <div className="bg-white rounded-xl p-4 flex flex-col gap-4 w-full">
-            <div className="flex gap-2">
-              {daysOfWeek.map((day, index) => (
-                <div
-                  key={index}
-                  className="flex justify-center items-center rounded-full flex-1 lg:w-[60px] xl:w-[85px] xl:h-[35px] xl:text-[18px] font-semibold text-[#575051]"
-                >
-                  {day}
-                </div>
-              ))}
-            </div>
-
-            {renderCalendarDays()}
-          </div>
-        </div>
-
-        <div className="flex flex-col h-full justify-center p-5 gap-8 flex-1 xl:w-[40%] bg-white rounded-xl shadow-md">
           <div className="text-center">
-            <p className="text-[#b1afb0] font-medium text-[20px]">{dayName}</p>
-            <h2 className="text-[50px] font-semibold text-[#575051]">
+            <p className="text-gray-400 font-medium text-[18px]">{dayName}</p>
+            <h2 className="text-[45px] font-bold text-gray-800">
               {selectedDay}
             </h2>
-            <h1 className="text-[#575051] text-[25px] font-semibold">
+            <h1 className="text-gray-700 text-[22px] font-semibold">
               {monthName}
             </h1>
           </div>
-
-          <div className="flex flex-col gap-4 overflow-y-auto max-h-[500px]">
-            {renderEventos()}
+          <div className="flex flex-col gap-4 overflow-y-auto max-h-[330px]">
+            {eventosDia.map((evento, index) => {
+              let eventColor = "";
+              let eventDetails = "";
+              if (evento.fecha) {
+                eventColor = "bg-blue-500";
+                eventDetails = (
+                  <>
+                    <p className="text-gray-600 font-medium">
+                      {new Date(evento.fecha).toLocaleDateString("es-ES")} -{" "}
+                      {formatTime(evento.fecha)}
+                    </p>
+                    <p className="text-gray-400 text-sm">
+                      <a
+                        href={evento.enlace_zoom}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600"
+                      >
+                        Enlace Zoom
+                      </a>
+                    </p>
+                  </>
+                );
+              } else if (evento.fecha_inicio) {
+                eventColor = "bg-green-500";
+                eventDetails = (
+                  <>
+                    <p className="text-gray-600 font-medium">
+                      {new Date(evento.fecha_inicio).toLocaleDateString(
+                        "es-ES"
+                      )}{" "}
+                      - {formatTime(evento.fecha_inicio)}
+                    </p>
+                    <p className="text-gray-500">Servicio: {evento.servicio}</p>
+                    <p className="text-gray-500">
+                      Modalidad: {evento.modalidad}
+                    </p>
+                  </>
+                );
+              } else {
+                eventColor = "bg-red-500";
+                eventDetails = (
+                  <>
+                    <p className="text-gray-600 font-medium">
+                      {evento.fecha_entregado
+                        ? new Date(evento.fecha_entregado).toLocaleDateString(
+                            "es-ES"
+                          )
+                        : "Sin fecha"}{" "}
+                      -{" "}
+                      {evento.fecha_terminado
+                        ? formatTime(evento.fecha_terminado)
+                        : "Sin hora"}
+                    </p>
+                    <p className="text-gray-400">Estado: {evento.estado}</p>
+                  </>
+                );
+              }
+              return (
+                <div
+                  key={index}
+                  className={`bg-white flex w-full min-h-[121px] gap-4 p-5 border border-[#E5E7EB] rounded-xl shadow hover:shadow-md transition ${eventColor}`}
+                >
+                  <div className="flex items-start pt-1">
+                    <div className="w-[15px] h-[15px] rounded-full bg-indigo-500 shadow-md"></div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <h2 className="text-[22px] font-bold text-gray-800">
+                      {evento.titulo}
+                    </h2>
+                    {eventDetails}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>

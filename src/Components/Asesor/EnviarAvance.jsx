@@ -55,17 +55,20 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
       onClose();
     }
   };
-
   const handleSubmit = async () => {
     if (titulo.trim() === "" || archivos.length === 0) return;
 
     setIsSubmitting(true);
-
     try {
-      // 👉 Enviar titulo y archivos "crudos" al padre
-      await onSubmit(titulo, archivos);
+      const formData = new FormData();
+      formData.append("titulo", titulo); // 👈 exacto como en UpdateAsuntoDto
 
-      // ✅ resetear formulario después de enviar
+      archivos.forEach((file) => {
+        formData.append("files", file); // 👈 coincide con FilesInterceptor('files')
+      });
+
+      await onSubmit(formData);
+
       setTitulo("");
       setArchivos([]);
       onClose();

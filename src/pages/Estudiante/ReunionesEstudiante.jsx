@@ -145,26 +145,37 @@ const ReunionesEstudiante = () => {
                         key={index}
                         className="flex flex-col sm:flex-row w-full sm:w-[310px] h-auto sm:h-[170px] items-center"
                       >
-                        <div
-                          className={`flex flex-col justify-center items-center rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none w-full sm:w-[104px] h-[100px] sm:h-full bg-[#17162E] p-4 text-white`}
-                        >
-                          <p>{formattedDate.month}</p>
-                          <h1 className="text-[30px]">{formattedDate.day}</h1>
-                          <p className="text-[12px]">{formattedDate.time}</p>
+                        {/* Sección de fecha */}
+                        <div className="flex flex-col justify-center items-center rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none w-full sm:w-[104px] h-[100px] sm:h-full bg-[#17162E] p-4 text-white">
+                          <p className="text-xs">{formattedDate.month}</p>
+                          <h1 className="text-3xl font-semibold">
+                            {formattedDate.day}
+                          </h1>
+                          <p className="text-[10px]">{formattedDate.time}</p>
                         </div>
-                        <div className="flex flex-col justify-between w-full h-full border border-[#AAA3A5] bg-[#F0EFEF] p-4 rounded-b-xl sm:rounded-r-xl sm:rounded-bl-none">
-                          <span className="flex flex-col gap-[6px]">
-                            <p className="font-medium">{reunion.titulo}</p>
-                            <h1 className="text-[#666666]">
-                              Codigo: {reunion.meetingId}
+
+                        {/* Sección de reunión */}
+                        <div className="flex flex-col justify-between w-full h-full border border-[#E0E0E0] bg-[#F9F9F9] p-4 rounded-b-xl sm:rounded-r-xl sm:rounded-bl-none">
+                          <span className="flex flex-col gap-2">
+                            <p className="font-medium text-[#333333]">
+                              {reunion.titulo}
+                            </p>
+                            <h1 className="text-[#999999] text-sm">
+                              Código: {reunion.meetingId}
                             </h1>
                           </span>
-                          <div className="w-full px-5">
-                            <button className="flex gap-4 justify-between px-1 h-12 items-center text-white rounded-2xl bg-[#1271ED]">
-                              <a href={reunion.enlace_zoom} target="_blank">
-                                <p className="font-medium">Enlace Zoom</p>
+                          <div className="w-full px-4">
+                            <button className="flex gap-4 justify-between items-center h-10 px-6 bg-[#1271ED] hover:bg-[#1E85F6] text-white rounded-full transition-all duration-200">
+                              <a
+                                href={reunion.enlace_zoom}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <p className="font-medium text-sm">
+                                  Enlace Zoom
+                                </p>
                               </a>
-                              <img src={Zoom} alt="Zoom" className="w-6 h-6" />
+                              <img src={Zoom} alt="Zoom" className="w-5 h-5" />
                             </button>
                           </div>
                         </div>
@@ -196,23 +207,33 @@ const ReunionesEstudiante = () => {
                             className="flex flex-col sm:flex-row items-center relative"
                           >
                             <img
-                              src="/wp-induccion.jpg"
-                              className="block w-full rounded-md"
+                              src="/preview.png"
+                              className="block w-full rounded-md shadow-lg"
                               alt="back_image-induccion"
                             />
-                            <div className="absolute w-full h-full top-0 flex flex-col justify-between p-2">
-                              <p className="text-white">{induccion?.titulo}</p>
-                              <div className="flex justify-between text-white">
+
+                            <div className="absolute w-full h-full top-0 flex flex-col justify-between p-6 bg-gradient-to-t from-black to-transparent opacity-80">
+                              {/* Título */}
+                              <p className="text-white text-3xl font-bold text-shadow-md mb-4">
+                                {induccion?.titulo}
+                              </p>
+
+                              <div className="flex justify-between items-center mt-auto">
+                                {/* Botón de ver */}
                                 <button
                                   onClick={() => {
                                     setUrlVideo(induccion.url);
                                     setShowModalVideo(true);
                                   }}
-                                  className="ml-auto text-sm border border-white rounded-md  p-2 flex gap-1 items-center"
+                                  className="ml-auto text-sm bg-blue-500 text-white border-2 border-blue-500 rounded-md p-3 flex gap-2 items-center hover:bg-white hover:text-blue-500 transition-all duration-300 ease-in-out"
                                 >
                                   Ver
                                   <span>
-                                    <img src={play_icon} alt="play-icon" />
+                                    <img
+                                      src={play_icon}
+                                      alt="play-icon"
+                                      className="w-5 h-5"
+                                    />
                                   </span>
                                 </button>
                               </div>
@@ -237,14 +258,12 @@ const ReunionesEstudiante = () => {
           >
             <div
               onClick={(event) => event.stopPropagation()}
-              className="bg-white p-6 rounded-lg w-full shadow-lg lg:w-[500px] lg:h-[500px] max-w-[800px] max-h-[500px]"
+              className=" p-6 rounded-lg w-full shadow-lg max-w-[100%] max-h-[80vh] relative"
+              style={{
+                aspectRatio: "14/8", // Relación de aspecto para videos horizontales
+              }}
             >
               <VideoPlayer urlVideo={urlVideo} />
-              {/* <video
-                src={urlVideo}
-                controls
-                className="w-full h-full"
-              ></video> */}
             </div>
           </div>
         )}

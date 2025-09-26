@@ -154,10 +154,12 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
 
             return (
               <React.Fragment key={envio.id_asunto || index}>
-                <div className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2
-                ">
+                <div
+                  className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2
+                "
+                >
                   <div className="w-[160px] flex text-[8px] sm:text-[12px] lg:text-[14px]">
-                    {envio.asunto}
+                    {envio.asunto.asesor}
                   </div>
                   <div className="text-white bg-[#353563] rounded px-3 hidden lg:text-[14px] 1xl:flex">
                     {envio.estado}
@@ -189,40 +191,36 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
                 </div>
 
                 {openItems[index] && hasDocuments && (
-                  <div className="bg-white shadow-md rounded-md p-1 my-1">
-                    {documents.slice(0).map((doc, docIndex) => (
-                      <div
-                        key={docIndex}
-                        className="flex justify-between items-center py-1 border-b last:border-b-0"
-                      >
-                        <div className="w-[160px] flex text-[8px] sm:text-[10px]">
-                          {envio.asunto}
+                  <div className="flex flex-col md:flex-row justify-between text-[#2B2829] font-normal items-center py-2 border-b text-xs md:text-base">
+                    <div className="flex-1 flex">{envio.asunto.cliente}</div>
+                    <div className="hidden lg:block text-white bg-[#353563] rounded px-3">
+                      {envio.estado}
+                    </div>
+                    <div className="flex-1 flex justify-center">
+                      {formatDate(envio.fecha)}
+                    </div>
+                    <div className="flex-1 flex flex-col gap-1 justify-center  font-semibold text-[#495D72]">
+                      {documents.map((doc, docIndex) => (
+                        <div
+                          key={docIndex}
+                          className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
+                        >
+                          <div className="flex justify-start">
+                            {cortarTexto(doc.name)}
+                          </div>
+                          <div className="w-[65px] flex justify-center">
+                            <button
+                              onClick={() =>
+                                handleDownload(doc.pathFile, doc.name)
+                              }
+                              className="transition-transform duration-300 hover:scale-110"
+                            >
+                              <img src={descargar} alt="Descargar" />
+                            </button>
+                          </div>
                         </div>
-                        <div className="w-[102px] hidden 1xl:flex 1xl:justify-center sm:text-[10px]">
-                          {envio.estado}
-                        </div>
-                        <div className="w-[100px] flex justify-center text-[8px] sm:text-[10px]">
-                          {formatDate(envio.fecha)}
-                        </div>
-                        <div className="w-[250px] justify-center hidden md:flex md:text-[10px]">
-                          {cortarTexto(doc.name)}
-                        </div>
-                        <div className="w-[100px] flex justify-center text-[8px] sm:text-[10px]">
-                          <button
-                            onClick={() =>
-                              handleDownload(doc.pathFile, doc.name)
-                            }
-                            className="transition-transform duration-300 hover:scale-110"
-                          >
-                            <img
-                              src={descargar}
-                              alt="Descargar"
-                              className="w-[10px] sm:w-[12px]"
-                            />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
               </React.Fragment>

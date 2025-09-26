@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import Zoom from "../../../assets/icons/IconEstudiante/ZoomLink.svg";
-import agregar from '../../../assets/icons/pluss.svg';
-import CrearZoom from '../../../Components/Asesor/CrearZoom';
-import eliminar from '../../../assets/icons/eliminarZoom.svg'
-import { useOutletContext } from 'react-router-dom'
-import axios from 'axios';
-import { useQuery } from '@tanstack/react-query';
-import { reunionesService } from '../../../services/reunionesService';
+import agregar from "../../../assets/icons/pluss.svg";
+import CrearZoom from "../../../Components/Asesor/CrearZoom";
+import eliminar from "../../../assets/icons/eliminarZoom.svg";
+import { useOutletContext } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { reunionesService } from "../../../services/reunionesService";
 
 const ReunionProximo = () => {
   const [crear, SetCrear] = useState(false);
@@ -18,31 +18,38 @@ const ReunionProximo = () => {
 
   const [fechaFiltro, setFechaFiltro] = useState(null);
 
-
   // Obtener el ID del asesor del localStorage
-  const userString = localStorage.getItem('user');
+  const userString = localStorage.getItem("user");
   const user = JSON.parse(userString);
   const idAsesor = user.id_asesor;
 
   // Obtener el delegado correspondiente al asesoramiento seleccionado
-  const delegado = asesorias.find(a => a.id === selectedAsesoriaId)?.delegado || '';
+  const delegado =
+    asesorias.find((a) => a.id === selectedAsesoriaId)?.delegado || "";
 
-
-  const { data: reunionesPorFecha, isLoading, isError } = useQuery({
-    queryKey: ['reunionesPorFecha', fechaFiltro],
-    queryFn: () => reunionesService.reunionesPorFecha(idAsesor, fechaFiltro)
-  })
+  const {
+    data: reunionesPorFecha,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["reunionesPorFecha", fechaFiltro],
+    queryFn: () => reunionesService.reunionesPorFecha(idAsesor, fechaFiltro),
+  });
 
   useEffect(() => {
     const fetchReuniones = async () => {
       try {
         if (selectedAsesoriaId) {
-          const response = await axios.get(`${import.meta.env.VITE_API_PORT_ENV}/reuniones/allReunionesProximas/${selectedAsesoriaId}`);
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_API_PORT_ENV
+            }/reuniones/allReunionesProximas/${selectedAsesoriaId}`
+          );
           setReuniones(response.data);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error al obtener las reuniones:', error);
+        console.error("Error al obtener las reuniones:", error);
         setLoading(false);
       }
     };
@@ -53,14 +60,14 @@ const ReunionProximo = () => {
   // Función para formatear la fecha
   const formatFecha = (fechaString) => {
     const date = new Date(fechaString);
-    const options = { month: 'long' };
+    const options = { month: "long" };
     // Extraer directamente la hora y minutos de la cadena ISO
-    const timePart = fechaString.split('T')[1].substring(0, 5);
+    const timePart = fechaString.split("T")[1].substring(0, 5);
 
     return {
-      month: new Intl.DateTimeFormat('es-ES', options).format(date),
+      month: new Intl.DateTimeFormat("es-ES", options).format(date),
       day: date.getUTCDate(),
-      time: timePart
+      time: timePart,
     };
   };
 
@@ -71,17 +78,22 @@ const ReunionProximo = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:3001/reuniones/eliminar-reunion/${meetingToDelete}`, {
-        data: {
-          id_asesor: idAsesor
+      await axios.delete(
+        `http://localhost:3001/reuniones/eliminar-reunion/${meetingToDelete}`,
+        {
+          data: {
+            id_asesor: idAsesor,
+          },
         }
-      });
+      );
 
       // Actualizar la lista de reuniones después de eliminar
-      setReuniones(reuniones.filter(reunion => reunion.id !== meetingToDelete));
+      setReuniones(
+        reuniones.filter((reunion) => reunion.id !== meetingToDelete)
+      );
       setShowConfirmModal(false);
     } catch (err) {
-      console.error('Error al eliminar la reunión:', err);
+      console.error("Error al eliminar la reunión:", err);
       setShowConfirmModal(false);
     }
   };
@@ -92,7 +104,7 @@ const ReunionProximo = () => {
   };
 
   const parseTime = (fecha) => {
-    console.log(fecha)
+    console.log(fecha);
     const fechaISO = new Date(fecha);
 
     // 2. Formatear solo la hora en formato de 12 horas
@@ -100,12 +112,12 @@ const ReunionProximo = () => {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-      timeZone: "UTC"
+      timeZone: "UTC",
     });
-    console.log(horaFormateada)
+    console.log(horaFormateada);
 
-    return horaFormateada
-  }
+    return horaFormateada;
+  };
 
   if (loading) {
     return <div>Cargando reuniones...</div>;
@@ -118,7 +130,9 @@ const ReunionProximo = () => {
         <div className="flex gap-3 flex-col w-[310px]  items-center justify-center bg-[#F0EFEF] border-[#AAA3A5] rounded-xl">
           <h1>Añadir una nueva reunion</h1>
           <button
-            onClick={() => { SetCrear(true) }}
+            onClick={() => {
+              SetCrear(true);
+            }}
           >
             <img className="w-8" src={agregar} alt="" />
           </button>
@@ -130,31 +144,42 @@ const ReunionProximo = () => {
 
           return (
             <div key={index} className="flex w-[350px]  items-center">
-
               <div className="flex flex-col justify-center items-center rounded-l-xl h-full w-[104px] bg-[#1C1C34] p-4 text-white">
                 <p>{fechaFormateada.month}</p>
                 <h1 className="text-[30px]">{fechaFormateada.day}</h1>
                 <p className="text-[12px]">{fechaFormateada.time}</p>
               </div>
 
-              <div className="flex flex-col w-full h-full border bg-[#F0EFEF] border-[#AAA3A5] p-4 justify-between rounded-r-xl gap-5">
-                <div className="flex flex-col gap-[6px]">
-                  <div className='flex  items-start'>
-                    <p className="font-medium">{reunion.delegado}</p>
-                    <button
-                      className='p-1'
-                      onClick={() => handleDeleteClick(reunion.id)}
-                    >
-                      <img src={eliminar} className='w-12' alt="Eliminar reunión" />
-                    </button>
-                  </div>
-                  <h1 className="text-[#666666]">CodigoID: {reunion.meetingId}</h1>
+              <div className="flex flex-col w-full bg-white p-4 rounded-xl shadow-sm border border-[#EAEAEA]">
+                <div className="flex justify-between items-center mb-4">
+                  <p className="font-semibold text-[#333333]">
+                    {reunion.delegado}
+                  </p>
+                  <button
+                    className="p-1 text-[#B1B1B1] hover:text-[#1271ED] transition-colors"
+                    onClick={() => handleDeleteClick(reunion.id)}
+                  >
+                    <img
+                      src={eliminar}
+                      className="w-5 h-5"
+                      alt="Eliminar reunión"
+                    />
+                  </button>
                 </div>
 
-                <button className="flex gap-4 justify-between px-1 h-12 items-center text-white rounded-2xl bg-[#1271ED]">
-                  <a href={reunion.enlace} target="_blank" rel="noopener noreferrer" className="w-full flex justify-between items-center px-2">
-                    <p className="font-medium">Enlace Zoom</p>
-                    <img src={Zoom} alt="Zoom" className="w-6 h-6" />
+                <h1 className="text-[#888888] text-sm mb-4">
+                  Código ID: {reunion.meetingId}
+                </h1>
+
+                <button className="flex items-center justify-between w-full h-12 px-6 bg-[#1271ED] text-white rounded-full hover:bg-[#1E85F6] focus:outline-none transition-all duration-200">
+                  <a
+                    href={reunion.enlace}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex justify-between w-full items-center"
+                  >
+                    <p className="font-semibold">Enlace Zoom</p>
+                    <img src={Zoom} alt="Zoom" className="w-5 h-5" />
                   </a>
                 </button>
               </div>
@@ -163,58 +188,71 @@ const ReunionProximo = () => {
         })}
       </div>
 
-      <hr className='border border-[#ccc]' />
+      <hr className="border border-[#ccc]" />
 
       {/* REUNIONES POR FILTRADOS POR FECHA */}
-      <div className='bg-[#F8F7F7] p-3 rounded-md space-y-4 border border-gray-100'>
-        <div className='flex gap-x-8'>
+      <div className="bg-[#F8F7F7] p-3 rounded-md space-y-4 border border-gray-100">
+        <div className="flex gap-x-8">
           {/* <h2>Pogramación Reuniones el dia de hoy</h2> */}
-          <div className='space-x-3'>
+          <div className="space-x-3">
             <label htmlFor="fecha_reuniones">Filtro por Fecha:</label>
-            <input className='outline-none border border-gray-400 px-2 rounded-sm' value={fechaFiltro ?? ""} onChange={(event) => setFechaFiltro(event.target.value)} id="fecha_reuniones" type="date" name="fecha_reuniones" />
+            <input
+              className="outline-none border border-gray-400 px-2 rounded-sm"
+              value={fechaFiltro ?? ""}
+              onChange={(event) => setFechaFiltro(event.target.value)}
+              id="fecha_reuniones"
+              type="date"
+              name="fecha_reuniones"
+            />
           </div>
         </div>
-        {
-          isLoading ? (
-            'Cargando...'
-          ) : isError ? (
-            'Algo salió mal, no se pudo cargar las reuniones filtradas'
-          ) : reunionesPorFecha.length > 0 ? (
-            <div className='max-h-[300px] relative overflow-auto '>
-              <table className='w-full min-w-[1500px]'>
-                <thead className='sticky w-full top-0 z-10 '>
-                  <tr className='text-center'>
-                    <td className='border-gray-500 py-2'>Id Reuníon</td>
-                    <td className='border-gray-500'>Titulo</td>
-                    <td className='border-gray-500'>Asesor</td>
-                    <td className='border-gray-500'>Fecha Reunión</td>
-                    <td className='border-gray-500'>Horario</td>
+        {isLoading ? (
+          "Cargando..."
+        ) : isError ? (
+          "Algo salió mal, no se pudo cargar las reuniones filtradas"
+        ) : reunionesPorFecha.length > 0 ? (
+          <div className="max-h-[300px] relative overflow-auto ">
+            <table className="w-full min-w-[1500px]">
+              <thead className="sticky w-full top-0 z-10 ">
+                <tr className="text-center">
+                  <td className="border-gray-500 py-2">Id Reuníon</td>
+                  <td className="border-gray-500">Titulo</td>
+                  <td className="border-gray-500">Asesor</td>
+                  <td className="border-gray-500">Fecha Reunión</td>
+                  <td className="border-gray-500">Horario</td>
+                </tr>
+              </thead>
+              <tbody className="">
+                {reunionesPorFecha.map((reunion, index) => (
+                  <tr
+                    key={reunion.id}
+                    className={`text-center ${
+                      index % 2 == 0 ? "bg-[#F0EFEF]" : "bg-white"
+                    }`}
+                  >
+                    <td className=" py-2">{reunion.id}</td>
+                    <td className="">{reunion.titulo}</td>
+                    <td className="">{reunion.asesor}</td>
+                    <td className="">
+                      {reunion.fecha_reunion
+                        .split("T")[0]
+                        .split("-")
+                        .reverse()
+                        .join("-")}
+                    </td>
+                    <td className="">{parseTime(reunion.fecha_reunion)}</td>
                   </tr>
-                </thead>
-                <tbody className=''>
-                  {
-                    reunionesPorFecha.map((reunion, index) => (
-                      <tr key={reunion.id} className={`text-center ${index % 2 == 0 ? 'bg-[#F0EFEF]' : 'bg-white'}`}>
-                        <td className=' py-2'>{reunion.id}</td>
-                        <td className=''>{reunion.titulo}</td>
-                        <td className=''>{reunion.asesor}</td>
-                        <td className=''>{(reunion.fecha_reunion.split('T')[0].split('-').reverse().join('-'))}</td>
-                        <td className=''>{parseTime(reunion.fecha_reunion)}</td>
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className='border border-gray-300 rounded-md max-h-[400px] h-[300px] flex justify-center items-center'>
-              <p>No hay reuniones en esta fecha</p>
-            </div>
-          )
-        }
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="border border-gray-300 rounded-md max-h-[400px] h-[300px] flex justify-center items-center">
+            <p>No hay reuniones en esta fecha</p>
+          </div>
+        )}
       </div>
       {/* REUNIONES POR FILTRADOS POR FECHA */}
-
 
       {crear && (
         <CrearZoom
@@ -229,7 +267,9 @@ const ReunionProximo = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">Confirmar eliminación</h2>
-            <p className="mb-6">¿Estás seguro de que deseas eliminar esta reunión?</p>
+            <p className="mb-6">
+              ¿Estás seguro de que deseas eliminar esta reunión?
+            </p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={cancelDelete}
@@ -248,7 +288,7 @@ const ReunionProximo = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default ReunionProximo;

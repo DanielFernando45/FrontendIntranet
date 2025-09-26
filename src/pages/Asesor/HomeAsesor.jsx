@@ -4,7 +4,6 @@ import flechaAzul from "../../assets/icons/arrowAzul.svg";
 import Zoom from "../../assets/icons/IconEstudiante/ZoomLink.svg";
 import { useState, useEffect } from "react";
 import EnviosClientes from "../Asesor/EnviosCliente/EnviosCliente";
-import LayoutAppV2 from "../../layout/LayoutAppV2";
 
 const HomeAsesor = () => {
   const [asesorias, setAsesorias] = useState([]);
@@ -178,36 +177,41 @@ const HomeAsesor = () => {
               {reuniones.map((reunion) => (
                 <div
                   key={reunion.id}
-                  className="flex w-auto mt-4  mn:w-[300px] h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[150px]  md:w-[400px] mx-auto lg:w-auto items-center"
+                  className="flex w-auto mt-4 h-auto mn:w-[300px] mn:h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[150px] md:w-[400px] mx-auto lg:w-auto items-center"
                 >
-                  <div className="flex flex-col h-full justify-between gap-[45px] items-center rounded-l-xl w-[80px] mn:w-[104px] bg-[#17162E] p-4 text-white">
-                    <div className="flex flex-col justify-center items-center gap-5">
-                      <p className="text-xs md:text-[14px] uppercase 1xl:text-[16px] 2xl:text-[18px]">
+                  {/* Fecha y Hora */}
+                  <div className="flex flex-col h-full justify-between gap-4 items-center rounded-l-xl w-[80px] mn:w-[104px] bg-[#17162E] p-4 text-white">
+                    <div className="flex flex-col justify-center items-center gap-3">
+                      <p className="text-xs md:text-sm uppercase text-[#B1B1B1]">
                         {formatFecha(reunion.fecha_reunion).mes}
                       </p>
-                      <p className="text-xs md:text-[20px] 1xl:text-[21px] 2xl:text-[24px]">
+                      <p className="text-lg md:text-xl font-bold text-white">
                         {formatFecha(reunion.fecha_reunion).dia}
                       </p>
                     </div>
-                    <p className="text-xs md:text-[12px] 1xl:text-[16px]">
+                    <p className="text-xs md:text-sm text-[#B1B1B1]">
                       {formatFecha(reunion.fecha_reunion).hora}
                     </p>
                   </div>
-                  <div className="flex flex-col h-full flex-1 gap-5 bg-white p-4 justify-between rounded-r-xl">
-                    <p className="text-xs md:text-basefont-medium 1xl:text-[15px] 2xl:text-[17px] text-center w-full">
+
+                  {/* Contenedor de contenido */}
+                  <div className="flex flex-col h-full flex-1 gap-3 bg-white p-4 justify-between rounded-r-xl shadow-sm">
+                    <p className="text-sm md:text-base text-[#333333] text-center">
                       {reunion.delegado}
                     </p>
-                    <button className="flex gap-4 justify-between px-1 h-8 md:h-12 items-center text-white rounded-2xl bg-[#1271ED]">
+
+                    {/* Botón de Enlace Zoom */}
+                    <button className="flex gap-3 justify-between px-4 h-10 md:h-12 items-center text-white rounded-lg bg-[#1271ED] hover:bg-[#1E85F6] transition-colors">
                       <a
                         href={reunion.enlace}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full flex justify-between items-center px-2"
+                        className="w-full flex justify-between items-center"
                       >
-                        <p className="font-medium text-xs md:text-[13px]">
+                        <p className="font-medium text-xs md:text-sm">
                           Enlace Zoom
                         </p>
-                        <img src={Zoom} alt="Zoom" className="w-6 h-6" />
+                        <img src={Zoom} alt="Zoom" className="w-5 h-5" />
                       </a>
                     </button>
                   </div>

@@ -101,7 +101,7 @@ const MisEnvios = ({ idAsesoramiento }) => {
     <div className="flex flex-col text-[14px]">
       {/* Encabezado visible solo en sm+ */}
       <div className="hidden sm:grid grid-cols-4 lg:grid-cols-5 text-[#495D72] font-medium p-2 rounded-md">
-        <div>Título</div>
+        <div>Título_asesor</div>
         <div className="text-center">Estado</div>
         <div className="text-center">Fecha</div>
         <div className="hidden lg:block text-center">Archivo</div>
@@ -124,7 +124,7 @@ const MisEnvios = ({ idAsesoramiento }) => {
               <React.Fragment key={envio.id_asunto || index}>
                 {/* Fila */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 text-[#2B2829] text-xs md:text-sm font-normal bg-[#E9E7E7] p-2 rounded-md items-center">
-                  <div className="truncate">{envio.asunto}</div>
+                  <div className="truncate">{envio.asunto.asesor}</div>
                   <div className="flex justify-center text-white bg-[#353563] rounded px-2">
                     {envio.estado}
                   </div>

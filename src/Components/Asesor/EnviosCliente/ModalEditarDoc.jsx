@@ -27,7 +27,7 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
 
       setIdAsesoramiento(data.asunto?.asesoramiento?.id);
       setDocumentosEditar(documentosEdi);
-      setTituloAsunto(data.asunto?.titulo);
+      setTituloAsunto(data.asunto?.titulo_asesor);
     }
   }, [data]);
 
@@ -115,7 +115,7 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
     }
 
     const formData = new FormData();
-    formData.append("titulo", tituloAsunto);
+    formData.append("titulo_asesor", tituloAsunto);
 
     // ✅ enviar como JSON string
     formData.append("idsElminar", JSON.stringify(idsElminar ?? []));

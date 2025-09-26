@@ -26,11 +26,15 @@ const editarAsunto = async ({ idAsunto, formData }) => {
   return data;
 };
 
-const editarFechaTerminadoAsuntoAsesor = async ({ idAsunto, horario }) => {
+const editarFechaTerminadoAsuntoAsesor = async ({
+  idAsunto,
+  fecha_estimada,
+}) => {
   const { data } = await api.put(
     `/asuntos/editarFechaAsuntoPendiente/${idAsunto}`,
-    { horario }
+    { fecha_estimada } // 🚀 ya viene en ISO desde el modal
   );
+
   return data;
 };
 

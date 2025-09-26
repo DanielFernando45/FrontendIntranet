@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 
 body {
   font-family: 'Poppins', sans-serif;
@@ -22,7 +24,6 @@ body {
 
 html{
     width: 100%;
-  height: 100%;
   overflow-x: auto; /* No ocultes el contenido horizontal */
   zoom: 100%; /* ✅ Esto restablece el zoom a su valor normal */
   transform: none; /* ✅ Asegura que no haya transformaciones */

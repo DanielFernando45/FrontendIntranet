@@ -1,4 +1,3 @@
-
 import EstudianteSidebar from "../Components/Sidebar/EstudianteSidebar";
 import AsesorSidebar from "../Components/Sidebar/AsesorSidebar";
 import JefeOperSidebar from "../Components/Sidebar/JefeOperSidebar";
@@ -15,24 +14,26 @@ const LayoutApp = ({ children }) => {
   const user = useSelector((state) => state.auth.user);
 
   if (!user) {
-    return <div className="text-center p-10">Cargando datos del usuario...</div>;
+    return (
+      <div className="text-center p-10">Cargando datos del usuario...</div>
+    );
   }
   const renderSidebar = () => {
     switch (user.role.nombre) {
-      case 'estudiante':
+      case "estudiante":
         return <EstudianteSidebar />;
-      case 'asesor':
+      case "asesor":
         return <AsesorSidebar />;
-      case 'jefe_operaciones':
+      case "jefe_operaciones":
         return <JefeOperSidebar />;
-      case 'supervisor':
-        return <SupervisorSidebar />;   
-      case 'contrato_pago':
+      case "supervisor":
+        return <SupervisorSidebar />;
+      case "contrato_pago":
         return <ContPagoSidebar />;
-      case 'marketing':
+      case "marketing":
         return <MarketingSidebar />;
-      case 'soporte':
-        return <SoporteSidebar />;          
+      case "soporte":
+        return <SoporteSidebar />;
       default:
         return null;
     }
@@ -41,8 +42,10 @@ const LayoutApp = ({ children }) => {
   return (
     <div className="">
       {renderSidebar()}
-       <Navbar user={user} /> 
-      <div className="mt-[50px] sm:mt-[65px] md:mt-[100px] p-4 md:p-4 xl:ml-[100px] xl:p-1"> {/* Ajuste de margen para layout */}
+      <Navbar user={user} />
+      <div className="mt-[50px] sm:mt-[65px] md:mt-[100px] p-4 md:p-4 xl:ml-[100px] xl:p-1">
+        {" "}
+        {/* Ajuste de margen para layout */}
         {children}
       </div>
     </div>

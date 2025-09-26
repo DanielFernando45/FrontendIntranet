@@ -124,7 +124,7 @@ const EnviosCliente = ({ idAsesoramiento }) => {
               <React.Fragment key={envio.id_asunto || index}>
                 {/* Fila */}
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[#2B2829] text-xs md:text-sm font-normal bg-[#E9E7E7] p-2 rounded-md items-center">
-                  <div>{envio.asunto}</div>
+                  <div>{envio.asunto.cliente}</div>
                   <div className="hidden sm:flex justify-center text-white bg-[#353563] rounded px-2">
                     {envio.estado}
                   </div>

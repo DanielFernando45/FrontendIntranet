@@ -6,7 +6,7 @@ import documentosVacios from "../../../assets/icons/documentosVacios.png";
 import FechaEstimada from "../../../Components/Asesor/FechaEstimada";
 import EnviarAvance from "../../../Components/Asesor/EnviarAvance";
 import { FaRegEdit } from "react-icons/fa";
-import ModalEditarFechaPendientes from "../../../Components/Asesor/EnviosCliente/ModalEditarFechaPendientes"
+import ModalEditarFechaPendientes from "../../../Components/Asesor/EnviosCliente/ModalEditarFechaPendientes";
 
 const DocPendientes = () => {
   const [pendientes, setPendientes] = useState([]);
@@ -76,24 +76,47 @@ const DocPendientes = () => {
   };
 
   const handleSubmitFecha = (id, fecha) => {
-    const now = new Date();
-    const fechaCompleta = `${fecha} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+    if (!fecha) {
+      console.error("❌ No se recibió una fecha válida:", fecha);
+      return;
+    }
 
-    axios
-      .patch(`${import.meta.env.VITE_API_PORT_ENV}/asuntos/en_proceso/${id}`, {
-        fecha_terminado: fechaCompleta,
-      })
-      .then(() => {
-        setCheckedItems((prev) => ({
-          ...prev,
-          [id]: true,
-        }));
-        setShowFechaEstimada(null);
-        fetchPendientes();
-      })
-      .catch((error) => {
-        console.error("Error al asignar fecha:", error);
-      });
+    try {
+      // Directamente construimos con el string que manda <input type="date">
+      const now = new Date();
+      const fechaCompleta = new Date(fecha);
+      fechaCompleta.setHours(now.getHours());
+      fechaCompleta.setMinutes(now.getMinutes());
+      fechaCompleta.setSeconds(now.getSeconds());
+
+      if (isNaN(fechaCompleta.getTime())) {
+        throw new Error("Fecha inválida");
+      }
+
+      const fechaISO = fechaCompleta.toISOString();
+      console.log("✅ Fecha Estimada a enviar:", fechaISO);
+
+      axios
+        .patch(
+          `${import.meta.env.VITE_API_PORT_ENV}/asuntos/en_proceso/${id}`,
+          {
+            fecha_estimada: fechaISO,
+          }
+        )
+        .then(() => {
+          setCheckedItems((prev) => ({ ...prev, [id]: true }));
+          setShowFechaEstimada(null);
+          fetchPendientes();
+        })
+        .catch((error) => {
+          console.error(
+            "Error al asignar fecha:",
+            error.response?.data || error
+          );
+        });
+    } catch (err) {
+      console.error("❌ Error procesando la fecha:", err);
+    }
   };
 
   const formatHora = (dateString) => {
@@ -118,35 +141,19 @@ const DocPendientes = () => {
     const year = date.getFullYear();
     return `${day} ${month} de ${year}`;
   };
-
-  const handleSubmitAvance = async (id, titulo, files) => {
+  const handleSubmitAvance = async (id, formData) => {
     try {
-      const formData = new FormData();
-      formData.append("titulo", titulo); // 👈 aquí debe ir "titulo"
-      files.forEach((file) => {
-        formData.append("files", file); // 👈 aquí debe ir "files"
-      });
-
-      console.log("FormData:", [...formData.entries()]); // debug para verificar
-
-      await axios.patch(
-        `${import.meta.env.VITE_API_PORT_ENV}/asuntos/finished/${id}`,
+      const res = await axios.patch(
+        `http://localhost:3001/asuntos/finished/${id}`,
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      fetchPendientes();
-      setShowEnviarAvance(null);
-    } catch (error) {
-      console.error("Error al enviar avance:", error.response?.data || error);
-      alert("Error al enviar avance");
+      console.log("Avance enviado:", res.data);
+      fetchPendientes(); // refresca lista
+    } catch (err) {
+      console.error("Error al enviar avance:", err.response?.data || err);
     }
   };
-
   const SkeletonItem = () => (
     <div className="flex flex-col gap-3 text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md px-6 animate-pulse">
       <div className="flex justify-between items-center">
@@ -178,12 +185,14 @@ const DocPendientes = () => {
                 <div className="w-[250px] flex justify-center">
                   {formatDate(pendiente.fecha_entrega)}
                 </div>
-                <button
-                  onClick={() => toggleEnviarAvance(pendiente.id_asunto)}
-                  className="flex justify-center items-center w-[180px] h-[30px] font-medium rounded-3xl bg-[#0CB2D5] text-white"
-                >
-                  ENVIAR AVANCE
-                </button>
+                {pendiente.fecha_estimada && (
+                  <button
+                    onClick={() => toggleEnviarAvance(pendiente.id_asunto)}
+                    className="flex justify-center items-center w-[180px] h-[30px] font-medium rounded-3xl bg-[#0CB2D5] text-white hover:bg-[#089dbb] transition"
+                  >
+                    ENVIAR AVANCE
+                  </button>
+                )}
                 <button
                   onClick={() => toggleOpen(pendiente.id_asunto)}
                   className="transition-transform duration-300"
@@ -210,7 +219,9 @@ const DocPendientes = () => {
                     <div>{formatHora(pendiente.fecha_entrega)}</div>
                     <div className="flex gap-5">
                       <div className="text-white bg-[#054755] rounded-md px-6 uppercase">
-                        Entregado
+                        {pendiente.estado === "proceso"
+                          ? "En Proceso"
+                          : "Entregado"}
                       </div>
                       <input
                         className="w-[25px]"
@@ -224,43 +235,56 @@ const DocPendientes = () => {
                     </div>
                   </div>
 
-                  {checkedItems[pendiente.id_asunto] &&
-                    pendiente.fecha_terminado && (
-                      <div className="flex justify-between mt-3">
-                        <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">
-                          {pendiente.documento_0}
-                        </div>
-                        <div className="flex w-[450px] gap-4">
-                          <p>
-                            Revisado: {formatDate(pendiente.fecha_revision)}
-                          </p>
-                          <p>
-                            Estimado: {formatDate(pendiente.fecha_terminado)}
-                          </p>
-                        </div>
-                        <div>{formatHora(pendiente.fecha_terminado)}</div>
-                        <div className="flex gap-5">
-                          <div className="text-white bg-[#0CB2D5] rounded-md px-8 items-center flex uppercase">
-                            {pendiente.estado}
-                          </div>
-                          <input
-                            className="w-[25px]"
-                            type="checkbox"
-                            checked={true}
-                            disabled={true}
-                          />
-                          <button
-                            onClick={() => {
-                              setIdAsunto(pendiente.id_asunto),
-                                setShowModalEdit(true);
-                            }}
-                            className="bg-slate-900 px-1 py-1 rounded-md "
-                          >
-                            <FaRegEdit color="white" size={20} />
-                          </button>
-                        </div>
+                  {pendiente.estado === "proceso" && (
+                    <div className="flex justify-between mt-3">
+                      <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">
+                        {pendiente.documento_0}
                       </div>
-                    )}
+                      <div className="flex w-[450px] gap-4">
+                        <p>Revisado: {formatDate(pendiente.fecha_revision)}</p>
+                        <p>Estimado: {formatDate(pendiente.fecha_estimada)}</p>
+                      </div>
+                      <div>{formatHora(pendiente.fecha_estimada)}</div>
+                      <div className="flex gap-5">
+                        <div className="text-white bg-[#f59e0b] rounded-md px-8 items-center flex uppercase">
+                          {pendiente.estado}
+                        </div>
+                        <button
+                          onClick={() => {
+                            setIdAsunto(pendiente.id_asunto),
+                              setShowModalEdit(true);
+                          }}
+                          className="bg-slate-900 px-1 py-1 rounded-md "
+                        >
+                          <FaRegEdit color="white" size={20} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {pendiente.estado === "terminado" && (
+                    <div className="flex justify-between mt-3">
+                      <div className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[15ch]">
+                        {pendiente.documento_0}
+                      </div>
+                      <div className="flex w-[450px] gap-4">
+                        <p>Revisado: {formatDate(pendiente.fecha_revision)}</p>
+                        <p>Estimado: {formatDate(pendiente.fecha_terminado)}</p>
+                      </div>
+                      <div>{formatHora(pendiente.fecha_terminado)}</div>
+                      <div className="flex gap-5">
+                        <div className="text-white bg-[#16a34a] rounded-md px-8 items-center flex uppercase">
+                          {pendiente.estado}
+                        </div>
+                        <input
+                          className="w-[25px]"
+                          type="checkbox"
+                          checked={true}
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -298,8 +322,8 @@ const DocPendientes = () => {
             <EnviarAvance
               show={true}
               onClose={handleCloseEnviarAvance}
-              onSubmit={(titulo, files) =>
-                handleSubmitAvance(showEnviarAvance, titulo, files)
+              onSubmit={(formData) =>
+                handleSubmitAvance(showEnviarAvance, formData)
               }
             />
           </div>

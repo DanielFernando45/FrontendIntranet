@@ -3,6 +3,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import flechaabajo from "../../../assets/icons/Flecha.svg";
 import flechaarriba from "../../../assets/icons/arrow-up.svg";
 import { contratosService } from "../../../services/contratosService";
+import { useNavigate } from "react-router-dom";
 
 const ContratoNuevo = () => {
   const [expandedIds, setExpandedIds] = useState({});
@@ -17,6 +18,7 @@ const ContratoNuevo = () => {
     fechaFin: "",
   });
   const [currentIdAsesoramiento, setCurrentIdAsesoramiento] = useState(null);
+  const navigate = useNavigate();
 
   const toggleExpand = (id) => {
     setExpandedIds((prev) => ({
@@ -25,10 +27,11 @@ const ContratoNuevo = () => {
     }));
   };
 
-  const displayStudents = (estudiantes) => {
-    if (!Array.isArray(estudiantes) || estudiantes.length === 0)
-      return "----------";
-    return estudiantes[0].estudiante;
+  // Mostrar solo un estudiante resumido
+  const displayStudents = (clientes) => {
+    if (!Array.isArray(clientes) || clientes.length === 1) return "----------";
+    if (clientes.length === 1) return clientes[0].estudiante;
+    return `${clientes[0].estudiante} +${clientes.length - 1} más`;
   };
 
   const {
@@ -68,20 +71,22 @@ const ContratoNuevo = () => {
 
   const handleFormSubmit = () => {
     if (currentIdAsesoramiento) {
-      mutation.mutate(currentIdAsesoramiento);
+      mutation.mutate(currentIdAsesoramiento, {
+        onSuccess: () => {
+          // 👇 Redirige al tab asignado
+          navigate("/cont-pago/contratos?tab=asignado");
+        },
+      });
     } else {
       alert("No se ha seleccionado un asesoramiento.");
     }
   };
-
   if (isLoading) return <div>Cargando...</div>;
   if (isError) return <div>Error al cargar: {error.message}</div>;
 
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-xl sm:text-2xl font-medium">Contratos Nuevos</h1>
-
-      {/* Encabezado */}
       <div className="hidden md:grid grid-cols-5 gap-2 px-2 text-[#495D72] font-medium text-sm sm:text-base">
         <div>ID Asesoria</div>
         <div className="text-center">Delegado</div>
@@ -90,7 +95,6 @@ const ContratoNuevo = () => {
         <div className="text-center">Acciones</div>
       </div>
 
-      {/* Lista */}
       {/* Lista */}
       <div className="flex flex-col gap-2">
         {contratosNoAsignados.length === 0 ? (
@@ -109,7 +113,7 @@ const ContratoNuevo = () => {
                   {contrato.id_asesoramiento.toString().padStart(4, "0")}
                 </div>
                 <div>{contrato.delegado}</div>
-                <div>{displayStudents(contrato.estudiantes)}</div>
+                <div>{displayStudents(contrato.cliente)}</div>
                 <div>{contrato.asesor}</div>
                 <div className="flex justify-between md:justify-center gap-2">
                   <button
@@ -141,9 +145,9 @@ const ContratoNuevo = () => {
               {expandedIds[contrato.id_asesoramiento] && (
                 <div className="px-4 py-2 text-sm bg-gray-50 rounded-md">
                   <div className="font-medium mb-1">Estudiantes:</div>
-                  {contrato.estudiantes?.length > 0 ? (
+                  {contrato.cliente?.length > 0 ? (
                     <ul className="list-disc pl-5">
-                      {contrato.estudiantes.map((e) => (
+                      {contrato.cliente.map((e) => (
                         <li key={e.id_estudiante}>{e.estudiante}</li>
                       ))}
                     </ul>
@@ -186,7 +190,7 @@ const ContratoNuevo = () => {
                       setFormData({ ...formData, modalidad: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value="Avance">Avance</option>
                     <option value="Plazo">Plazo</option>
                   </select>
@@ -201,7 +205,7 @@ const ContratoNuevo = () => {
                       setFormData({ ...formData, servicio: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value="Proyecto">Proyecto</option>
                     <option value="Inf.Final">Inf.Final</option>
                     <option value="Completo">Completo</option>
@@ -221,7 +225,7 @@ const ContratoNuevo = () => {
                       setFormData({ ...formData, idCategoria: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
                       Oro
                     </option>
@@ -250,7 +254,7 @@ const ContratoNuevo = () => {
                       })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value={1}>Proyecto Bachillerato</option>
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
@@ -267,7 +271,7 @@ const ContratoNuevo = () => {
                       setFormData({ ...formData, idTipoPago: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value={1}>Contado</option>
                     <option value={2}>Cuotas</option>
                   </select>

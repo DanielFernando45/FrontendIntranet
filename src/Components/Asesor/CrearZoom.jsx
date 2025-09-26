@@ -63,7 +63,7 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
           body: JSON.stringify(reunionData),
         }
       );
-      alert("Zoom Creardo Correctamente");
+      alert("Zoom Creado Correctamente");
 
       if (!response.ok) {
         throw new Error("Error al crear la reunión");
@@ -81,72 +81,80 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
 
   return (
     <div
-      ref={modalRef}
-      className="top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-xl flex flex-col gap-5 p-4 py-10 items-center justify-center w-[600px] rounded-xl bg-[#F8F7F7] relative"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
-      <button
-        onClick={Close}
-        className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold p-1"
-        aria-label="Cerrar"
+      <div
+        ref={modalRef}
+        className="relative w-[90%] sm:w-[600px] bg-[#F8F7F7] rounded-xl p-4 py-10 flex flex-col gap-5"
       >
-        ×
-      </button>
-
-      <h1 className="font-medium">Agregar reunion</h1>
-      {error && <p className="text-red-500">{error}</p>}
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-5 mb-10 w-full px-10"
-      >
-        <div className="flex justify-between gap-14 font-medium">
-          <p>Tema: </p>
-          <input
-            type="text"
-            name="titulo"
-            placeholder="Inserte el Tema"
-            className="w-[350px] p-1 rounded-lg px-3"
-            value={formData.titulo}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="flex justify-between gap-14 font-medium">
-          <p>Delegado: </p>
-          <input
-            type="text"
-            placeholder={delegado}
-            className="w-[350px] p-1 rounded-lg px-3 bg-gray-100"
-            disabled
-          />
-        </div>
-        <div className="flex justify-between gap-14 font-medium ">
-          <p>Fecha: </p>
-          <input
-            type="date"
-            name="fecha"
-            placeholder="Elijer Fecha"
-            className="w-[350px] rounded-lg px-3 p-1"
-            value={formData.fecha}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="flex justify-between gap-14 font-medium">
-          <p>Hora: </p>
-          <input
-            type="time"
-            name="hora"
-            placeholder="Inserte Hora"
-            className="w-[350px] rounded-lg px-3 p-1"
-            value={formData.hora}
-            onChange={handleChange}
-          />
-        </div>
         <button
-          type="submit"
-          className="px-6 rounded-md p-1 bg-[#E9E7E7] hover:bg-[#D1CFCF] self-center"
+          onClick={Close}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-xl font-bold p-1"
+          aria-label="Cerrar"
         >
-          Agregar Zoom
+          ×
         </button>
-      </form>
+
+        <h1 className="font-medium text-center">Agregar reunión</h1>
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-5 mb-10 w-full px-4 sm:px-10"
+        >
+          <div className="flex flex-col sm:flex-row justify-between gap-10 sm:gap-14 font-medium">
+            <p className="w-full sm:w-auto">Tema: </p>
+            <input
+              type="text"
+              name="titulo"
+              placeholder="Inserte el Tema"
+              className="w-full sm:w-[350px] p-1 rounded-lg px-3"
+              value={formData.titulo}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between gap-10 sm:gap-14 font-medium">
+            <p className="w-full sm:w-auto">Delegado: </p>
+            <input
+              type="text"
+              placeholder={delegado}
+              className="w-full sm:w-[350px] p-1 rounded-lg px-3 bg-gray-100"
+              disabled
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between gap-10 sm:gap-14 font-medium">
+            <p className="w-full sm:w-auto">Fecha: </p>
+            <input
+              type="date"
+              name="fecha"
+              placeholder="Elija Fecha"
+              className="w-full sm:w-[350px] rounded-lg px-3 p-1"
+              value={formData.fecha}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between gap-10 sm:gap-14 font-medium">
+            <p className="w-full sm:w-auto">Hora: </p>
+            <input
+              type="time"
+              name="hora"
+              placeholder="Inserte Hora"
+              className="w-full sm:w-[350px] rounded-lg px-3 p-1"
+              value={formData.hora}
+              onChange={handleChange}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="px-6 rounded-md p-2 bg-[#E9E7E7] hover:bg-[#D1CFCF] self-center mt-4"
+          >
+            Agregar Zoom
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

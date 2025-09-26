@@ -10,27 +10,19 @@ import axios from "axios";
 
 const parseToDate = (input) => {
   if (!input) return null;
-
   if (input instanceof Date) return isNaN(input.getTime()) ? null : input;
-
   if (typeof input === "number") {
     const d = new Date(input);
     return isNaN(d.getTime()) ? null : d;
   }
-
   if (typeof input === "string") {
     let s = input.trim();
-
-    // "YYYY-MM-DD"
     if (/^\d{4}-\d{2}-\d{2}$/.test(s)) s += "T00:00:00Z";
-    // "YYYY-MM-DD HH:mm:ss"
     else if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s))
       s = s.replace(" ", "T") + "Z";
-
     const d = new Date(s);
     return isNaN(d.getTime()) ? null : d;
   }
-
   return null;
 };
 
@@ -53,11 +45,7 @@ const JefeOpeAsignar = () => {
     queryKey: ["asesoria"],
     queryFn: async () => {
       const res = await asesoriasService.listarAsignadosJefeOpe();
-      // Normaliza estado a boolean
-      return res.map((c) => ({
-        ...c,
-        estado: c.estado === "activo",
-      }));
+      return res.map((c) => ({ ...c, estado: c.estado === "activo" }));
     },
     refetchOnWindowFocus: false,
     initialData: [],
@@ -72,7 +60,6 @@ const JefeOpeAsignar = () => {
   const displayStudents = (estudiantes = []) => {
     if (!Array.isArray(estudiantes) || estudiantes.length === 0)
       return "----------";
-    // backend: [{ id_estudiante, estudiante }]
     return estudiantes[0]?.estudiante ?? "----------";
   };
 
@@ -83,9 +70,7 @@ const JefeOpeAsignar = () => {
 
   const confirmEstadoChange = async () => {
     if (!contratoToChange) return;
-
     const nuevoEstado = contratoToChange.estado ? "desactivado" : "activo";
-
     try {
       await axios.patch(
         `${import.meta.env.VITE_API_PORT_ENV}/asesoramiento/estado/${
@@ -93,7 +78,6 @@ const JefeOpeAsignar = () => {
         }`,
         { estado: nuevoEstado }
       );
-
       await refetch();
       setShowConfirmModal(false);
       setContratoToChange(null);
@@ -110,149 +94,149 @@ const JefeOpeAsignar = () => {
 
   return (
     <LayoutApp>
-      <div className="ml-10">
+      <div className="px-4 md:ml-10">
         <div className="bg-[#1C1C34] rounded-t-lg w-40 py-1 text-white text-center">
           Asignados
         </div>
-        <div className="bg-white rounded-b-lg rounded-tr-lg p-5">
-          <div className="flex flex-col gap-5">
-            <h1 className="text-[25px] font-medium">
+        <div className="bg-white rounded-b-lg rounded-tr-lg p-5 overflow-x-auto">
+          <div className="flex flex-col gap-5 min-w-[900px]">
+            <h1 className="text-xl md:text-2xl font-medium">
               Asignaciones y Contratos Clientes
             </h1>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between px-1 text-[#495D72] text-center font-medium">
-                <div className="w-[100px]">IdAsesoria</div>
-                <div className="w-[300px]">Delegado</div>
-                <div className="w-[200px]">Fin Contrato</div>
-                <div className="w-[200px]">Tipo trabajo</div>
-                <div className="w-[200px]">Área</div>
-                <div className="w-[300px]">Alumnos</div>
-                <div className="w-[300px]">Asesor</div>
-                <div className="w-[120px]">Estado</div>
-              </div>
+            {/* Encabezado */}
+            <div className="flex justify-between px-1 text-[#495D72] text-center font-medium text-xs md:text-sm">
+              <div className="min-w-[80px]">IdAsesoria</div>
+              <div className="min-w-[200px]">Delegado</div>
+              <div className="min-w-[160px]">Fin Contrato</div>
+              <div className="min-w-[160px]">Tipo trabajo</div>
+              <div className="min-w-[160px]">Área</div>
+              <div className="min-w-[200px]">Alumnos</div>
+              <div className="min-w-[200px]">Asesor</div>
+              <div className="min-w-[100px]">Estado</div>
+            </div>
 
-              <div className="flex flex-col gap-1 px-1">
-                {asesoria.map((contrato, index) => {
-                  const finContratoFmt =
-                    safeFormatDate(contrato?.finContrato) ?? "Por Asignar";
-                  const tipoTrabajo =
-                    contrato?.tipotrabajo ??
-                    contrato?.tipoTrabajo ??
-                    "Por Asignar";
+            {/* Filas */}
+            <div className="flex flex-col gap-1 px-1">
+              {asesoria.map((contrato, index) => {
+                const finContratoFmt =
+                  safeFormatDate(contrato?.finContrato) ?? "Por Asignar";
+                const tipoTrabajo =
+                  contrato?.tipotrabajo ??
+                  contrato?.tipoTrabajo ??
+                  "Por Asignar";
 
-                  return (
-                    <React.Fragment key={contrato.id_asesoramiento}>
-                      <div
-                        className={`flex items-center text-center justify-between px-1 rounded-md ${
-                          index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-                        } py-2`}
-                      >
-                        <div className="w-[100px]">
-                          {String(contrato.id_asesoramiento).padStart(4, "0")}
-                        </div>
-                        <div className="w-[300px]">
-                          {contrato?.delegado ?? "—"}
-                        </div>
-                        <div className="w-[200px]">{finContratoFmt}</div>
-                        <div className="w-[200px]">{tipoTrabajo}</div>
-                        <div className="w-[200px]">{contrato?.area ?? "—"}</div>
-                        <div className="w-[300px]">
-                          {displayStudents(contrato?.cliente)}
-                        </div>
-                        <div className="w-[300px]">
-                          {contrato?.asesor ?? "—"}
-                        </div>
-
-                        <div className="flex w-[120px] justify-between px-3">
-                          <div className="text-[8px] flex flex-col items-center justify-center">
-                            <button
-                              onClick={() => handleEstadoClick(contrato)}
-                              className={`w-[60px] h-[25px] font-semibold rounded-3xl border border-black flex items-center transition-all duration-300 ease-in-out 
-                                ${
-                                  contrato.estado
-                                    ? "bg-green-100 justify-end"
-                                    : "bg-red-100 justify-start"
-                                }`}
-                            >
-                              <div
-                                className={`w-[20px] h-[20px] m-0.5 rounded-full transition-all duration-300 ease-in-out
-                                ${
-                                  contrato.estado
-                                    ? "bg-green-500"
-                                    : "bg-red-500"
-                                }`}
-                              >
-                                <img
-                                  className="h-full w-full transition-transform duration-300 ease-in-out"
-                                  src={contrato.estado ? activado : desactivado}
-                                  alt="estado"
-                                />
-                              </div>
-                            </button>
-                            <label className="mt-1">
-                              {contrato.estado ? "activado" : "desactivado"}
-                            </label>
-                          </div>
-
-                          <button
-                            onClick={() =>
-                              toggleExpand(contrato.id_asesoramiento)
-                            }
-                          >
-                            <img
-                              src={
-                                expandedIds.includes(contrato.id_asesoramiento)
-                                  ? flechaarriba
-                                  : flechaabajo
-                              }
-                              alt={
-                                expandedIds.includes(contrato.id_asesoramiento)
-                                  ? "Cerrar"
-                                  : "Expandir"
-                              }
-                            />
-                          </button>
-                        </div>
+                return (
+                  <React.Fragment key={contrato.id_asesoramiento}>
+                    <div
+                      className={`flex items-center text-center justify-between px-1 rounded-md text-xs md:text-sm ${
+                        index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                      } py-2`}
+                    >
+                      <div className="min-w-[80px]">
+                        {String(contrato.id_asesoramiento).padStart(4, "0")}
+                      </div>
+                      <div className="min-w-[200px]">
+                        {contrato?.delegado ?? "—"}
+                      </div>
+                      <div className="min-w-[160px]">{finContratoFmt}</div>
+                      <div className="min-w-[160px]">{tipoTrabajo}</div>
+                      <div className="min-w-[160px]">
+                        {contrato?.area ?? "—"}
+                      </div>
+                      <div className="min-w-[200px]">
+                        {displayStudents(contrato?.cliente)}
+                      </div>
+                      <div className="min-w-[200px]">
+                        {contrato?.asesor ?? "—"}
                       </div>
 
-                      {expandedIds.includes(contrato.id_asesoramiento) && (
-                        <div
-                          className={`px-4 py-2 rounded-b-md ${
-                            index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
-                          }`}
-                        >
-                          <div className="font-medium mb-2">Estudiantes :</div>
-                          {Array.isArray(contrato?.cliente) &&
-                          contrato.cliente.length > 0 ? (
-                            <ul className="list-disc pl-5">
-                              {contrato.cliente.map((estudiante) => (
-                                <li key={estudiante.id_estudiante}>
-                                  {estudiante.estudiante}
-                                </li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <div className="text-gray-500">
-                              Solo tienes 1 estudiante
+                      <div className="flex min-w-[100px] justify-between px-3">
+                        <div className="text-[8px] flex flex-col items-center justify-center">
+                          <button
+                            onClick={() => handleEstadoClick(contrato)}
+                            className={`w-[50px] h-[22px] font-semibold rounded-3xl border border-black flex items-center transition-all duration-300 ease-in-out 
+                              ${
+                                contrato.estado
+                                  ? "bg-green-100 justify-end"
+                                  : "bg-red-100 justify-start"
+                              }`}
+                          >
+                            <div
+                              className={`w-[18px] h-[18px] m-0.5 rounded-full transition-all duration-300 ease-in-out
+                              ${
+                                contrato.estado ? "bg-green-500" : "bg-red-500"
+                              }`}
+                            >
+                              <img
+                                className="h-full w-full transition-transform duration-300 ease-in-out"
+                                src={contrato.estado ? activado : desactivado}
+                                alt="estado"
+                              />
                             </div>
-                          )}
+                          </button>
+                          <label className="mt-1 text-[10px]">
+                            {contrato.estado ? "activado" : "desactivado"}
+                          </label>
                         </div>
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </div>
+
+                        <button
+                          onClick={() =>
+                            toggleExpand(contrato.id_asesoramiento)
+                          }
+                        >
+                          <img
+                            src={
+                              expandedIds.includes(contrato.id_asesoramiento)
+                                ? flechaarriba
+                                : flechaabajo
+                            }
+                            alt={
+                              expandedIds.includes(contrato.id_asesoramiento)
+                                ? "Cerrar"
+                                : "Expandir"
+                            }
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    {expandedIds.includes(contrato.id_asesoramiento) && (
+                      <div
+                        className={`px-4 py-2 rounded-b-md text-xs md:text-sm ${
+                          index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
+                        }`}
+                      >
+                        <div className="font-medium mb-2">Estudiantes :</div>
+                        {Array.isArray(contrato?.cliente) &&
+                        contrato.cliente.length > 0 ? (
+                          <ul className="list-disc pl-5">
+                            {contrato.cliente.map((estudiante) => (
+                              <li key={estudiante.id_estudiante}>
+                                {estudiante.estudiante}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <div className="text-gray-500">
+                            Solo tienes 1 estudiante
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal de confirmación */}
+      {/* Modal */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-            <h3 className="text-xl font-semibold mb-4">
+            <h3 className="text-lg font-semibold mb-4">
               Confirmar cambio de estado
             </h3>
             <p className="mb-6">
