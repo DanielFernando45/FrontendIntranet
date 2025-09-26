@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { asuntosService } from "../../../../services/asuntosServices";
+import { asuntosService } from "../../services/asuntosServices";
 import { TiDelete } from "react-icons/ti";
 import { GoPlusCircle } from "react-icons/go";
 

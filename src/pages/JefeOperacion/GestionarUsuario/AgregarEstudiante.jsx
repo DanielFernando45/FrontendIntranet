@@ -6,7 +6,6 @@ import axios from "axios";
 const AgregarEstudiante = () => {
   const navigate = useNavigate();
 
-  // Definir el estado para almacenar los datos del formulario
   const [clienteData, setClienteData] = useState({
     dni: "",
     nombre: "",
@@ -19,15 +18,12 @@ const AgregarEstudiante = () => {
     carrera: "",
   });
 
-  // Función para ir atrás
   const handlerAtras = () => {
     navigate("/jefe-operaciones/gestionar-usuarios");
   };
 
-  // Función que maneja los cambios en los campos de entrada
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Convertimos a número los campos que lo requieren
     const parsedValue = ["telefono", "gradoAcademico"].includes(name)
       ? parseInt(value) || ""
       : value;
@@ -35,7 +31,6 @@ const AgregarEstudiante = () => {
     setClienteData((prev) => ({ ...prev, [name]: parsedValue }));
   };
 
-  // Función que maneja el envío del formulario para agregar el nuevo cliente
   const handleSubmit = async () => {
     try {
       await axios.post(
@@ -45,82 +40,85 @@ const AgregarEstudiante = () => {
       alert("Cliente añadido exitosamente");
       navigate("/jefe-operaciones/gestionar-usuarios");
     } catch (error) {
-      console.error("Error al añadir asesor:", error);
-      alert("Error al guardar asesor. Revisa los datos.");
+      console.error("Error al añadir estudiante:", error);
+      alert("Error al guardar estudiante. Revisa los datos.");
     }
   };
 
   return (
     <LayoutApp>
-      <main className="m-20">
-        <div className="ml-8 fondo_login rounded-t-[20px] w-full h-14 "> </div>
-        <div className="flex flex-col gap-[40px] ml-8 pb-12 pt-[38px] w-full h-full px-5 bg-white rounded-b-[20px] ">
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-10">
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Nombres</p>
+      <main className="px-4 md:px-20 py-10">
+        <div className="fondo_login rounded-t-[20px] w-full h-14"></div>
+
+        <div className="flex flex-col gap-10 pb-12 pt-8 w-full h-full px-5 bg-white rounded-b-[20px]">
+          <div className="flex flex-col gap-6">
+            {/* Nombre y Apellido */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Nombres</p>
                 <input
                   name="nombre"
                   value={clienteData.nombre}
                   onChange={handleChange}
                   placeholder="Ingrese nombres"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
-
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Apellidos</p>
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Apellidos</p>
                 <input
                   name="apellido"
                   value={clienteData.apellido}
                   onChange={handleChange}
                   placeholder="Ingrese apellidos"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
             </div>
 
-            <div className="flex gap-10 ">
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Telefono</p>
+            {/* Teléfono y DNI */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Teléfono</p>
                 <input
                   name="telefono"
-                  value={clienteData.telefono}
+                  value={clienteData.telefono || ""}
                   onChange={handleChange}
-                  placeholder="Agregar Telefono"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  placeholder="Agregar Teléfono"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">DNI</p>
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>DNI</p>
                 <input
                   name="dni"
                   value={clienteData.dni}
                   onChange={handleChange}
-                  placeholder="Ingrese dni"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  placeholder="Ingrese DNI"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
             </div>
 
-            <div className="flex gap-10 ">
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Universidad</p>
+            {/* Universidad y Grado Académico */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Universidad</p>
                 <input
                   name="universidad"
                   value={clienteData.universidad}
                   onChange={handleChange}
                   placeholder="Ingresar Universidad"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Grado Academico</p>
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Grado Académico</p>
                 <select
                   name="gradoAcademico"
                   value={clienteData.gradoAcademico || ""}
                   onChange={handleChange}
-                  className="flex bg-[#F9F9F9] w-full h-[55px] rounded-lg text-[#808080] items-center p-4"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 >
                   <option value="">Seleccione nivel</option>
                   <option value={1}>Estudiante Pregrado</option>
@@ -132,51 +130,53 @@ const AgregarEstudiante = () => {
               </div>
             </div>
 
-            <div className="flex gap-10 ">
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Correo electrónico</p>
+            {/* Email y País */}
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Correo electrónico</p>
                 <input
                   name="email"
                   value={clienteData.email}
                   onChange={handleChange}
-                  placeholder="Ingrese Correo"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  placeholder="Ingrese correo"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Pais</p>
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>País</p>
                 <input
                   name="pais"
                   value={clienteData.pais}
                   onChange={handleChange}
-                  placeholder="Ingrese pais"
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  placeholder="Ingrese país"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
             </div>
 
-            <div className="flex gap-10 items-end">
-              <div className="flex flex-col gap-3 w-full">
-                <p className="pl-[1px]">Carrera</p>
+            {/* Carrera y Botones */}
+            <div className="flex flex-col md:flex-row gap-6 items-start md:items-end">
+              <div className="flex flex-col gap-2 w-full md:w-1/2">
+                <p>Carrera</p>
                 <input
                   name="carrera"
                   value={clienteData.carrera}
                   onChange={handleChange}
-                  placeholder="Ingrese la Carrera "
-                  className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] items-center p-4"
+                  placeholder="Ingrese la Carrera"
+                  className="bg-[#F9F9F9] w-full h-[49px] rounded-lg text-[#808080] p-4"
                 />
               </div>
 
-              <div className="flex w-full h-full gap-[50px] justify-center">
+              <div className="flex flex-col md:flex-row gap-4 w-full md:w-1/2 justify-end">
                 <button
                   onClick={handlerAtras}
-                  className=" h-[46px] w-[180px] flex justify-center items-center p-4 rounded-lg border border-black"
+                  className="h-[46px] w-full md:w-[180px] border border-black rounded-lg flex justify-center items-center"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className=" h-[46px] w-[180px] flex justify-center items-center fondo_login text-white p-4 rounded-lg"
+                  className="h-[46px] w-full md:w-[180px] fondo_login text-white rounded-lg flex justify-center items-center"
                 >
                   Añadir
                 </button>

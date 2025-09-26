@@ -4,7 +4,6 @@ import flechaAzul from "../../assets/icons/arrowAzul.svg";
 import Zoom from "../../assets/icons/IconEstudiante/ZoomLink.svg";
 import { useState, useEffect } from "react";
 import EnviosClientes from "../Asesor/EnviosCliente/EnviosCliente";
-import LayoutAppV2 from "../../layout/LayoutAppV2";
 
 const HomeAsesor = () => {
   const [asesorias, setAsesorias] = useState([]);

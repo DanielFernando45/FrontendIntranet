@@ -5,7 +5,17 @@ const FechaEstimada = ({ onClose, onSubmit }) => {
 
   const handleSubmit = () => {
     if (!fecha) return;
-    onSubmit(fecha);
+    const now = new Date();
+    const [year, month, day] = fecha.split("-");
+    const fechaCompleta = new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day),
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds()
+    );
+    onSubmit(fechaCompleta.toISOString()); // 👈 ISO válido
   };
 
   return (

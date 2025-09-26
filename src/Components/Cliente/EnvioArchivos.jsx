@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import agregar from "../../assets/icons/IconEstudiante/add.svg";
 import eliminar from "../../assets/icons/delete.svg";
 
 const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
-  const [asunto, setAsunto] = useState('');
+  const [asunto, setAsunto] = useState("");
   const [archivos, setArchivos] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -12,44 +12,66 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
 
   const tiposPermitidos = [
     // Documentos
-    'application/pdf', 'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'text/plain', 'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     // Imágenes
-    'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
     // Comprimidos
-    'application/zip', 'application/x-rar-compressed', 'application/x-7z-compressed'
+    "application/zip",
+    "application/x-rar-compressed",
+    "application/x-7z-compressed",
   ];
 
   // Función simplificada para obtener el token y datos básicos del usuario
   const getAuthData = () => {
-    const token = JSON.parse(localStorage.getItem('authToken') || '');
-    const userDataString = localStorage.getItem('user');
-    console.log(token);
-    let user = { role: 'estudiante' }; // Valor por defecto
-    
+    let token = null;
+    let user = { role: "estudiante" }; // Valor por defecto
+
     try {
-      // Intenta parsear como JSON o extraer datos del formato irregular
-      user = userDataString ? JSON.parse(userDataString) : user;
+      // Obtener token (si lo guardaste en localStorage como string JSON)
+      const tokenString = localStorage.getItem("authToken");
+      token = tokenString ? JSON.parse(tokenString) : null;
+
+      // Obtener user limpio
+      const userDataString = localStorage.getItem("user");
+      if (userDataString) {
+        const parsedUser = JSON.parse(userDataString);
+        if (
+          parsedUser?.role === "asesor" ||
+          parsedUser?.role === "estudiante"
+        ) {
+          user.role = parsedUser.role;
+        }
+      }
     } catch (e) {
-      // Si falla, intenta extraer datos del formato irregular
-      const roleMatch = userDataString?.match(/role:"([^"]+)"/);
-      user.role = roleMatch ? roleMatch[1] : 'estudiante';
+      console.warn(
+        "Error leyendo datos de auth, usando valores por defecto",
+        e
+      );
     }
-    
+
     return { token, user };
   };
 
   const handleFileChange = (e) => {
     const nuevosArchivos = Array.from(e.target.files);
-    const archivosValidos = nuevosArchivos.filter(file => tiposPermitidos.includes(file.type));
+    const archivosValidos = nuevosArchivos.filter((file) =>
+      tiposPermitidos.includes(file.type)
+    );
 
     if (archivos.length + archivosValidos.length <= 7) {
-      setArchivos(prev => [...prev, ...archivosValidos]);
+      setArchivos((prev) => [...prev, ...archivosValidos]);
     } else {
-      alert('Solo puedes subir un máximo de 7 archivos.');
+      alert("Solo puedes subir un máximo de 7 archivos.");
     }
   };
 
@@ -58,61 +80,67 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
   };
 
   const eliminarArchivo = (index) => {
-    setArchivos(prev => prev.filter((_, i) => i !== index));
+    setArchivos((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleClickOutside = (e) => {
-    if (e.target.id === 'modal-background') {
+    if (e.target.id === "modal-background") {
       onClose();
     }
   };
 
   const handleSubmit = async () => {
-    if (asunto.trim() === '' || archivos.length === 0) return;
+    if (asunto.trim() === "" || archivos.length === 0) return;
 
     setIsSubmitting(true);
     setSubmitError(null);
 
     try {
-      // Obtenemos el token y datos básicos sin validación
+      // Obtenemos el token y datos básicos
       const { token, user } = getAuthData();
 
+      // Sanitizamos role (por si acaso)
+      const role = user?.role === "asesor" ? "asesor" : "estudiante";
+
       const formData = new FormData();
-      formData.append('titulo', asunto);
-      formData.append('subido_por', user.role);
+      formData.append("titulo", asunto);
+      formData.append("subido_por", role); // 👈 Ahora siempre string válido
 
       // Agregar cada archivo al FormData
       archivos.forEach((file) => {
-        formData.append('files', file);
+        formData.append("files", file);
       });
 
-      const response = await fetch(`${import.meta.env.VITE_API_PORT_ENV}/asuntos/addWithDocument/${asesoriaId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/asuntos/addWithDocument/${asesoriaId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText || 'Error al enviar los documentos');
+        throw new Error(errorText || "Error al enviar los documentos");
       }
 
       setSubmitSuccess(true);
       setTimeout(() => onClose(), 1000);
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       setSubmitError(error.message);
     } finally {
       setIsSubmitting(false);
     }
-    
   };
-
   useEffect(() => {
     if (!show) {
-      setAsunto('');
+      setAsunto("");
       setArchivos([]);
       setSubmitSuccess(false);
       setSubmitError(null);
@@ -131,9 +159,11 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-lg"
-        >✕</button>
+        >
+          ✕
+        </button>
 
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           <h2 className="text-xl font-medium">Agregar Asunto</h2>
         </div>
 
@@ -154,8 +184,8 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
           <input
             type="text"
             value={asunto}
-            onChange={e => setAsunto(e.target.value)}
-            placeholder='Inserte el asunto'
+            onChange={(e) => setAsunto(e.target.value)}
+            placeholder="Inserte el asunto"
             className="border border-gray-400 shadow-sm w-full rounded px-3 py-[2px] focus:outline-none focus:ring-2 focus:ring-blue-400"
             disabled={isSubmitting}
           />
@@ -168,7 +198,7 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
             type="file"
             ref={fileInputRef}
             multiple
-            accept={tiposPermitidos.join(',')}
+            accept={tiposPermitidos.join(",")}
             onChange={handleFileChange}
             className="hidden"
             disabled={isSubmitting}
@@ -176,7 +206,10 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
           {archivos.length > 0 && (
             <ul className="flex flex-col text-sm text-gray-700 gap-3">
               {archivos.map((file, index) => (
-                <li key={index} className="flex w-[375px] justify-between items-center bg-white rounded">
+                <li
+                  key={index}
+                  className="flex w-[375px] justify-between items-center bg-white rounded"
+                >
                   <span className="truncate w-[80%]">{file.name}</span>
                   <button
                     onClick={() => !isSubmitting && eliminarArchivo(index)}
@@ -191,27 +224,27 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
           )}
         </div>
 
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           {archivos.length < 7 && (
-            <button
-              onClick={handleUploadClick}
-              disabled={isSubmitting}
-            >
+            <button onClick={handleUploadClick} disabled={isSubmitting}>
               <img src={agregar} alt="" />
             </button>
           )}
         </div>
 
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           <button
-            className={`w-[130px] text-[13px] rounded-md ${asunto.trim() !== '' && archivos.length > 0 && !isSubmitting
-                ? 'bg-[#DAD6D7] hover:bg-black text-white'
-                : 'bg-[#DAD6D7] cursor-not-allowed'
-              }`}
+            className={`w-[130px] text-[13px] rounded-md ${
+              asunto.trim() !== "" && archivos.length > 0 && !isSubmitting
+                ? "bg-[#DAD6D7] hover:bg-black text-white"
+                : "bg-[#DAD6D7] cursor-not-allowed"
+            }`}
             onClick={handleSubmit}
-            disabled={asunto.trim() === '' || archivos.length === 0 || isSubmitting}
+            disabled={
+              asunto.trim() === "" || archivos.length === 0 || isSubmitting
+            }
           >
-            {isSubmitting ? 'Enviando...' : 'Subir'}
+            {isSubmitting ? "Enviando..." : "Subir"}
           </button>
         </div>
       </div>
