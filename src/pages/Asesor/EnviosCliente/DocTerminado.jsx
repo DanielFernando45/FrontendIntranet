@@ -89,7 +89,7 @@ const DocTerminado = () => {
               className="grid grid-cols-1 sm:grid-cols-5 lg:grid-cols-7 gap-2 text-[#2B2829] font-normal bg-[#E9E7E7] p-2 rounded-md items-center"
             >
               {/* Col 1: Título */}
-              <div>{terminado.titulo}</div>
+              <div>{terminado.titulo_asesor}</div>
 
               {/* Col 2: Entrega */}
               <div className="text-center">

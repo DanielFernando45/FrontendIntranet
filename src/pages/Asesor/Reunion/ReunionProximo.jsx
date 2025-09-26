@@ -150,35 +150,36 @@ const ReunionProximo = () => {
                 <p className="text-[12px]">{fechaFormateada.time}</p>
               </div>
 
-              <div className="flex flex-col w-full h-full border bg-[#F0EFEF] border-[#AAA3A5] p-4 justify-between rounded-r-xl gap-5">
-                <div className="flex flex-col gap-[6px]">
-                  <div className="flex  items-start">
-                    <p className="font-medium">{reunion.delegado}</p>
-                    <button
-                      className="p-1"
-                      onClick={() => handleDeleteClick(reunion.id)}
-                    >
-                      <img
-                        src={eliminar}
-                        className="w-12"
-                        alt="Eliminar reunión"
-                      />
-                    </button>
-                  </div>
-                  <h1 className="text-[#666666]">
-                    CodigoID: {reunion.meetingId}
-                  </h1>
+              <div className="flex flex-col w-full bg-white p-4 rounded-xl shadow-sm border border-[#EAEAEA]">
+                <div className="flex justify-between items-center mb-4">
+                  <p className="font-semibold text-[#333333]">
+                    {reunion.delegado}
+                  </p>
+                  <button
+                    className="p-1 text-[#B1B1B1] hover:text-[#1271ED] transition-colors"
+                    onClick={() => handleDeleteClick(reunion.id)}
+                  >
+                    <img
+                      src={eliminar}
+                      className="w-5 h-5"
+                      alt="Eliminar reunión"
+                    />
+                  </button>
                 </div>
 
-                <button className="flex gap-4 justify-between px-1 h-12 items-center text-white rounded-2xl bg-[#1271ED]">
+                <h1 className="text-[#888888] text-sm mb-4">
+                  Código ID: {reunion.meetingId}
+                </h1>
+
+                <button className="flex items-center justify-between w-full h-12 px-6 bg-[#1271ED] text-white rounded-full hover:bg-[#1E85F6] focus:outline-none transition-all duration-200">
                   <a
                     href={reunion.enlace}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full flex justify-between items-center px-2"
+                    className="flex justify-between w-full items-center"
                   >
-                    <p className="font-medium">Enlace Zoom</p>
-                    <img src={Zoom} alt="Zoom" className="w-6 h-6" />
+                    <p className="font-semibold">Enlace Zoom</p>
+                    <img src={Zoom} alt="Zoom" className="w-5 h-5" />
                   </a>
                 </button>
               </div>

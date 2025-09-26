@@ -147,7 +147,9 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
             return (
               <React.Fragment key={envio.id_asunto || index}>
                 <div className="flex justify-between text-[#2B2829] text-xs md:text-base font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2">
-                  <div className="sm:w-[300px] flex">{envio.asunto}</div>
+                  <div className="sm:w-[300px] flex">
+                    {envio.asunto.cliente}
+                  </div>
                   <div className="hidden lg:block text-white bg-[#353563] rounded px-3">
                     {envio.estado}
                   </div>
@@ -181,8 +183,8 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
                   <div className="bg-white p-2 mt-1 rounded-md">
                     {/* Encabezado repetido UNA VEZ */}
                     <div className="flex flex-col md:flex-row justify-between text-[#2B2829] font-normal items-center py-2 border-b text-xs md:text-base">
-                      <div className="flex-1 flex">{envio.asunto}</div>
-                      <div className="flex-1  text-white bg-[#353563] rounded px-3 text-center my-2 md:my-0">
+                      <div className="flex-1 flex">{envio.asunto.cliente}</div>
+                      <div className="hidden lg:block text-white bg-[#353563] rounded px-3">
                         {envio.estado}
                       </div>
                       <div className="flex-1 flex justify-center">

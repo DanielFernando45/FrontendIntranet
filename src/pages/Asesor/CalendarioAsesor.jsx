@@ -391,7 +391,23 @@ const CalendarioAsesor = () => {
     <LayoutApp>
       <main className="sm:m-5 flex flex-col lg:flex-row gap-10 xl:gap-[60px]">
         <div className="flex flex-col flex-1 lg:w-[60%] justify-center items-center">
-          <div className="bg-white rounded-xl p-4 flex flex-col md:flex-row w-full justify-between mb-10 items-center shadow">
+        
+          <div className="bg-white rounded-xl p-4 flex flex-col gap-4 w-full shadow">
+            <div className="flex gap-2">
+              {daysOfWeek.map((day, index) => (
+                <div
+                  key={index}
+                  className="flex justify-center items-center rounded-full flex-1 lg:w-[60px] xl:w-[85px] xl:h-[35px] xl:text-[16px] font-semibold text-gray-600"
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
+            {renderCalendarDays()}
+          </div>
+        </div>
+        <div className="flex flex-col h-full justify-center p-5 gap-8 flex-1 xl:w-[40%] bg-white rounded-xl shadow-lg">
+            <div className="bg-white rounded-xl p-4 flex flex-col md:flex-row w-full justify-between mb-10 items-center shadow">
             <p className="font-semibold text-[20px] text-gray-800">
               Calendario de actividades
             </p>
@@ -431,21 +447,6 @@ const CalendarioAsesor = () => {
               </select>
             </div>
           </div>
-          <div className="bg-white rounded-xl p-4 flex flex-col gap-4 w-full shadow">
-            <div className="flex gap-2">
-              {daysOfWeek.map((day, index) => (
-                <div
-                  key={index}
-                  className="flex justify-center items-center rounded-full flex-1 lg:w-[60px] xl:w-[85px] xl:h-[35px] xl:text-[16px] font-semibold text-gray-600"
-                >
-                  {day}
-                </div>
-              ))}
-            </div>
-            {renderCalendarDays()}
-          </div>
-        </div>
-        <div className="flex flex-col h-full justify-center p-5 gap-8 flex-1 xl:w-[40%] bg-white rounded-xl shadow-lg">
           <div className="text-center">
             <p className="text-gray-400 font-medium text-[18px]">{dayName}</p>
             <h2 className="text-[45px] font-bold text-gray-800">
@@ -455,7 +456,7 @@ const CalendarioAsesor = () => {
               {monthName}
             </h1>
           </div>
-          <div className="flex flex-col gap-4 overflow-y-auto max-h-[500px]">
+          <div className="flex flex-col gap-4 overflow-y-auto max-h-[330px]">
             {eventosDia.map((evento, index) => {
               let eventColor = "";
               let eventDetails = "";
