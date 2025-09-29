@@ -266,7 +266,7 @@ const ContratoAsignado = () => {
                     }
                   >
                     <option disabled>Seleccionar</option>
-                    <option value={1}>Proyecto Bachillerato</option>
+                                 <option value={1}>Proyecto Bachillerato</option>
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
                     <option value={4}>Tesis Maestría</option>

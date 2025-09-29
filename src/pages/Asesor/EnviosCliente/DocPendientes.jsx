@@ -7,6 +7,7 @@ import FechaEstimada from "../../../Components/Asesor/FechaEstimada";
 import EnviarAvance from "../../../Components/Asesor/EnviarAvance";
 import { FaRegEdit } from "react-icons/fa";
 import ModalEditarFechaPendientes from "../../../Components/Asesor/EnviosCliente/ModalEditarFechaPendientes";
+import { asuntosService } from "../../../services/asuntosServices";
 
 const DocPendientes = () => {
   const [pendientes, setPendientes] = useState([]);
@@ -141,19 +142,17 @@ const DocPendientes = () => {
     const year = date.getFullYear();
     return `${day} ${month} de ${year}`;
   };
+  
   const handleSubmitAvance = async (id, formData) => {
     try {
-      const res = await axios.patch(
-        `http://localhost:3001/asuntos/finished/${id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const res = await asuntosService.agregarAsuntosFinales(id, formData);
       console.log("Avance enviado:", res.data);
       fetchPendientes(); // refresca lista
     } catch (err) {
       console.error("Error al enviar avance:", err.response?.data || err);
     }
   };
+
   const SkeletonItem = () => (
     <div className="flex flex-col gap-3 text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md px-6 animate-pulse">
       <div className="flex justify-between items-center">

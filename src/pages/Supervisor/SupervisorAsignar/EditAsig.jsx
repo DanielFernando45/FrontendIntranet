@@ -83,6 +83,34 @@ const EditAsig = () => {
     queryKey: ["clientesSinAsignar"],
     queryFn: clientesService.clientesSinAsignar,
   });
+  // Cuando llegan los datos del asesoramiento, inicializar referencia
+  // Cuando llegan los datos del asesoramiento, inicializar referencia, área y asesor
+  useEffect(() => {
+    if (asesoramiento && areas.length > 0) {
+      // área
+      const areaSel = areas.find(
+        (a) => String(a.id) === String(asesoramiento.id_area)
+      );
+      if (areaSel) {
+        setAreaSeleccionada(areaSel);
+
+        // asesor
+        const asesorSel = areaSel.asesores?.find(
+          (a) => String(a.id) === String(asesoramiento.id_asesor)
+        );
+        if (asesorSel) {
+          setAsesorSeleccionado(asesorSel);
+        }
+      }
+
+      // referencia (profesion_asesoria)
+      if (asesoramiento.profesion_asesoria) {
+        setReferencia(asesoramiento.profesion_asesoria);
+      }
+
+      console.log("Referencia inicial:", asesoramiento.profesion_asesoria);
+    }
+  }, [asesoramiento, areas]);
 
   // 4) Inicializa seleccionado (delegado y estudiantes) desde backend
   useEffect(() => {

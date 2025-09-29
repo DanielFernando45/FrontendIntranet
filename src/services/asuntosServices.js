@@ -27,14 +27,17 @@ const editarAsunto = async ({ idAsunto, formData }) => {
 };
 
 const editarAsuntoEstudiante = async ({ idAsunto, formData }) => {
-  const { data } = await api.patch(`/asuntos/estudiante/${idAsunto}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const { data } = await api.patch(
+    `/asuntos/estudiante/${idAsunto}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return data;
 };
-
 
 const editarFechaTerminadoAsuntoAsesor = async ({
   idAsunto,
@@ -47,11 +50,25 @@ const editarFechaTerminadoAsuntoAsesor = async ({
 
   return data;
 };
+const agregarAsuntosFinales = async (id, formData) => {
+  try {
+    const res = await api.patch(
+      `http://localhost:3001/asuntos/finished/${id}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+    console.log("Avance enviado:", res.data);
+    fetchPendientes(); // refresca lista
+  } catch (err) {
+    console.error("Error al enviar avance:", err.response?.data || err);
+  }
+};
 
 export const asuntosService = {
   asuntoById,
   eliminarAsunto,
   editarAsunto,
+  agregarAsuntosFinales,
   editarAsuntoEstudiante,
   asuntoAsesorByIdAsunto,
   editarFechaTerminadoAsuntoAsesor,

@@ -337,14 +337,7 @@ const CalendarioEstudiante = () => {
             }
           }
 
-          if (dayData.day === 15 && dayData.currentMonth) {
-            // Solo el día 15 del mes actual tendrá 3 íconos
-            eventIcons.add(<Video size={18} className="text-blue-500" />);
-            eventIcons.add(<Clock size={18} className="text-gray-500" />);
-            eventIcons.add(
-              <CalendarCheck2 size={18} className="text-green-500" />
-            );
-          }
+      
           // Estilos para el día activo
           const isActive = isToday || isSelected;
           const activeBg = isToday
