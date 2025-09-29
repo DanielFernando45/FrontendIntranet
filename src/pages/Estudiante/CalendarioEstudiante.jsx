@@ -140,7 +140,7 @@ const CalendarioEstudiante = () => {
     "Diciembre",
   ];
 
-  const daysOfWeek = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"];
+  const daysOfWeek = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
   useEffect(() => {
     generateCalendar();
@@ -149,7 +149,7 @@ const CalendarioEstudiante = () => {
   const generateCalendar = () => {
     const firstDay = new Date(selectedYear, selectedMonth, 1);
     const lastDay = new Date(selectedYear, selectedMonth + 1, 0);
-    const startDay = firstDay.getDay();
+    const startDay = (firstDay.getDay() + 6) % 7; // Convierte domingo (0) en 6, lunes (1) en 0, etc.
     const totalDays = lastDay.getDate();
     const prevMonthDays = new Date(selectedYear, selectedMonth, 0).getDate();
 
@@ -184,7 +184,7 @@ const CalendarioEstudiante = () => {
 
     // Días del mes siguiente (relleno)
     const totalFilled = days.length;
-    for (let i = 1; i <= 42 - totalFilled; i++) {
+    for (let i = 1; i <= 35 - totalFilled; i++) {
       days.push({
         day: i,
         currentMonth: false,
@@ -221,23 +221,25 @@ const CalendarioEstudiante = () => {
     ).padStart(2, "0")}`;
   };
 
-  const renderCalendarDays = () => {
+  const renderCalendarDays = (eventos) => {
     const weeks = [];
     for (let i = 0; i < calendarDays.length; i += 7)
       weeks.push(calendarDays.slice(i, i + 7));
+
     return weeks.map((week, weekIndex) => (
-      <div key={weekIndex} className="flex gap-2 w-full">
+      <div key={weekIndex} className="grid grid-cols-7 gap-[6px] w-full">
         {week.map((dayData, dayIndex) => {
           const isSelected =
             dayData.currentMonth && dayData.day === selectedDay;
           const isToday = dayData.isToday;
-          const isVencimiento = dayData.isVencimiento;
+
           const eventosEnElDia = eventos.reuniones.filter(
             (evento) =>
               new Date(evento.fecha).getDate() === dayData.day &&
               new Date(evento.fecha).getMonth() === selectedMonth &&
               new Date(evento.fecha).getFullYear() === selectedYear
           );
+
           const eventosDeContrato = eventos.contratos.filter(
             (evento) =>
               (new Date(evento.fecha_inicio).getDate() === dayData.day &&
@@ -248,6 +250,7 @@ const CalendarioEstudiante = () => {
                 new Date(evento.fecha_fin).getMonth() === selectedMonth &&
                 new Date(evento.fecha_fin).getFullYear() === selectedYear)
           );
+
           const eventosDeAsunto = eventos.asuntos.filter(
             (evento) =>
               (evento.fecha_entregado &&
@@ -270,104 +273,141 @@ const CalendarioEstudiante = () => {
                 new Date(evento.fecha_estimada).getMonth() === selectedMonth &&
                 new Date(evento.fecha_estimada).getFullYear() === selectedYear)
           );
+
           let eventIcons = new Set();
-          let dayColor = "";
           let dayText = "";
-          eventosDeContrato.forEach((evento) => {
-            if (
+          let dayBgClass = "bg-gray-100";
+          let dayTextColor = dayData.currentMonth
+            ? "text-gray-800"
+            : "text-gray-400";
+
+          const esFinDeContrato = eventosDeContrato.some(
+            (evento) =>
               evento.fecha_fin &&
               new Date(evento.fecha_fin).getDate() === dayData.day &&
               new Date(evento.fecha_fin).getMonth() === selectedMonth &&
               new Date(evento.fecha_fin).getFullYear() === selectedYear
-            ) {
-              dayColor = "bg-red-300"; // cambia fondo y texto
-              dayText = { label: "Fin contrato", textColor: "text-red-500" };
-            } else if (
-              new Date(evento.fecha_inicio).getDate() === dayData.day &&
-              new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
-              new Date(evento.fecha_inicio).getFullYear() === selectedYear &&
-              dayColor !== "text-red-500"
-            ) {
-              dayColor = "bg-green-300";
-              dayText = {
-                label: "Inicio contrato",
-                textColor: "text-green-500",
-              };
-            }
-          });
-          if (eventosEnElDia.length > 0)
-            eventIcons.add(<Video className="text-blue-500" />);
-          if (eventosDeAsunto.length > 0) {
-            for (let evento of eventosDeAsunto) {
-              let icon = null;
-              if (
-                evento.estado === "terminado" &&
-                evento.fecha_terminado &&
-                !icon
-              )
-                icon = <CalendarCheck2 className="text-gray-500" />;
-              else if (
-                evento.estado === "en proceso" &&
-                evento.fecha_revision &&
-                !icon
-              )
-                icon = <Clock className="text-gray-500" />;
-              else if (
-                evento.estado === "en proceso" &&
-                evento.fecha_estimada &&
-                !icon
-              )
-                icon = <Clock className="text-gray-500" />;
-              else if (
-                evento.estado === "entregado" &&
-                evento.fecha_entregado &&
-                !icon
-              )
-                icon = <NotepadText className="text-gray-500" />;
-              if (icon) {
-                eventIcons.add(icon);
-                break;
+          );
+
+          if (esFinDeContrato) {
+            dayBgClass = "bg-red-100";
+            dayText = "Fin\nContrato";
+            dayTextColor = "text-red-600";
+          } else if (
+            eventosDeContrato.some(
+              (e) =>
+                new Date(e.fecha_inicio).getDate() === dayData.day &&
+                new Date(e.fecha_inicio).getMonth() === selectedMonth &&
+                new Date(e.fecha_inicio).getFullYear() === selectedYear
+            )
+          ) {
+            dayBgClass = "bg-green-100";
+          }
+
+          // Solo agregamos íconos si NO es fin de contrato
+          if (!esFinDeContrato) {
+            if (eventosEnElDia.length > 0)
+              eventIcons.add(<Video className="text-blue-500" />);
+            if (eventosDeAsunto.length > 0) {
+              for (let evento of eventosDeAsunto) {
+                let icon = null;
+                if (evento.estado === "terminado" && evento.fecha_terminado)
+                  icon = <CalendarCheck2 size={18} className="text-gray-500" />;
+                else if (
+                  evento.estado === "en proceso" &&
+                  evento.fecha_revision
+                )
+                  icon = <Clock size={18} className="text-gray-500" />;
+                else if (
+                  evento.estado === "en proceso" &&
+                  evento.fecha_estimada
+                )
+                  icon = <Clock size={18} className="text-gray-500" />;
+                else if (
+                  evento.estado === "entregado" &&
+                  evento.fecha_entregado
+                )
+                  icon = <NotepadText size={18} className="text-gray-500" />;
+
+                if (icon) {
+                  eventIcons.add(icon);
+                  break;
+                }
               }
             }
           }
+
+          if (dayData.day === 15 && dayData.currentMonth) {
+            // Solo el día 15 del mes actual tendrá 3 íconos
+            eventIcons.add(<Video size={18} className="text-blue-500" />);
+            eventIcons.add(<Clock size={18} className="text-gray-500" />);
+            eventIcons.add(
+              <CalendarCheck2 size={18} className="text-green-500" />
+            );
+          }
+          // Estilos para el día activo
+          const isActive = isToday || isSelected;
+          const activeBg = isToday
+            ? "bg-[#4BD7F5]"
+            : isSelected
+            ? "bg-gray-400"
+            : dayBgClass;
+          const activeText =
+            isToday || isSelected ? "text-white" : dayTextColor;
+
           return (
             <div
               key={dayIndex}
               onClick={() => handleDayClick(dayData.day, dayData.currentMonth)}
-              className={`flex justify-center items-center rounded-full flex-1 lg:w-[60px] lg:h-[60px] xl:w-[85px] xl:h-[85px] xl:text-[22px] cursor-pointer transition ${
-                dayData.currentMonth ? "bg-white" : "text-gray-300"
-              } relative`}
+              className={`flex flex-col items-center justify-center aspect-square min-w-[36px] sm:min-w-[48px] md:min-w-[60px] xl:min-w-[70px] transition cursor-pointer`}
             >
               <div
-                className={`text-[16px] font-semibold text-black rounded-full w-[50px] h-[50px] flex justify-center items-center  ${
-                  isToday ? "bg-[#4BD7F5]" : ""
-                }${isSelected ? "bg-gray-300" : ""}
-               } ${!isToday && !isSelected ? dayColor : ""}
-              `}
+                className={`aspect-square w-full max-w-[50px] sm:max-w-[60px] md:max-w-[70px] rounded-full flex items-center justify-center 
+    text-[18px] sm:text-[20px] md:text-[22px] font-bold ${activeBg} ${activeText}`}
               >
                 {dayData.day}
               </div>
-              {dayText && (
-                <div
-                  className={`absolute bottom-0 text-sm font-semibold ${
-                    dayText.textColor || "text-gray-600"
-                  }`}
-                >
-                  {dayText.label}
-                </div>
-              )}
+
               {eventIcons.size > 0 && (
-                <div className="absolute mt-12 flex gap-1 left-1/2 transform -translate-x-1/2">
-                  {[...eventIcons].map((icon, index) => (
-                    <div key={index} className="w-[20px] h-[20px]">
-                      {icon}
-                    </div>
-                  ))}
-                </div>
+                <>
+                  {/* Vista móvil: puntos de colores */}
+                  <div className="flex gap-[3px] mt-1 sm:hidden">
+                    {/* Reunión */}
+                    {eventosEnElDia.length > 0 && (
+                      <div className="w-[6px] h-[6px] rounded-full bg-blue-500"></div>
+                    )}
+
+                    {/* Contrato */}
+                    {eventosDeContrato.length > 0 && !esFinDeContrato && (
+                      <div className="w-[6px] h-[6px] rounded-full bg-green-500"></div>
+                    )}
+
+                    {/* Asunto */}
+                    {eventosDeAsunto.length > 0 && (
+                      <div className="w-[6px] h-[6px] rounded-full bg-gray-500"></div>
+                    )}
+                  </div>
+
+                  {/* Vista escritorio: íconos */}
+                  <div className="hidden sm:flex justify-center items-center gap-[6px] mt-1">
+                    {[...eventIcons].map((icon, index) => (
+                      <div
+                        key={index}
+                        className="text-[8px] md:text-[12px] xl:text-[14px]"
+                      >
+                        {icon}
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
-              {isVencimiento && (
-                <div className="absolute mt-12 text-[10px] font-semibold text-red-500">
-                  Contrato Finalizado
+
+              {/* Texto "Fin Contrato" debajo */}
+              {esFinDeContrato && (
+                <div className="text-[8px] text-center leading-tight mt-[2px] font-medium text-red-500">
+                  Fin
+                  <br />
+                  Contrato
                 </div>
               )}
             </div>
@@ -379,31 +419,38 @@ const CalendarioEstudiante = () => {
 
   return (
     <LayoutApp>
-      <main className="sm:m-5 flex flex-col lg:flex-row gap-10 xl:gap-[60px]">
-        <div className="flex flex-col flex-1 lg:w-[60%] justify-center items-center">
-         
-          <div className="bg-white rounded-xl p-4 flex flex-col gap-4 w-full shadow">
-            <div className="flex gap-2">
+      <main className="px-4 sm:px-5 py-5 flex flex-col lg:flex-row gap-6 xl:gap-[60px]">
+        {/* Panel Izquierdo: Calendario */}
+        <div className="flex flex-col flex-1 lg:w-[60%] items-center">
+          <div className="bg-white rounded-xl p-4 sm:p-6 flex flex-col gap-4 w-full shadow">
+            {/* Días de la semana */}
+            <div className="grid grid-cols-7 gap-1 sm:gap-2">
               {daysOfWeek.map((day, index) => (
                 <div
                   key={index}
-                  className="flex justify-center items-center rounded-full flex-1 lg:w-[60px] xl:w-[85px] xl:h-[35px] xl:text-[16px] font-semibold text-gray-600"
+                  className="flex justify-center items-center rounded-full text-[11px] sm:text-[14px] md:text-[16px] font-bold text-gray-600"
                 >
                   {day}
                 </div>
               ))}
             </div>
-            {renderCalendarDays()}
+
+            {/* Días del calendario */}
+            {renderCalendarDays(eventos)}
           </div>
         </div>
-        <div className="flex flex-col h-full justify-center p-5 gap-8 flex-1 xl:w-[40%] bg-white rounded-xl shadow-lg">
-           <div className="bg-white rounded-xl p-4 flex flex-col md:flex-row w-full justify-between mb-10 items-center shadow">
-            <p className="font-semibold text-[20px] text-gray-800">
+
+        {/* Panel Derecho: Detalles */}
+        <div className="flex flex-col gap-6 flex-1 xl:w-[40%] bg-white rounded-xl shadow-lg p-4 sm:p-6">
+          {/* Encabezado y selects */}
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between w-full">
+            <p className="font-semibold text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] text-gray-800 text-center md:text-left">
               Calendario de actividades
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
+
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto">
               <select
-                className="bg-gray-900 w-full p-[5px] rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
+                className="bg-gray-900 text-white font-semibold rounded-md p-2 text-sm sm:text-base w-full sm:w-[120px] h-[35px]"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               >
@@ -413,8 +460,9 @@ const CalendarioEstudiante = () => {
                   </option>
                 ))}
               </select>
+
               <select
-                className="bg-gray-900 p-[5px] w-full rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
+                className="bg-gray-900 text-white font-semibold rounded-md p-2 text-sm sm:text-base w-full sm:w-[120px] h-[35px]"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               >
@@ -424,10 +472,11 @@ const CalendarioEstudiante = () => {
                   </option>
                 ))}
               </select>
+
               <select
                 onChange={handleChange}
                 value={selectedAsesoriaId || ""}
-                className="border rounded-t-md border-[#b4a6aa]"
+                className="border border-[#b4a6aa] rounded-md p-2 text-sm sm:text-base w-full sm:w-[150px] h-[35px]"
               >
                 {asesorias.map((asesoria, index) => (
                   <option key={index} value={asesoria.id}>
@@ -437,24 +486,31 @@ const CalendarioEstudiante = () => {
               </select>
             </div>
           </div>
+
+          {/* Fecha seleccionada */}
           <div className="text-center">
-            <p className="text-gray-400 font-medium text-[18px]">{dayName}</p>
-            <h2 className="text-[45px] font-bold text-gray-800">
+            <p className="text-gray-400 font-medium text-[14px] sm:text-[16px]">
+              {dayName}
+            </p>
+            <h2 className="text-[38px] sm:text-[45px] font-bold text-gray-800">
               {selectedDay}
             </h2>
-            <h1 className="text-gray-700 text-[22px] font-semibold">
+            <h1 className="text-gray-700 text-[18px] sm:text-[22px] font-semibold">
               {monthName}
             </h1>
           </div>
+
+          {/* Lista de eventos */}
           <div className="flex flex-col gap-4 overflow-y-auto max-h-[300px]">
             {eventosDia.map((evento, index) => {
               let eventColor = "";
               let eventDetails = "";
+
               if (evento.fecha) {
                 eventColor = "";
                 eventDetails = (
                   <>
-                    <p className="text-gray-600 font-medium">
+                    <p className="text-gray-600 font-medium text-sm sm:text-base">
                       {new Date(evento.fecha).toLocaleDateString("es-ES")} -{" "}
                       {formatTime(evento.fecha)}
                     </p>
@@ -474,14 +530,16 @@ const CalendarioEstudiante = () => {
                 eventColor = "bg-green-500";
                 eventDetails = (
                   <>
-                    <p className="text-gray-600 font-medium">
+                    <p className="text-gray-600 font-medium text-sm sm:text-base">
                       {new Date(evento.fecha_inicio).toLocaleDateString(
                         "es-ES"
                       )}{" "}
                       - {formatTime(evento.fecha_inicio)}
                     </p>
-                    <p className="text-gray-500">Servicio: {evento.servicio}</p>
-                    <p className="text-gray-500">
+                    <p className="text-gray-500 text-sm">
+                      Servicio: {evento.servicio}
+                    </p>
+                    <p className="text-gray-500 text-sm">
                       Modalidad: {evento.modalidad}
                     </p>
                   </>
@@ -490,7 +548,7 @@ const CalendarioEstudiante = () => {
                 eventColor = "bg-red-500";
                 eventDetails = (
                   <>
-                    <p className="text-gray-600 font-medium">
+                    <p className="text-gray-600 font-medium text-sm sm:text-base">
                       {evento.fecha_entregado
                         ? new Date(evento.fecha_entregado).toLocaleDateString(
                             "es-ES"
@@ -501,20 +559,23 @@ const CalendarioEstudiante = () => {
                         ? formatTime(evento.fecha_terminado)
                         : "Sin hora"}
                     </p>
-                    <p className="text-gray-400">Estado: {evento.estado}</p>
+                    <p className="text-gray-400 text-sm">
+                      Estado: {evento.estado}
+                    </p>
                   </>
                 );
               }
+
               return (
                 <div
                   key={index}
-                  className={`bg-white flex w-full min-h-[121px] gap-4 p-5 border border-[#E5E7EB] rounded-xl shadow hover:shadow-md transition ${eventColor}`}
+                  className={`bg-white flex w-full min-h-[100px] sm:min-h-[121px] gap-4 p-4 sm:p-5 border border-[#E5E7EB] rounded-xl shadow hover:shadow-md transition ${eventColor}`}
                 >
                   <div className="flex items-start pt-1">
-                    <div className="w-[15px] h-[15px] rounded-full bg-indigo-500 shadow-md"></div>
+                    <div className="w-[12px] h-[12px] sm:w-[15px] sm:h-[15px] rounded-full bg-indigo-500 shadow-md"></div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <h2 className="text-[22px] font-bold text-gray-800">
+                    <h2 className="text-[18px] sm:text-[20px] font-bold text-gray-800">
                       {evento.titulo}
                     </h2>
                     {eventDetails}
