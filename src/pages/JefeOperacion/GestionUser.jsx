@@ -1,5 +1,4 @@
 import LayoutApp from "../../layout/LayoutApp";
-
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 
 const GestionarUsuarios = () => {

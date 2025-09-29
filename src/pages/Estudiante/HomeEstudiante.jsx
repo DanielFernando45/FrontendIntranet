@@ -333,6 +333,7 @@ const HomeEstudiante = () => {
         </section>
 
         <div className="flex justify-between  flex-col mt-2 xl:flex-row md">
+
           <div className="w-full xl:w-auto flex flex-col gap-6 xl:pt-2 ">
             <section className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <h2 className="mb-2 text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
@@ -407,10 +408,8 @@ const HomeEstudiante = () => {
 
             <select
               onChange={handleChange}
-              value={selectedAsesoriaId || ""}
-              className="w-full max-w-xs px-4 py-2 text-[15px] rounded-lg border border-gray-300 bg-white text-gray-700 
-                  shadow-sm focus:outline-none 
-                  transition duration-200 ease-in-out cursor-pointer "
+              value={selectedAsesoriaId || ''}
+              className='border rounded-t-md border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
             >
               {asesorias?.isEmpty ? (
                 <option value="" disabled>
@@ -427,9 +426,7 @@ const HomeEstudiante = () => {
 
             <div className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
-                <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
-                  Envios Asesor
-                </h1>
+                <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Envios Asesor</h1>
                 <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
                   <a href=""></a>
                   <img src={flechaAzul} alt="" className="w-4" />
@@ -443,9 +440,7 @@ const HomeEstudiante = () => {
 
             <div className="max-xl:hidden flex flex-col gap-5 xl:gap-2  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
-                <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">
-                  Reuniones
-                </h2>
+                <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Reuniones</h2>
                 <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
                   <a href=""></a>
                   <img src={flechaAzul} alt="" className="w-4" />
@@ -524,9 +519,7 @@ const HomeEstudiante = () => {
 
           <div className="xl:hidden flex flex-col gap-5  bg-white p-4 rounded-lg shadow-md">
             <div className="mt-5 flex justify-between">
-              <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
-                Reuniones
-              </h2>
+              <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Reuniones</h2>
               <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
                 <a href=""></a>
                 <img src={flechaAzul} alt="" className="w-4" />
@@ -599,9 +592,7 @@ const HomeEstudiante = () => {
 
           <div className=" bg-white p-4 rounded-lg shadow-md max-xl:hidden xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
             <div className="flex justify-between">
-              <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">
-                Envios Asesor
-              </h1>
+              <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Envios Asesor</h1>
               <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
                 <a href=""></a>
                 <img src={flechaAzul} alt="" className="w-4" />
@@ -645,6 +636,7 @@ const HomeEstudiante = () => {
             </div>
           </div>
         )}
+        
       </main>
     </LayoutApp>
   );

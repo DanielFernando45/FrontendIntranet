@@ -41,7 +41,15 @@ const MiPerfil = () => {
         <div className="flex flex-col gap-[40px]  pb-12 pt-[38px] w-full h-full px-5 bg-white rounded-b-[20px]">
           <div className="flex justify-between gap-[22px] items-center">
             <div className="flex gap-[22px] items-center">
-              <img src={perfil} alt="" className="w-[94px] h-[94px]" />
+              <div className="flex items-center justify-center w-8 h-8 sm:w-16 sm:h-16 rounded-full bg-[#1C1C34] text-white text-[25px] font-bold">
+                {perfilData?.nombre
+                  ?.split(" ") // separa el nombre por espacios
+                  .map((n) => n[0]) // toma la primera letra de cada palabra
+                  .join("") // las une
+                  .toUpperCase()
+                  .slice(0, 2)}{" "}
+                {/* Máximo 2 iniciales */}
+              </div>
               <div>
                 <h3 className="text-[20px] font-medium max-sm:text-[17px]">
                   {perfilData.nombre} {perfilData.apellido}

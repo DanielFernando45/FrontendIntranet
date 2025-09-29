@@ -61,9 +61,9 @@ const MiContrato = () => {
 
   return (
     <LayoutApp>
-      <main className="m-24">
-        <div className="ml-8 fondo_login rounded-t-[20px] w-full h-14 "> </div>
-        <div className="flex flex-col  gap-[40px] ml-8  pb-12 pt-[38px] w-full h-full px-12 bg-white rounded-b-[20px] ">
+      <main className="xl:m-24">
+        <div className=" fondo_login rounded-t-[20px] w-full h-14 "> </div>
+        <div className="flex flex-col  gap-[40px] p-5 mn:p-8 sm:p-12 w-full h-full bg-white rounded-b-[20px] ">
           <div className="flex flex-col gap-4">
             <h1 className="text-[23px] font-medium">Mis Contratos</h1>
 
@@ -86,8 +86,8 @@ const MiContrato = () => {
 
             {contrato ? (
               <>
-                <div className="flex gap-10">
-                  <div className="flex flex-col gap-3 w-full">
+                <div className="flex gap-10 flex-col sm:flex-row">
+                  <div className="flex flex-col  gap-3 w-full">
                     <p className="pl-[1px]">Servicio</p>
                     <div
                       className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg 
@@ -108,7 +108,7 @@ const MiContrato = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-10">
+                <div className="flex gap-10 flex-col sm:flex-row">
                   <div className="flex flex-col gap-3 w-full">
                     <p className="pl-[1px]">Fecha Inicio</p>
                     <div
@@ -130,16 +130,17 @@ const MiContrato = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-10">
+                <div className="flex gap-10 flex-col sm:flex-row">
                   <div className="flex flex-col gap-3 w-full">
-                    <p className="pl-[1px]">Tipo de Trabajo</p>
+                    <p className="pl-[1px]">Categoría</p>
                     <div
                       className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg 
                       text-[#808080] items-center p-4"
                     >
-                      {contrato?.tipoTrabajo?.nombre || "No asignado"}
+                      {contrato?.categoria?.descripcion || "No asignado"}
                     </div>
                   </div>
+                  
 
                   <div className="flex flex-col gap-3 w-full">
                     <p className="pl-[1px]">Tipo de Pago</p>
@@ -154,14 +155,15 @@ const MiContrato = () => {
 
                 <div className="flex gap-10">
                   <div className="flex flex-col gap-3 w-full">
-                    <p className="pl-[1px]">Categoría</p>
+                    <p className="pl-[1px]">Tipo de Trabajo</p>
                     <div
                       className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg 
                       text-[#808080] items-center p-4"
                     >
-                      {contrato?.categoria?.descripcion || "No asignado"}
+                      {contrato?.tipoTrabajo?.nombre || "No asignado"}
                     </div>
                   </div>
+
                 </div>
               </>
             ) : (
