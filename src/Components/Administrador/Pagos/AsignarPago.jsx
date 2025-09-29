@@ -144,7 +144,9 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
             value={numeroCuotas}
             className="flex items-center rounded-2xl w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
           >
-            <option value="1">1</option>
+            <option disabled value="">
+              Seleccione cuotas
+            </option>
             <option value="2">2</option>
             <option value="3">3</option>
           </select>

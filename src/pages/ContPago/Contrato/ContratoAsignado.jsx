@@ -270,6 +270,13 @@ const ContratoAsignado = () => {
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
                     <option value={4}>Tesis Maestría</option>
+                    <option value={5}>Tesis Doctorado</option>
+                    <option value={6}>Plan de negocios</option>
+                    <option value={7}>Revisión sistemática</option>
+                    <option value={8}>Articulo Cientifico</option>
+                    <option value={8}>Estudio de prefactibilidad</option>
+                    <option value={10}>Suficiencia profesional</option>
+                    <option value={11}>Tesis Segunda Especialidad</option>
                   </select>
                 </div>
                 <div className="flex flex-col w-full md:w-1/2">

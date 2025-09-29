@@ -48,7 +48,7 @@ const ModalEditarAsunto = ({ onClose, idAsunto }) => {
   };
 
   const mutate = useMutation({
-    mutationFn: (body) => asuntosService.editarAsunto(body),
+    mutationFn: (body) => asuntosService.editarAsuntoEstudiante(body),
     onSuccess: () => {
       alert("Asunto actualizado");
       onClose();

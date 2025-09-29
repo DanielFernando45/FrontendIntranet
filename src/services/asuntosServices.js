@@ -26,6 +26,16 @@ const editarAsunto = async ({ idAsunto, formData }) => {
   return data;
 };
 
+const editarAsuntoEstudiante = async ({ idAsunto, formData }) => {
+  const { data } = await api.patch(`/asuntos/estudiante/${idAsunto}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+};
+
+
 const editarFechaTerminadoAsuntoAsesor = async ({
   idAsunto,
   fecha_estimada,
@@ -42,6 +52,7 @@ export const asuntosService = {
   asuntoById,
   eliminarAsunto,
   editarAsunto,
+  editarAsuntoEstudiante,
   asuntoAsesorByIdAsunto,
   editarFechaTerminadoAsuntoAsesor,
 };
