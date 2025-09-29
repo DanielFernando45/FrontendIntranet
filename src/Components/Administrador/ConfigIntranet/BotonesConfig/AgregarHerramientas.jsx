@@ -88,9 +88,9 @@ const AgregarHerramientas = ({ close }) => {
         formDataToSend.append("url_imagen", formData.url_imagen);
       }
 
-      // 👉 usar el service
       await marketingService.agregarHerramientas(formDataToSend);
 
+      console.log(formData.url_imagen);
       // Si todo salió bien
       location.reload();
       close();
@@ -177,17 +177,50 @@ const AgregarHerramientas = ({ close }) => {
           {/* Campo para enlace web */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Enlace a la herramienta
+              Enlace a la herramientas
             </label>
             <input
               type="url"
               name="enlace"
               value={formData.enlace}
-              onChange={handleChange}
+              onChange={(e) => {
+                const { value } = e.target;
+
+                // Actualiza el campo enlace
+                setFormData((prev) => ({
+                  ...prev,
+                  enlace: value,
+                }));
+
+                // Generar previsualización del enlace
+                if (value) {
+                  try {
+                    const url = new URL(value);
+                    setWebsitePreview({
+                      domain: url.hostname,
+                      favicon: `https://www.google.com/s2/favicons?domain=${url.hostname}`,
+                    });
+                  } catch {
+                    setWebsitePreview(null);
+                  }
+                } else {
+                  setWebsitePreview(null);
+                }
+              }}
               placeholder="https://www.herramienta.com"
-              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className={`w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                ${formData.enlace.length > 200 ? "border-red-500" : ""}`}
               required
             />
+
+            {/* Mensaje de advertencia si excede los caracteres */}
+            {formData.enlace.length > 200 && (
+              <p className="text-red-600 text-sm mt-1">
+                ⚠️ El enlace supera los 200 caracteres. Por favor ingresa uno más corto.
+              </p>
+            )}
+
+            {/* Previsualización de sitio */}
             {websitePreview && (
               <div className="mt-2 flex items-center p-2 border rounded bg-gray-50">
                 <img
@@ -195,12 +228,11 @@ const AgregarHerramientas = ({ close }) => {
                   alt="Favicon"
                   className="w-4 h-4 mr-2"
                 />
-                <span className="text-sm text-gray-700">
-                  {websitePreview.domain}
-                </span>
+                <span className="text-sm text-gray-700">{websitePreview.domain}</span>
               </div>
             )}
           </div>
+
 
           <div className="flex justify-between">
             <button

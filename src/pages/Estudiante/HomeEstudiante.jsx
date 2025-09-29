@@ -409,7 +409,7 @@ const HomeEstudiante = () => {
             <select
               onChange={handleChange}
               value={selectedAsesoriaId || ''}
-              className='border rounded-t-md border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
+              className='border rounded border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
             >
               {asesorias?.isEmpty ? (
                 <option value="" disabled>
@@ -427,10 +427,6 @@ const HomeEstudiante = () => {
             <div className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
                 <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Envios Asesor</h1>
-                <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                  <a href=""></a>
-                  <img src={flechaAzul} alt="" className="w-4" />
-                </span>
               </div>
               <DocsAsesor
                 key={selectedAsesoriaId}
@@ -441,10 +437,7 @@ const HomeEstudiante = () => {
             <div className="max-xl:hidden flex flex-col gap-5 xl:gap-2  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
                 <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Reuniones</h2>
-                <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                  <a href=""></a>
-                  <img src={flechaAzul} alt="" className="w-4" />
-                </span>
+                
               </div>
               <div className="flex flex-col gap-5 md:px-20 xl:px-0">
                 <div className="flex flex-wrap justify-start gap-6 ">
@@ -520,10 +513,7 @@ const HomeEstudiante = () => {
           <div className="xl:hidden flex flex-col gap-5  bg-white p-4 rounded-lg shadow-md">
             <div className="mt-5 flex justify-between">
               <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Reuniones</h2>
-              <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <a href=""></a>
-                <img src={flechaAzul} alt="" className="w-4" />
-              </span>
+              
             </div>
 
             <div className="flex flex-col gap-5 md:px-20 lg:px-1">
@@ -593,10 +583,6 @@ const HomeEstudiante = () => {
           <div className=" bg-white p-4 rounded-lg shadow-md max-xl:hidden xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
             <div className="flex justify-between">
               <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Envios Asesor</h1>
-              <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <a href=""></a>
-                <img src={flechaAzul} alt="" className="w-4" />
-              </span>
             </div>
             <DocsAsesor
               key={selectedAsesoriaId}

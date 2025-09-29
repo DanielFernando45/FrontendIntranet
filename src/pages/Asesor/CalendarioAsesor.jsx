@@ -413,7 +413,7 @@ const CalendarioAsesor = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <select
-                className="bg-gray-900 w-full p-[5px] rounded-lg text-white sm:w-[120px] h-[35px] font-semibold"
+                className="bg-gray-900 w-full p-[5px] rounded-lg text-white sm:w-[130px] h-[35px] font-semibold"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               >

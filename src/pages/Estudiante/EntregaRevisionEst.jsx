@@ -118,9 +118,6 @@ const EntregaRevisionEst = () => {
           <div className="flex flex-col gap-[12px]">
             <div className=" mt-5 flex justify-between">
               <h2 className="text-base md:text-2xl font-bold">Asuntos</h2>
-              <span className="flex  justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <img src={flechaAzul} alt="" />
-              </span>
             </div>
 
             <div className="flex w-full border-b-2 gap-3 border-black font-normal">
@@ -156,9 +153,6 @@ const EntregaRevisionEst = () => {
         <div className="flex flex-col gap-[10px] px-[20px] sm:px-[40px] py-5 w-full  bg-white rounded-[10px]">
           <div className="flex justify-between flex-col md:flex-row">
             <h2 className="text-base md:text-2xl font-bold">Documentos</h2>
-            <span className="flex md:justify-end gap-1 items-center font-medium text-[#2F80ED]">
-              <img src={flechaAzul} alt="" />
-            </span>
           </div>
           <div className="flex w-full border-b-2 gap-3 border-black font-normal">
             <button

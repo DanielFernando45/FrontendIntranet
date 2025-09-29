@@ -335,7 +335,7 @@ const PagosEstudiante = () => {
 
         {/* RESPONSIVE */}
         <div className="block sm:hidden space-y-9">
-          <div className="flex border border-b items-center">
+          <div className="flex  border-b items-center">
             <button
               onClick={() => setShowOtrosPagos(false)}
               className={`${

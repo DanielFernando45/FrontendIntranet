@@ -21,7 +21,7 @@ const Contrato = () => {
             <div className="flex border-b border-gray-300 gap-3 font-medium">
               <button
                 onClick={() => handleTabChange("nuevo")}
-                className={`px-5 py-3 w-[200px] text-center transition-all duration-200
+                className={`px-5 py-1 w-[200px] text-center transition-all duration-200
                 ${
                   tab === "nuevo"
                     ? "bg-[#17162E] text-white rounded-t-md"
@@ -32,7 +32,7 @@ const Contrato = () => {
               </button>
               <button
                 onClick={() => handleTabChange("asignado")}
-                className={`px-5 py-3 w-[200px] text-center transition-all duration-200
+                className={`px-5 py-1 w-[220px] text-center transition-all duration-200
                 ${
                   tab === "asignado"
                     ? "bg-[#17162E] text-white rounded-t-md"

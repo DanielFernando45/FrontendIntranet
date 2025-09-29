@@ -109,7 +109,7 @@ const ReunionesEstudiante = () => {
               <select
                 onChange={handleChange}
                 value={selectedAsesoriaId || ""}
-                className="border rounded-t-md border-[#b4a6aa]"
+                className="border rounded border-[#b4a6aa]"
               >
                 <option value="" disabled>
                   Seleccione una opción
@@ -146,11 +146,14 @@ const ReunionesEstudiante = () => {
                         className="flex flex-col sm:flex-row w-full sm:w-[310px] h-auto sm:h-[170px] items-center"
                       >
                         {/* Sección de fecha */}
-                        <div className="flex flex-col justify-center items-center rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none w-full sm:w-[104px] h-[100px] sm:h-full bg-[#17162E] p-4 text-white">
-                          <p className="text-xs">{formattedDate.month}</p>
-                          <h1 className="text-3xl font-semibold">
-                            {formattedDate.day}
-                          </h1>
+                        <div className="flex flex-col justify-between items-center rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none w-full sm:w-[104px] h-[100px] sm:h-full bg-[#17162E] p-4 text-white">
+                          <div className="flex flex-col items-center gap-2">
+                            <p className="text-xs">{formattedDate.month}</p>
+                            <h1 className="text-3xl font-semibold">
+                              {formattedDate.day}
+                            </h1>
+                          </div>
+                          
                           <p className="text-[10px]">{formattedDate.time}</p>
                         </div>
 

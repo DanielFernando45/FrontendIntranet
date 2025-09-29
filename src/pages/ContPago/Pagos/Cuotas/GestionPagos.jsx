@@ -161,7 +161,7 @@ const GestionPagos = () => {
                   className="px-2 py-1 bg-[#1C1C34] text-white text-xs rounded-md"
                   onClick={() => handleActualizarClick(pagoInfo)}
                 >
-                  Editar
+                  Actualizar Pagos
                 </button>
                 <button
                   className="px-2 py-1 bg-red-500 text-white text-xs rounded-md"
@@ -223,7 +223,7 @@ const GestionPagos = () => {
                   className="flex-1 px-1 py-1 bg-[#1C1C34] text-white text-[10px] rounded-md"
                   onClick={() => handleActualizarClick(pagoInfo)}
                 >
-                  Editar
+                  Actualizar 
                 </button>
                 <button
                   className="flex-1 px-1 py-1 border border-red-500 text-red-500 text-[10px] rounded-md"
