@@ -333,7 +333,6 @@ const HomeEstudiante = () => {
         </section>
 
         <div className="flex justify-between  flex-col mt-2 xl:flex-row md">
-
           <div className="w-full xl:w-auto flex flex-col gap-6 xl:pt-2 ">
             <section className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <h2 className="mb-2 text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
@@ -409,7 +408,7 @@ const HomeEstudiante = () => {
             <select
               onChange={handleChange}
               value={selectedAsesoriaId || ''}
-              className='border rounded border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
+              className='border rounded-t-md border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
             >
               {asesorias?.isEmpty ? (
                 <option value="" disabled>
@@ -427,6 +426,10 @@ const HomeEstudiante = () => {
             <div className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
                 <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Envios Asesor</h1>
+                <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
+                  <a href=""></a>
+                  <img src={flechaAzul} alt="" className="w-4" />
+                </span>
               </div>
               <DocsAsesor
                 key={selectedAsesoriaId}
@@ -437,7 +440,10 @@ const HomeEstudiante = () => {
             <div className="max-xl:hidden flex flex-col gap-5 xl:gap-2  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
                 <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Reuniones</h2>
-                
+                <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
+                  <a href=""></a>
+                  <img src={flechaAzul} alt="" className="w-4" />
+                </span>
               </div>
               <div className="flex flex-col gap-5 md:px-20 xl:px-0">
                 <div className="flex flex-wrap justify-start gap-6 ">
@@ -513,7 +519,10 @@ const HomeEstudiante = () => {
           <div className="xl:hidden flex flex-col gap-5  bg-white p-4 rounded-lg shadow-md">
             <div className="mt-5 flex justify-between">
               <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Reuniones</h2>
-              
+              <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
+                <a href=""></a>
+                <img src={flechaAzul} alt="" className="w-4" />
+              </span>
             </div>
 
             <div className="flex flex-col gap-5 md:px-20 lg:px-1">
@@ -583,6 +592,10 @@ const HomeEstudiante = () => {
           <div className=" bg-white p-4 rounded-lg shadow-md max-xl:hidden xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
             <div className="flex justify-between">
               <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Envios Asesor</h1>
+              <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
+                <a href=""></a>
+                <img src={flechaAzul} alt="" className="w-4" />
+              </span>
             </div>
             <DocsAsesor
               key={selectedAsesoriaId}
@@ -597,32 +610,69 @@ const HomeEstudiante = () => {
             onClick={() => setVerNoticias(null)}
           >
             <div
-              className="relative flex flex-col overflow-hidden bg-white w-[600px] max-h-[90vh] shadow-[8px_8px_4px_0px_rgba(0,0,0,0.25)] rounded-[20px] mx-auto"
+              className="relative flex flex-col overflow-hidden bg-white w-full max-w-[740px] max-h-[90vh] shadow-[8px_8px_4px_0px_rgba(0,0,0,0.25)] rounded-[20px] mx-auto"
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Botón de cerrar */}
               <button
                 onClick={() => setVerNoticias(null)}
                 className="absolute left-2 top-2 z-10"
               >
                 <img src={flechaCirculo} alt="Cerrar" />
               </button>
-              <div className="overflow-y-auto">
-                <img
-                  src={verNoticias.imagen}
-                  alt="Noticia"
-                  className="w-full object-cover h-[250px]"
-                />
-                <div className="flex flex-col gap-4 p-4">
-                  <h1 className="text-[24px] font-bold text-[#17162E]">
-                    {verNoticias.titulo}
-                  </h1>
-                  <p className="text-[#333]">{verNoticias.descripcion}</p>
+
+              {/* Card content */}
+              <div className="relative flex bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-full flex-row">
+                <div className="relative w-2/5 overflow-hidden rounded-l-xl shrink-0">
+                  <img
+                    src={
+                      verNoticias?.imagen ||
+                      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1471&q=80"
+                    }
+                    alt="Noticia"
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <div className="p-6 flex flex-col justify-between">
+                  <div>
+                    <h6 className="mb-4 text-base font-semibold uppercase text-gray-700">
+                      Noticia
+                    </h6>
+                    <h4 className="mb-2 text-2xl font-semibold text-blue-gray-900">
+                      {verNoticias?.titulo || "Título de la noticia"}
+                    </h4>
+                    <p className="mb-8 text-base text-gray-700">
+                      {verNoticias?.descripcion ||
+                        "Descripción de la noticia aquí. Si no hay descripción, se muestra este texto de ejemplo."}
+                    </p>
+                  </div>
+                  <a href="#" className="inline-block mt-auto">
+                    <button
+                      className="flex items-center gap-2 px-6 py-3 text-xs font-bold text-center text-gray-900 uppercase transition-all rounded-lg hover:bg-gray-900/10 active:bg-gray-900/20"
+                      type="button"
+                    >
+                      Learn More
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+                        />
+                      </svg>
+                    </button>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         )}
-        
       </main>
     </LayoutApp>
   );
