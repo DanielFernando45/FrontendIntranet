@@ -113,7 +113,7 @@ const CambiarContraseña = () => {
   return (
     <LayoutApp>
       {/* Contenedor de pantalla completa */}
-      <main className="flex justify-center items-center h-screen bg-gray-50">
+      <main className="flex justify-center items-center h-screen ">
         {/* Formulario centrado con scroll interno si es necesario */}
         <form
           onSubmit={handleSubmit}

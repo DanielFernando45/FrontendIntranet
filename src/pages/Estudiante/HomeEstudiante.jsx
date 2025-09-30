@@ -73,8 +73,7 @@ const HomeEstudiante = () => {
     if (selectedAsesoriaId) {
       setLoadingReuniones(true);
       fetch(
-        `${
-          import.meta.env.VITE_API_PORT_ENV
+        `${import.meta.env.VITE_API_PORT_ENV
         }/reuniones/espera/${selectedAsesoriaId}`
       )
         .then((res) => res.json())
@@ -262,7 +261,7 @@ const HomeEstudiante = () => {
 
         {/*Noticias, Envios Asesor*/}
         <section className="max-xl:hidden xl:mt-5  bg-white py-2 rounded-lg shadow-md">
-          <h2 className="mb-2 text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[25px] font-semibold pl-4">
+          <h2 className="mb-2 text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold pl-4">
             Noticias Recientes
           </h2>
 
@@ -333,16 +332,16 @@ const HomeEstudiante = () => {
         </section>
 
         <div className="flex justify-between  flex-col mt-2 xl:flex-row md">
-          <div className="w-full xl:w-auto flex flex-col gap-6 xl:pt-2 ">
+          <div className="w-full xl:w-auto flex flex-col gap-2  ">
             <section className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
-              <h2 className="mb-2 text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
+              <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
                 Noticias Recientes
               </h2>
 
               <div className="flex justify-between w-full items-center">
                 <button
                   onClick={() => navigate("prev")}
-                  className="p-2  rounded-full transition-colors"
+                  className="  rounded-full transition-colors"
                   disabled={NoticiasRecientes.length === 0 || loadingNoticias}
                 >
                   <img src={FeclaIzqui} alt="Anterior" className="w-6" />
@@ -371,7 +370,7 @@ const HomeEstudiante = () => {
                             <p className="text-white text-[11px] lg:text-[13px] line-clamp-3">
                               {noticia?.titulo || "Título no disponible"}
                             </p>
-                            <span className="flex justify-end gap-1 items-center mt-2">
+                            <span className="flex justify-end gap-1 items-center">
                               <button
                                 className="text-[#7373B4] text-[12px] lg:text-[14px] hover:text-white transition-colors"
                                 onClick={() => handleVerNoticia(noticia.id)}
@@ -397,7 +396,7 @@ const HomeEstudiante = () => {
 
                 <button
                   onClick={() => navigate("next")}
-                  className="p-2  rounded-full transition-colors"
+                  className=" rounded-full transition-colors"
                   disabled={NoticiasRecientes.length === 0 || loadingNoticias}
                 >
                   <img src={FechaDerec} alt="Siguiente" />
@@ -408,7 +407,7 @@ const HomeEstudiante = () => {
             <select
               onChange={handleChange}
               value={selectedAsesoriaId || ''}
-              className='border rounded-t-md border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
+              className='border rounded border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
             >
               {asesorias?.isEmpty ? (
                 <option value="" disabled>
@@ -426,10 +425,6 @@ const HomeEstudiante = () => {
             <div className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
                 <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Envios Asesor</h1>
-                <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                  <a href=""></a>
-                  <img src={flechaAzul} alt="" className="w-4" />
-                </span>
               </div>
               <DocsAsesor
                 key={selectedAsesoriaId}
@@ -437,13 +432,9 @@ const HomeEstudiante = () => {
               />
             </div>
 
-            <div className="max-xl:hidden flex flex-col gap-5 xl:gap-2  bg-white p-4 rounded-lg shadow-md">
+            <div className="max-xl:hidden flex flex-col gap-5 xl:gap-2  bg-white px-4 pb-2 rounded-lg shadow-md">
               <div className="flex justify-between ">
                 <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Reuniones</h2>
-                <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                  <a href=""></a>
-                  <img src={flechaAzul} alt="" className="w-4" />
-                </span>
               </div>
               <div className="flex flex-col gap-5 md:px-20 xl:px-0">
                 <div className="flex flex-wrap justify-start gap-6 ">
@@ -516,13 +507,9 @@ const HomeEstudiante = () => {
             </div>
           </div>
 
-          <div className="xl:hidden flex flex-col gap-5  bg-white p-4 rounded-lg shadow-md">
-            <div className="mt-5 flex justify-between">
+          <div className="xl:hidden flex flex-col gap-2 mt-4 bg-white px-4 py-2 rounded-lg shadow-md">
+            <div className=" flex justify-between">
               <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Reuniones</h2>
-              <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <a href=""></a>
-                <img src={flechaAzul} alt="" className="w-4" />
-              </span>
             </div>
 
             <div className="flex flex-col gap-5 md:px-20 lg:px-1">
@@ -592,10 +579,6 @@ const HomeEstudiante = () => {
           <div className=" bg-white p-4 rounded-lg shadow-md max-xl:hidden xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
             <div className="flex justify-between">
               <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Envios Asesor</h1>
-              <span className="text-[8px] sm:text-[11px] flex justify-end gap-1 items-center font-medium text-[#2F80ED]">
-                <a href=""></a>
-                <img src={flechaAzul} alt="" className="w-4" />
-              </span>
             </div>
             <DocsAsesor
               key={selectedAsesoriaId}

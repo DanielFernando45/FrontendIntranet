@@ -14,12 +14,12 @@ const MiAsesor = () => {
   const [asesor, setAsesor] = useState(null);
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState(null);
 
-  // 🔹 Obtener usuario desde localStorage
+  //  Obtener usuario desde localStorage
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const idCliente = user?.id_cliente;
 
-  // 🔹 Relación de asesores con imágenes por nombre
+  //  Relación de asesores con imágenes por nombre
   const verAsesor = [
     { nombre: "Diana Alexandra", imagen: Diana },
     { nombre: "Victor Alfonso", imagen: Victor },
@@ -50,15 +50,15 @@ const MiAsesor = () => {
         if (asesoriasArray.length > 0) {
           const primeraAsesoriaId = asesoriasArray[0].id;
           setSelectedAsesoriaId(primeraAsesoriaId);
-          obtenerDatosAsesor(idCliente);
+          obtenerDatosAsesor(primeraAsesoriaId);
         }
       })
       .catch((error) => console.error("Error al obtener asesorías:", error));
   }, [idCliente]);
 
   // 🔹 Función para obtener el asesor
-  const obtenerDatosAsesor = (idCliente) => {
-    fetch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/asesor/${idCliente}`)
+  const obtenerDatosAsesor = (asesoriaId) => {
+    fetch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/asesor/${asesoriaId}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Error en la respuesta del servidor");
@@ -78,7 +78,7 @@ const MiAsesor = () => {
   const handleChange = (e) => {
     const asesoriaId = e.target.value;
     setSelectedAsesoriaId(asesoriaId);
-    obtenerDatosAsesor(idCliente);
+    obtenerDatosAsesor(asesoriaId);
   };
 
   // 🔹 Obtener imagen del asesor por nombre o fallback

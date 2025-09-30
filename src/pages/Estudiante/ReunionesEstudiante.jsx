@@ -198,7 +198,7 @@ const ReunionesEstudiante = () => {
 
               {/* Contenido para reuniones terminadas */}
               <div className="flex flex-col gap-5">
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-6">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
                   {induccionesLoading ? (
                     <p>Cargando inducciones...</p>
                   ) : inducciones && inducciones.length > 0 ? (
@@ -217,7 +217,7 @@ const ReunionesEstudiante = () => {
 
                             <div className="absolute w-full h-full top-0 flex flex-col justify-between p-6 bg-gradient-to-t from-black to-transparent opacity-80">
                               {/* Título */}
-                              <p className="text-white text-3xl font-bold text-shadow-md mb-4">
+                              <p className="text-white mn:text-2xl sm:text-xl font-bold text-shadow-md mb-4">
                                 {induccion?.titulo}
                               </p>
 

@@ -130,10 +130,10 @@ const ContratoAsignado = () => {
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
           {/* Encabezado */}
-          <div className="grid grid-cols-7 text-sm sm:text-base font-medium text-[#495D72] p-2">
+          <div className="grid grid-cols-8 text-sm sm:text-base font-medium text-[#495D72] p-2">
             <div className="text-center">ID Contrato</div>
             <div className="text-center">Trab. Investigación</div>
-            <div className="text-center">Delegado</div>
+            <div className="text-center col-span-2">Delegado</div>
             <div className="text-center">Fecha Registro</div>
             <div className="text-center">Modalidad</div>
             <div className="text-center">Tipo de Pago</div>
@@ -144,14 +144,14 @@ const ContratoAsignado = () => {
           {contrato.map((c, index) => (
             <div
               key={index}
-              className="grid grid-cols-7 text-sm sm:text-base items-center p-2 border-b"
+              className="grid grid-cols-8 text-sm sm:text-base items-center p-2 border-b"
             >
               <div className="text-center">
                 {"CT-" + (index + 1).toString().padStart(3, "0")}
               </div>
               <div className="text-center">{c.trabajo_investigacion}</div>
-              <div className="text-center">{c.delegado}</div>
-              <div className="text-center">
+              <div className="text-center col-span-2">{c.delegado}</div>
+              <div className="text-center ">
                 {new Date(c.fecha_inicio).toLocaleDateString()}
               </div>
               <div className="text-center">{c.modalidad}</div>
