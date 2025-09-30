@@ -6,10 +6,13 @@ import Login from "./pages/LoginUser";
 import RouterApp from "./routes/RouterApp";
 import { AuthProvider } from "./context/authContext";
 import PublicRoute from "./routes/PublicRoute";
+import { Toaster } from "react-hot-toast";
 
 export const App = () => {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" reverseOrder={false} />
+
       <Suspense
         fallback={
           <div className="bg-[#ffff] min-h-screen flex items-center justify-center">

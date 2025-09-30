@@ -4,7 +4,7 @@ import { IoTrash } from "react-icons/io5";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { asesoriasService } from "../../../services/asesoriasService";
 import { contratosService } from "../../../services/contratosService";
-
+import toast from "react-hot-toast";
 const ContratoAsignado = () => {
   const [editContrato, setEditContrato] = useState(false);
   const [eliminar, setEliminar] = useState(false);
@@ -37,12 +37,12 @@ const ContratoAsignado = () => {
     mutationFn: (data) =>
       contratosService.actualizarContrato(data.id, data.payload),
     onSuccess: () => {
-      alert("Contrato editado exitosamente");
+      toast.success("Contrato editado exitosamente");
       setEditContrato(false);
       refetch();
     },
     onError: (error) => {
-      alert(
+      toast.error(
         `Error al editar el contrato: ${
           error.response?.data?.message || error.message
         }`
@@ -53,35 +53,36 @@ const ContratoAsignado = () => {
   const mutationEliminar = useMutation({
     mutationFn: (idContrato) => contratosService.eliminarContrato(idContrato),
     onSuccess: () => {
-      alert("Contrato eliminado exitosamente");
+      toast.success("Contrato eliminado exitosamente");
       setEliminar(false);
       refetch();
     },
     onError: (error) => {
-      alert(`Error al eliminar el contrato: ${error.response?.data?.message}`);
+      toast.error(
+        `Error al eliminar el contrato: ${error.response?.data?.message}`
+      );
     },
   });
 
   const handleEditSubmit = () => {
     if (!formData.fechaInicio || !formData.fechaFin) {
-      alert("Ambas fechas son obligatorias.");
+      toast.error("Ambas fechas son obligatorias.");
       return;
     }
-
     const fechaInicio = new Date(formData.fechaInicio);
     const fechaFin = new Date(formData.fechaFin);
 
     if (fechaInicio > fechaFin) {
-      alert("La fecha de inicio no puede ser mayor que la fecha de fin.");
+      toast.error("La fecha de inicio no puede ser mayor que la fecha de fin.");
       return;
     }
-
     // Si el servicio es Completo, la categoría es obligatoria
+
     if (formData.servicio === "Completo" && !formData.idCategoria) {
-      alert("Selecciona una categoría.");
+      toast.error("Selecciona una categoría.");
       return;
     }
-
+    
     if (currentContrato) {
       const payload = {
         modalidad: formData.modalidad,
@@ -266,7 +267,7 @@ const ContratoAsignado = () => {
                     }
                   >
                     <option disabled>Seleccionar</option>
-                                 <option value={1}>Proyecto Bachillerato</option>
+                    <option value={1}>Proyecto Bachillerato</option>
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
                     <option value={4}>Tesis Maestría</option>
