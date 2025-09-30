@@ -4,6 +4,7 @@ import { IoTrash } from "react-icons/io5";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { asesoriasService } from "../../../services/asesoriasService";
 import { contratosService } from "../../../services/contratosService";
+import toast from "react-hot-toast";
 
 const ContratoAsignado = () => {
   const [editContrato, setEditContrato] = useState(false);
@@ -37,12 +38,12 @@ const ContratoAsignado = () => {
     mutationFn: (data) =>
       contratosService.actualizarContrato(data.id, data.payload),
     onSuccess: () => {
-      alert("Contrato editado exitosamente");
+      toast.success("Contrato editado exitosamente");
       setEditContrato(false);
       refetch();
     },
     onError: (error) => {
-      alert(
+      toast.error(
         `Error al editar el contrato: ${
           error.response?.data?.message || error.message
         }`
@@ -53,32 +54,33 @@ const ContratoAsignado = () => {
   const mutationEliminar = useMutation({
     mutationFn: (idContrato) => contratosService.eliminarContrato(idContrato),
     onSuccess: () => {
-      alert("Contrato eliminado exitosamente");
+      toast.success("Contrato eliminado exitosamente");
       setEliminar(false);
       refetch();
     },
     onError: (error) => {
-      alert(`Error al eliminar el contrato: ${error.response?.data?.message}`);
+      toast.error(
+        `Error al eliminar el contrato: ${error.response?.data?.message}`
+      );
     },
   });
 
   const handleEditSubmit = () => {
     if (!formData.fechaInicio || !formData.fechaFin) {
-      alert("Ambas fechas son obligatorias.");
+      toast.error("Ambas fechas son obligatorias.");
       return;
     }
-
     const fechaInicio = new Date(formData.fechaInicio);
     const fechaFin = new Date(formData.fechaFin);
 
     if (fechaInicio > fechaFin) {
-      alert("La fecha de inicio no puede ser mayor que la fecha de fin.");
+      toast.error("La fecha de inicio no puede ser mayor que la fecha de fin.");
       return;
     }
-
     // Si el servicio es Completo, la categoría es obligatoria
+
     if (formData.servicio === "Completo" && !formData.idCategoria) {
-      alert("Selecciona una categoría.");
+      toast.error("Selecciona una categoría.");
       return;
     }
 
@@ -204,9 +206,9 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, modalidad: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
-                    <option value="Avance">Avance</option>
-                    <option value="Plazo">Plazo</option>
+                    <option >Seleccionar</option>
+                    <option value="avance">Avance</option>
+                    <option value="plazo">Plazo</option>
                   </select>
                 </div>
                 <div className="flex flex-col w-full md:w-1/2">
@@ -218,16 +220,16 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, servicio: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
-                    <option value="Proyecto">Proyecto</option>
-                    <option value="Inf.Final">Inf.Final</option>
-                    <option value="Completo">Completo</option>
+                    <option>Seleccionar</option>
+                    <option value="proyecto">Proyecto</option>
+                    <option value="inf.Final">Inf.Final</option>
+                    <option value="completo">Completo</option>
                   </select>
                 </div>
               </div>
 
               {/* Categoría */}
-              {formData.servicio === "Completo" && (
+              {formData.servicio === "completo" && (
                 <div className="flex flex-col">
                   <label className="text-sm font-medium">Categoría:</label>
                   <select
@@ -237,7 +239,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, idCategoria: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option >Seleccionar</option>
                     <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
                       Oro
                     </option>
@@ -265,7 +267,7 @@ const ContratoAsignado = () => {
                       })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option >Seleccionar</option>
                     <option value={1}>Proyecto Bachillerato</option>
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
@@ -288,7 +290,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, idTipoPago: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option >Seleccionar</option>
                     <option value={1}>Contado</option>
                     <option value={2}>Cuotas</option>
                   </select>

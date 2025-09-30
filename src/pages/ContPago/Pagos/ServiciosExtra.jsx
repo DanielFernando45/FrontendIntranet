@@ -3,7 +3,8 @@ import agregar from "../../../assets/icons/IconAdmin/add-white.svg";
 import AsignarExtra from "../../../Components/Administrador/Pagos/AsignarExtra";
 import EditarExtra from "../../../Components/Administrador/Pagos/EditarExtra";
 import axios from "axios";
-
+import toast from "react-hot-toast";
+// asegúrate de tener esta línea arriba
 const ServiciosExtra = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -40,6 +41,7 @@ const ServiciosExtra = () => {
 
   const confirmDelete = () => {
     if (!servicioToDelete) return;
+
     axios
       .delete(
         `${import.meta.env.VITE_API_PORT_ENV}/pagos/delete/${
@@ -47,12 +49,14 @@ const ServiciosExtra = () => {
         }`
       )
       .then(() => {
+        toast.success("Servicio eliminado correctamente"); // ✅ TOAST AQUÍ
         cargarServicios();
         setShowDeleteModal(false);
         setServicioToDelete(null);
       })
       .catch((error) => {
         console.error("Error al eliminar el servicio", error);
+        toast.error("Error al eliminar el servicio"); // ✅ TOAST AQUÍ
         setShowDeleteModal(false);
       });
   };

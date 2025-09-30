@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import busqueda from "../../../assets/icons/busqueda.svg";
+import toast from "react-hot-toast";
 
 const AsignarExtra = ({ close }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -99,15 +100,17 @@ const AsignarExtra = ({ close }) => {
       );
 
       if (response.ok) {
-        alert("Servicio extra agregado correctamente");
+        toast.success(
+          `Servicio agregado correctamente`
+        );
         close();
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1000);
       } else {
         throw new Error("Error al agregar el servicio");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Hubo un error al agregar el servicio");
+      toast.error(`Error al agregar el servicio "${formData.titulo}" ❌`);
     }
   };
 

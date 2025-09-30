@@ -4,6 +4,7 @@ import flechaabajo from "../../../assets/icons/Flecha.svg";
 import flechaarriba from "../../../assets/icons/arrow-up.svg";
 import { contratosService } from "../../../services/contratosService";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; // 👈 importación del toast
 
 const ContratoNuevo = () => {
   const [expandedIds, setExpandedIds] = useState({});
@@ -56,12 +57,12 @@ const ContratoNuevo = () => {
         idCategoria: formData.idCategoria || null,
       }),
     onSuccess: () => {
-      alert("Contrato creado exitosamente");
+      toast.success("Contrato creado exitosamente 🎉");
       setAsigContrato(false);
     },
     onError: (error) => {
       console.error("Error al crear el contrato:", error.response?.data);
-      alert(
+      toast.error(
         `Error al crear el contrato: ${
           error.response?.data?.message || error.message
         }`
@@ -73,14 +74,14 @@ const ContratoNuevo = () => {
     if (currentIdAsesoramiento) {
       mutation.mutate(currentIdAsesoramiento, {
         onSuccess: () => {
-          // 👇 Redirige al tab asignado
           navigate("/cont-pago/contratos?tab=asignado");
         },
       });
     } else {
-      alert("No se ha seleccionado un asesoramiento.");
+      toast.error("No se ha seleccionado un asesoramiento.");
     }
   };
+
   if (isLoading) return <div>Cargando...</div>;
   if (isError) return <div>Error al cargar: {error.message}</div>;
 

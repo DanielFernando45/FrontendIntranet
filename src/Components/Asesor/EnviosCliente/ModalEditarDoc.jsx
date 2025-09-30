@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { GoPlusCircle } from "react-icons/go";
 import { TiDelete } from "react-icons/ti";
 import { asuntosService } from "../../../services/asuntosServices";
-
+import toast from "react-hot-toast";
 const ModalEditarDoc = ({ idAsunto, onClose }) => {
   const userAuth = JSON.parse(localStorage.getItem("user"));
   const addFile = useRef(null);
@@ -21,10 +21,10 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
 
   useEffect(() => {
     if (data) {
-      const documentosEdi = data.asunto.documentos.map((doc) => {
-        return { id: doc.id, nombre: doc.nombre };
-      });
-
+      const documentosEdi = data.asunto.documentos.map((doc) => ({
+        id: doc.id,
+        nombre: doc.nombre,
+      }));
       setIdAsesoramiento(data.asunto?.asesoramiento?.id);
       setDocumentosEditar(documentosEdi);
       setTituloAsunto(data.asunto?.titulo_asesor);
@@ -49,11 +49,14 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
   const mutate = useMutation({
     mutationFn: (body) => asuntosService.editarAsunto(body),
     onSuccess: () => {
-      alert("Asunto actualizado");
+      toast.success("Asunto actualizado correctamente ");
       onClose();
       setIdsEliminar([]);
       setDocumentosEditar([]);
       setFiles([]);
+    },
+    onError: () => {
+      toast.error("Error al actualizar el asunto ");
     },
   });
 
@@ -95,8 +98,9 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
       tiposPermitidos.includes(file.type)
     );
 
-    if (archivosValidos.length === 0)
-      return alert("No se acepta ese tipo de archivo");
+    if (archivosValidos.length === 0) {
+      return toast.error("No se acepta ese tipo de archivo ");
+    }
 
     setDocumentosEditar((prev) => [
       ...prev,
@@ -107,17 +111,16 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
   };
 
   const handleEdit = () => {
-    if (tituloAsunto.length === 0) {
-      return alert("El asunto no puede ir vacío!");
+    if (tituloAsunto.trim().length === 0) {
+      return toast.error("El asunto no puede ir vacío ");
     }
+
     if (documentosEditar.length === 0) {
-      return alert("No puedes dejar los archivos vacíos!");
+      return toast.error("No puedes dejar los archivos vacíos ");
     }
 
     const formData = new FormData();
     formData.append("titulo_asesor", tituloAsunto);
-
-    // ✅ enviar como JSON string
     formData.append("idsElminar", JSON.stringify(idsElminar ?? []));
 
     if (idAsesoramiento) {
@@ -130,15 +133,10 @@ const ModalEditarDoc = ({ idAsunto, onClose }) => {
         : userAuth?.role?.nombre;
 
     if (roleValue) {
-      formData.append("subido_por", roleValue.toLowerCase()); // enum en minúsculas
+      formData.append("subido_por", roleValue.toLowerCase());
     }
 
     files.forEach((file) => formData.append("files", file));
-
-    // 🔍 debug
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
 
     mutate.mutate({ idAsunto, formData });
   };

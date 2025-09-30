@@ -14,7 +14,7 @@ const Asignados = () => {
   const usuario = getUsuarioDesdeToken();
   const idSupervisor = usuario?.id_supervisor;
 
-  // 🔹 Dejo tu query EXACTA como pediste
+  // Dejo tu query EXACTA como pediste
   const {
     data: asesorias = [],
     isLoading,
@@ -81,9 +81,9 @@ const Asignados = () => {
 
                 <div
                   className="w-[260px] truncate"
-                  title={displayStudents(asesoria.cliente)}
+                  title={displayStudents(asesoria.clientes)}
                 >
-                  {displayStudents(asesoria.cliente)}
+                  {displayStudents(asesoria.clientes)}
                 </div>
 
                 <div className="w-[220px] text-center">
@@ -139,15 +139,16 @@ const Asignados = () => {
                 >
                   <div className="font-medium mb-2">Estudiantes:</div>
 
-                  {Array.isArray(asesoria.cliente) &&
-                  asesoria.cliente.length > 0 ? (
+                  {Array.isArray(asesoria.clientes) &&
+                  asesoria.clientes.length > 0 ? (
                     <ul className="list-disc pl-5">
-                      {asesoria.cliente.map((c) => (
-                        <li key={c.id_estudiante}>
-                          {c.estudiante}
-                          {/* Si luego necesitas usar el ID, ya está aquí: c.id_estudiante */}
-                        </li>
-                      ))}
+                      {asesoria.clientes.map(
+                        (
+                          c // ✅ usar clientes (plural)
+                        ) => (
+                          <li key={c.id_estudiante}>{c.estudiante}</li>
+                        )
+                      )}
                     </ul>
                   ) : (
                     <div className="text-gray-500">
