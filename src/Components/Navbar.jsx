@@ -15,6 +15,7 @@ import candadoblack from "../assets/icons/candadoPass.svg";
 import cerrarsesion from "../assets/icons/cerrarSesion.svg";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/auth/authSlice";
+import { BellRing} from "lucide-react";
 
 const Navbar = ({ user }) => {
   // const { logout } = useContext(AuthContext);
@@ -43,6 +44,17 @@ const Navbar = ({ user }) => {
       />
 
       <div className="inline-flex items-center gap-2 relative">
+        {/* Botón de notificaciones */}
+        <button
+          className="relative flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full hover:bg-gray-100"
+          onClick={() => console.log("Notificaciones clickeadas")}
+        >
+          <BellRing size={20} className="text-[#1C1C34]" />
+          {/* Badge opcional */}
+          <span className="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+            3
+          </span>
+        </button>
         <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#1C1C34] text-white font-bold">
           {user?.nombre
             ?.split(" ") // separa el nombre por espacios

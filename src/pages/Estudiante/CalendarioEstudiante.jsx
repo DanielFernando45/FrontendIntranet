@@ -123,7 +123,10 @@ const CalendarioEstudiante = () => {
         console.error("Error al obtener eventos del día:", error)
       );
   };
-  const handleChange = (e) => setSelectedAsesoriaId(e.target.value);
+  const handleChange = (e) => {
+    const idSeleccionado = parseInt(e.target.value); // asegura que sea número
+    setSelectedAsesoriaId(idSeleccionado);
+  };
 
   const months = [
     "Enero",
@@ -274,9 +277,13 @@ const CalendarioEstudiante = () => {
                 new Date(evento.fecha_estimada).getFullYear() === selectedYear)
           );
 
+          const tieneEventos =
+            eventosEnElDia.length > 0 ||
+            eventosDeContrato.length > 0 ||
+            eventosDeAsunto.length > 0;
+
           let eventIcons = new Set();
-          let dayText = "";
-          let dayBgClass = "bg-gray-100";
+          let dayBgClass = "bg-[#E9E7E7]";
           let dayTextColor = dayData.currentMonth
             ? "text-gray-800"
             : "text-gray-400";
@@ -291,7 +298,6 @@ const CalendarioEstudiante = () => {
 
           if (esFinDeContrato) {
             dayBgClass = "bg-red-100";
-            dayText = "Fin\nContrato";
             dayTextColor = "text-red-600";
           } else if (
             eventosDeContrato.some(
@@ -304,7 +310,6 @@ const CalendarioEstudiante = () => {
             dayBgClass = "bg-green-100";
           }
 
-          // Solo agregamos íconos si NO es fin de contrato
           if (!esFinDeContrato) {
             if (eventosEnElDia.length > 0)
               eventIcons.add(<Video className="text-blue-500" />);
@@ -337,8 +342,6 @@ const CalendarioEstudiante = () => {
             }
           }
 
-      
-          // Estilos para el día activo
           const isActive = isToday || isSelected;
           const activeBg = isToday
             ? "bg-[#4BD7F5]"
@@ -352,30 +355,33 @@ const CalendarioEstudiante = () => {
             <div
               key={dayIndex}
               onClick={() => handleDayClick(dayData.day, dayData.currentMonth)}
-              className={`flex flex-col items-center justify-center aspect-square min-w-[36px] sm:min-w-[48px] md:min-w-[60px] xl:min-w-[70px] transition cursor-pointer`}
+              className="flex flex-col items-center justify-center aspect-square min-w-[36px] sm:min-w-[48px] md:min-w-[60px] xl:min-w-[70px] transition cursor-pointer"
             >
-              <div
-                className={`aspect-square w-full max-w-[50px] sm:max-w-[60px] md:max-w-[70px] rounded-full flex items-center justify-center 
-    text-[18px] sm:text-[20px] md:text-[22px] font-bold ${activeBg} ${activeText}`}
-              >
-                {dayData.day}
-              </div>
+              {tieneEventos || isActive ? (
+                <div
+                  className={`aspect-square w-full max-w-[50px] sm:max-w-[60px] md:max-w-[70px] rounded-full flex items-center justify-center 
+                  text-[18px] sm:text-[20px] md:text-[22px] font-bold ${activeBg} ${activeText}`}
+                >
+                  {dayData.day}
+                </div>
+              ) : (
+                <div
+                  className={`text-[22px] sm:text-[16px] md:text-[28px] font-medium ${dayTextColor}`}
+                >
+                  {dayData.day}
+                </div>
+              )}
 
               {eventIcons.size > 0 && (
                 <>
                   {/* Vista móvil: puntos de colores */}
                   <div className="flex gap-[3px] mt-1 sm:hidden">
-                    {/* Reunión */}
                     {eventosEnElDia.length > 0 && (
                       <div className="w-[6px] h-[6px] rounded-full bg-blue-500"></div>
                     )}
-
-                    {/* Contrato */}
                     {eventosDeContrato.length > 0 && !esFinDeContrato && (
                       <div className="w-[6px] h-[6px] rounded-full bg-green-500"></div>
                     )}
-
-                    {/* Asunto */}
                     {eventosDeAsunto.length > 0 && (
                       <div className="w-[6px] h-[6px] rounded-full bg-gray-500"></div>
                     )}
@@ -395,7 +401,6 @@ const CalendarioEstudiante = () => {
                 </>
               )}
 
-              {/* Texto "Fin Contrato" debajo */}
               {esFinDeContrato && (
                 <div className="text-[8px] text-center leading-tight mt-[2px] font-medium text-red-500">
                   Fin

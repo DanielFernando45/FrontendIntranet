@@ -11,7 +11,7 @@ import { Toaster } from "react-hot-toast";
 export const App = () => {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
 
       <Suspense
         fallback={

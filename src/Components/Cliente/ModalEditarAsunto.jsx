@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { asuntosService } from "../../services/asuntosServices";
 import { TiDelete } from "react-icons/ti";
 import { GoPlusCircle } from "react-icons/go";
+import toast from "react-hot-toast"; // 👈 importación
 
 const ModalEditarAsunto = ({ onClose, idAsunto }) => {
   const userAuth = JSON.parse(localStorage.getItem("user"));
@@ -50,14 +51,14 @@ const ModalEditarAsunto = ({ onClose, idAsunto }) => {
   const mutate = useMutation({
     mutationFn: (body) => asuntosService.editarAsuntoEstudiante(body),
     onSuccess: () => {
-      alert("Asunto actualizado");
+      toast.success("Asunto actualizado correctamente");
       onClose();
       setIdsEliminar([]);
       setFiles([]);
     },
     onError: (error) => {
       console.error("Error al editar asunto:", error);
-      alert("Hubo un error al actualizar el asunto.");
+      toast.error("Hubo un error al actualizar el asunto ❌");
     },
   });
 
@@ -100,7 +101,8 @@ const ModalEditarAsunto = ({ onClose, idAsunto }) => {
     );
 
     if (archivosValidos.length === 0) {
-      return alert("No se aceptan archivos de este tipo.");
+      toast.error("No se aceptan archivos de este tipo ❌");
+      return;
     }
 
     archivosValidos.forEach((file) => {
@@ -112,7 +114,8 @@ const ModalEditarAsunto = ({ onClose, idAsunto }) => {
 
   const handleEdit = () => {
     if (tituloAsunto.trim().length === 0) {
-      return alert("El título del asunto no puede ir vacío.");
+      toast.error("El título del asunto no puede ir vacío ❌");
+      return;
     }
 
     const formData = new FormData();
@@ -120,7 +123,6 @@ const ModalEditarAsunto = ({ onClose, idAsunto }) => {
     formData.append("idAsesoramiento", idAsesoramiento);
     formData.append("idsElminar", JSON.stringify(idsElminar));
 
-    // ✅ Corregido: evitar enviar [object Object]
     if (typeof userAuth.role === "object" && userAuth.role.nombre) {
       formData.append("subido_por", userAuth.role.nombre);
     } else {
@@ -130,11 +132,6 @@ const ModalEditarAsunto = ({ onClose, idAsunto }) => {
     files.forEach((file) => {
       formData.append("files", file);
     });
-
-    // Debug
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
 
     mutate.mutate({ idAsunto, formData });
   };

@@ -29,8 +29,9 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
           setOpenItems(initialOpenState);
         })
         .catch((error) => {
-          console.error("Error al obtener los pendientes:", error);
+          console.warn("No se pudieron obtener los pendientes");
         })
+
         .finally(() => {
           setLoading(false);
         });

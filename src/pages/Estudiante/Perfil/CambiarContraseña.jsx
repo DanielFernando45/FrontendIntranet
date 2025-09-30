@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import LayoutApp from "../../../layout/LayoutApp";
+import toast from "react-hot-toast";
 
 const CambiarContraseña = () => {
   const [userId, setUserId] = useState(null);
@@ -65,7 +66,7 @@ const CambiarContraseña = () => {
 
     const errorValidacion = validarCampos();
     if (errorValidacion) {
-      alert(errorValidacion);
+      toast.error(errorValidacion);
       return;
     }
 
@@ -81,7 +82,7 @@ const CambiarContraseña = () => {
           body: JSON.stringify({
             oldPassword: passwords.oldPassword,
             newPassword: passwords.newPassword,
-            repeatPassword: passwords.confirmPassword, // ✅ enviado igual que en el backend
+            repeatPassword: passwords.confirmPassword,
           }),
         }
       );
@@ -92,14 +93,14 @@ const CambiarContraseña = () => {
         throw new Error(data.message || "Error al cambiar la contraseña");
       }
 
-      alert("¡Contraseña cambiada exitosamente!");
+      toast.success("¡Contraseña cambiada exitosamente!");
       setPasswords({
         oldPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
     } catch (error) {
-      alert(error.message || "Error al cambiar la contraseña");
+      toast.error(error.message || "Error al cambiar la contraseña");
     } finally {
       setLoading(false);
     }

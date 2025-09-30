@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-
+import toast from "react-hot-toast";
 const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
   const modalRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -7,9 +7,7 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
     fecha: "",
     hora: "",
   });
-  const [error, setError] = useState("");
 
-  // Cerrar al hacer click fuera del modal
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -35,15 +33,13 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
     e.preventDefault();
 
     if (!formData.titulo || !formData.fecha || !formData.hora) {
-      setError("Todos los campos son obligatorios");
+      toast.error("Todos los campos son obligatorios");
       return;
     }
 
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const idAsesor = user.id_asesor;
-
-      // Combinar fecha y hora en el formato requerido
       const fecha_reunion = `${formData.fecha}T${formData.hora}:00`;
 
       const reunionData = {
@@ -63,7 +59,6 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
           body: JSON.stringify(reunionData),
         }
       );
-      alert("Zoom Creado Correctamente");
 
       if (!response.ok) {
         throw new Error("Error al crear la reunión");
@@ -71,18 +66,17 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
 
       const data = await response.json();
       console.log("Reunión creada:", data);
-      Close(); // Cerrar el modal después de crear la reunión
-      // Aquí podrías añadir una notificación de éxito o redirigir
+
+      toast.success("Zoom creado correctamente ✅");
+      Close();
     } catch (err) {
       console.error("Error:", err);
-      setError("Error al crear la reunión. Por favor, inténtelo de nuevo.");
+      toast.error("Error al crear la reunión. Intenta nuevamente ❌");
     }
   };
 
   return (
-    <div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div
         ref={modalRef}
         className="relative w-[90%] sm:w-[600px] bg-[#F8F7F7] rounded-xl p-4 py-10 flex flex-col gap-5"

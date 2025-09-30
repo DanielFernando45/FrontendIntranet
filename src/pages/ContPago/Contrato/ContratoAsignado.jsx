@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { asesoriasService } from "../../../services/asesoriasService";
 import { contratosService } from "../../../services/contratosService";
 import toast from "react-hot-toast";
+
 const ContratoAsignado = () => {
   const [editContrato, setEditContrato] = useState(false);
   const [eliminar, setEliminar] = useState(false);
@@ -82,7 +83,7 @@ const ContratoAsignado = () => {
       toast.error("Selecciona una categoría.");
       return;
     }
-    
+
     if (currentContrato) {
       const payload = {
         modalidad: formData.modalidad,
@@ -205,9 +206,9 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, modalidad: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
-                    <option value="Avance">Avance</option>
-                    <option value="Plazo">Plazo</option>
+                    <option >Seleccionar</option>
+                    <option value="avance">Avance</option>
+                    <option value="plazo">Plazo</option>
                   </select>
                 </div>
                 <div className="flex flex-col w-full md:w-1/2">
@@ -219,16 +220,16 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, servicio: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
-                    <option value="Proyecto">Proyecto</option>
-                    <option value="Inf.Final">Inf.Final</option>
-                    <option value="Completo">Completo</option>
+                    <option>Seleccionar</option>
+                    <option value="proyecto">Proyecto</option>
+                    <option value="inf.Final">Inf.Final</option>
+                    <option value="completo">Completo</option>
                   </select>
                 </div>
               </div>
 
               {/* Categoría */}
-              {formData.servicio === "Completo" && (
+              {formData.servicio === "completo" && (
                 <div className="flex flex-col">
                   <label className="text-sm font-medium">Categoría:</label>
                   <select
@@ -238,7 +239,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, idCategoria: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option >Seleccionar</option>
                     <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
                       Oro
                     </option>
@@ -266,7 +267,7 @@ const ContratoAsignado = () => {
                       })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option >Seleccionar</option>
                     <option value={1}>Proyecto Bachillerato</option>
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
@@ -289,7 +290,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, idTipoPago: e.target.value })
                     }
                   >
-                    <option disabled>Seleccionar</option>
+                    <option >Seleccionar</option>
                     <option value={1}>Contado</option>
                     <option value={2}>Cuotas</option>
                   </select>

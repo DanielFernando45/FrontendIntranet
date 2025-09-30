@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import busqueda from "../../../assets/icons/busqueda.svg";
+import toast from "react-hot-toast";
 
 const EditarExtra = ({ closeEdit, servicio }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,17 +56,16 @@ const EditarExtra = ({ closeEdit, servicio }) => {
         }
       );
 
-      window.location.reload();
-
       if (response.ok) {
-        alert("Servicio actualizado correctamente");
+        toast.success("Servicio actualizado correctamente");
         closeEdit();
+        setTimeout(() => window.location.reload(), 1000); // 👈 da tiempo al toast
       } else {
         throw new Error("Error al actualizar el servicio");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Hubo un error al actualizar el servicio");
+      toast.error("Hubo un error al actualizar el servicio ❌");
     }
   };
 
@@ -145,7 +145,7 @@ const EditarExtra = ({ closeEdit, servicio }) => {
             </button>
           </div>
         </form>
-      </div>  
+      </div>
     </div>
   );
 };

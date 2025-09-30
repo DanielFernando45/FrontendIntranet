@@ -1,12 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { asuntosService } from "../../../services/asuntosServices";
+import toast from "react-hot-toast";
+
 
 const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
   const [fecha, setFecha] = useState("");
-  const [hora, setHora] = useState("12"); // valor por defecto 12
-  const [minuto, setMinuto] = useState("00"); // valor por defecto 00
-  const [ampm, setAmpm] = useState("AM"); // AM o PM
+  const [hora, setHora] = useState("12");
+  const [minuto, setMinuto] = useState("00");
+  const [ampm, setAmpm] = useState("AM");
 
   const mutate = useMutation({
     mutationFn: ({ idAsunto, fecha_estimada }) =>
@@ -15,7 +17,7 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
         fecha_estimada,
       }),
     onSuccess: () => {
-      alert("Fecha actualizada correctamente");
+      toast.success("Fecha actualizada correctamente");
       setShowModalEdit(false);
       setFecha("");
       setHora("12");
@@ -23,7 +25,7 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
       setAmpm("AM");
     },
     onError: (error) => {
-      alert(`Error: ${error.message || "Ocurrió un error inesperado"}`);
+      toast.error(`Error: ${error.message || "Ocurrió un error inesperado"}`);
     },
   });
 
@@ -31,14 +33,14 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
     event.preventDefault();
 
     if (!fecha || !hora || !minuto) {
-      return alert("Por favor ingrese la fecha y hora correctamente");
+      return toast.error("Por favor ingrese la fecha y hora correctamente");
     }
 
     let hora12 = parseInt(hora, 10);
     let minutos = parseInt(minuto, 10);
 
     if (isNaN(hora12) || isNaN(minutos)) {
-      return alert("La hora o los minutos no son válidos");
+      return toast.error("La hora o los minutos no son válidos");
     }
 
     // Convertir a formato 24h
@@ -49,7 +51,6 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
     const horaStr = hora24.toString().padStart(2, "0");
     const minStr = minutos.toString().padStart(2, "0");
 
-    // ✅ Construir string exacto sin UTC
     const fecha_estimada = `${fecha} ${horaStr}:${minStr}:00`;
 
     console.log("✅ Fecha Estimada a enviar:", fecha_estimada);

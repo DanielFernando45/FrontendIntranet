@@ -57,20 +57,15 @@ const ContratoNuevo = () => {
         idCategoria: formData.idCategoria || null,
       }),
     onSuccess: () => {
-      toast.success(
-        <div>
-          <b>Contrato creado exitosamente 🎉</b>
-        </div>
-      );
+      toast.success("Contrato creado exitosamente 🎉");
       setAsigContrato(false);
     },
     onError: (error) => {
       console.error("Error al crear el contrato:", error.response?.data);
       toast.error(
-        <div>
-          <b>Error al crear el contrato:</b>{" "}
-          {error.response?.data?.message || error.message}
-        </div>
+        `Error al crear el contrato: ${
+          error.response?.data?.message || error.message
+        }`
       );
     },
   });
@@ -83,7 +78,7 @@ const ContratoNuevo = () => {
         },
       });
     } else {
-      toast.error(<b>No se ha seleccionado un asesoramiento.</b>);
+      toast.error("No se ha seleccionado un asesoramiento.");
     }
   };
 
