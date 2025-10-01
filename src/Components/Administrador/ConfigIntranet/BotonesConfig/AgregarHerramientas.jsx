@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { marketingService } from "../../../../services/marketingService";
+import toast from "react-hot-toast";
 
 const AgregarHerramientas = ({ close }) => {
   const [formData, setFormData] = useState({
@@ -17,10 +18,7 @@ const AgregarHerramientas = ({ close }) => {
     const { name, value } = e.target;
 
     if (name === "enlace") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
 
       // Generar previsualización del enlace
       if (value) {
@@ -39,18 +37,13 @@ const AgregarHerramientas = ({ close }) => {
       return;
     }
 
-    // Manejo normal para otros campos de texto
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validar que sea una imagen
     if (!file.type.match("image.*")) {
       setError(
         "Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF)"
@@ -58,18 +51,11 @@ const AgregarHerramientas = ({ close }) => {
       return;
     }
 
-    // Crear previsualización de la imagen
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
 
-    // Actualizar el estado con el archivo
-    setFormData((prev) => ({
-      ...prev,
-      url_imagen: file,
-    }));
+    setFormData((prev) => ({ ...prev, url_imagen: file }));
     setError(null);
   };
 
@@ -90,20 +76,20 @@ const AgregarHerramientas = ({ close }) => {
 
       await marketingService.agregarHerramientas(formDataToSend);
 
-      console.log(formData.url_imagen);
-      // Si todo salió bien
-      location.reload();
+      toast.success("Herramienta agregada correctamente");
+
       close();
     } catch (err) {
-      setError(err.message || "Error al agregar la herramienta");
+      const message = err.message || "Error al agregar la herramienta";
+      setError(message);
+      toast.error(`❌ ${message}`);
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/3">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+      <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-medium mb-4 text-[#2B2829]">
           Añadir Herramienta
         </h2>
@@ -114,8 +100,9 @@ const AgregarHerramientas = ({ close }) => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Nombre */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nombre
             </label>
@@ -129,7 +116,9 @@ const AgregarHerramientas = ({ close }) => {
               required
             />
           </div>
-          <div className="mb-4">
+
+          {/* Descripción */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Descripción
             </label>
@@ -144,8 +133,8 @@ const AgregarHerramientas = ({ close }) => {
             />
           </div>
 
-          {/* Campo para subir imagen */}
-          <div className="mb-4">
+          {/* Imagen */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Imagen
             </label>
@@ -164,7 +153,7 @@ const AgregarHerramientas = ({ close }) => {
                 </h3>
                 <img
                   src={imagePreview}
-                  alt="Vista previa de la imagen"
+                  alt="Vista previa"
                   className="max-h-40 rounded object-contain"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -174,53 +163,30 @@ const AgregarHerramientas = ({ close }) => {
             )}
           </div>
 
-          {/* Campo para enlace web */}
-          <div className="mb-4">
+          {/* Enlace */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Enlace a la herramientas
+              Enlace a la herramienta
             </label>
             <input
               type="url"
               name="enlace"
               value={formData.enlace}
-              onChange={(e) => {
-                const { value } = e.target;
-
-                // Actualiza el campo enlace
-                setFormData((prev) => ({
-                  ...prev,
-                  enlace: value,
-                }));
-
-                // Generar previsualización del enlace
-                if (value) {
-                  try {
-                    const url = new URL(value);
-                    setWebsitePreview({
-                      domain: url.hostname,
-                      favicon: `https://www.google.com/s2/favicons?domain=${url.hostname}`,
-                    });
-                  } catch {
-                    setWebsitePreview(null);
-                  }
-                } else {
-                  setWebsitePreview(null);
-                }
-              }}
+              onChange={handleChange}
               placeholder="https://www.herramienta.com"
-              className={`w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                ${formData.enlace.length > 200 ? "border-red-500" : ""}`}
+              className={`w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                formData.enlace.length > 200 ? "border-red-500" : ""
+              }`}
               required
             />
 
-            {/* Mensaje de advertencia si excede los caracteres */}
             {formData.enlace.length > 200 && (
               <p className="text-red-600 text-sm mt-1">
-                ⚠️ El enlace supera los 200 caracteres. Por favor ingresa uno más corto.
+                ⚠️ El enlace supera los 200 caracteres. Por favor ingresa uno
+                más corto.
               </p>
             )}
 
-            {/* Previsualización de sitio */}
             {websitePreview && (
               <div className="mt-2 flex items-center p-2 border rounded bg-gray-50">
                 <img
@@ -228,17 +194,19 @@ const AgregarHerramientas = ({ close }) => {
                   alt="Favicon"
                   className="w-4 h-4 mr-2"
                 />
-                <span className="text-sm text-gray-700">{websitePreview.domain}</span>
+                <span className="text-sm text-gray-700">
+                  {websitePreview.domain}
+                </span>
               </div>
             )}
           </div>
 
-
-          <div className="flex justify-between">
+          {/* Botones */}
+          <div className="flex flex-col sm:flex-row justify-between gap-2 pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-16 py-2 bg-[#1C1C34] text-white rounded hover:bg-[#2a2a4a] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-2 bg-[#1C1C34] text-white rounded hover:bg-[#2a2a4a] disabled:opacity-50"
             >
               {isSubmitting ? "Añadiendo..." : "Añadir"}
             </button>
@@ -246,7 +214,7 @@ const AgregarHerramientas = ({ close }) => {
               onClick={close}
               type="button"
               disabled={isSubmitting}
-              className="px-16 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100 disabled:opacity-50"
             >
               Cancelar
             </button>

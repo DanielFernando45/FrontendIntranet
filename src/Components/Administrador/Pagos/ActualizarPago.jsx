@@ -74,7 +74,7 @@ const ActualizarPago = ({ onClose, pagoData }) => {
 
       setTimeout(() => {
         setExito(false);
-        onClose(); // ✅ Cierra el modal después del toast
+        onClose();
       }, 1000);
     } catch (error) {
       console.error("Error:", error);
@@ -83,100 +83,107 @@ const ActualizarPago = ({ onClose, pagoData }) => {
   };
 
   return (
-    <div className="flex flex-col absolute gap-[15px] top-20 left-[500px] px-10 py-5 w-[875px] rounded-lg bg-white border border-[#D2CECF]">
-      <h1 className="text-[25px] font-semibold">Actualizar pagos</h1>
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto bg-black bg-opacity-30">
+      <div className="w-full max-w-4xl bg-white rounded-lg border border-[#D2CECF] px-6 py-8">
+        <h1 className="text-2xl font-semibold mb-4">Actualizar pagos</h1>
 
-      {exito && (
-        <div className="flex items-center gap-2 text-green-600 font-semibold">
-          <img src={check} alt="check" className="w-5 h-5" />
-          Pagos actualizados correctamente
-        </div>
-      )}
+        {exito && (
+          <div className="flex items-center gap-2 text-green-600 font-semibold mb-4">
+            <img src={check} alt="check" className="w-5 h-5" />
+            Pagos actualizados correctamente
+          </div>
+        )}
 
-      <div className="flex justify-between">
-        <div className="flex flex-col w-[369px] h-[82px] gap-[15px]">
-          <h2 className="font-medium">Alumno:</h2>
-          <input
-            value={pagoData?.delegado || ""}
-            disabled
-            className="flex items-center rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-          />
+        {/* Datos generales */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex flex-col w-full gap-2">
+            <label className="font-medium">Alumno:</label>
+            <input
+              value={pagoData?.delegado || ""}
+              disabled
+              className="rounded-2xl text-[#1C1C34] bg-[#E9E7E7] px-4 py-2 font-medium w-full"
+            />
+          </div>
+          <div className="flex flex-col w-full md:max-w-[160px] gap-2">
+            <label className="font-medium">Número de cuotas:</label>
+            <select
+              onChange={handleNumeroCuotasChange}
+              value={numeroCuotas}
+              disabled
+              className="rounded-2xl bg-[#E9E7E7] px-4 py-2 font-medium w-full"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+          <div className="flex flex-col w-full md:max-w-[220px] gap-2">
+            <label className="font-medium">Total a pagar:</label>
+            <input
+              disabled
+              value={totalPagar}
+              onChange={(e) => setTotalPagar(e.target.value)}
+              placeholder="Ingrese un monto"
+              className="rounded-2xl text-[#1C1C34] bg-[#E9E7E7] px-4 py-2 font-medium w-full"
+            />
+          </div>
         </div>
-        <div className="flex flex-col w-[169px] h-[82px] gap-[15px]">
-          <h2 className="font-medium">Número de cuotas:</h2>
-          <select
-            onChange={handleNumeroCuotasChange}
-            value={numeroCuotas}
-            disabled
-            className="flex items-center rounded-2xl w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </select>
-        </div>
-        <div className="flex flex-col w-[222px] h-[82px] gap-[15px]">
-          <h2 className="font-medium">Total a pagar:</h2>
-          <input
-            disabled
-            value={totalPagar}
-            onChange={(e) => setTotalPagar(e.target.value)}
-            placeholder="Ingrese un monto"
-            className="flex items-center rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-          />
-        </div>
-      </div>
 
-      <h1 className="text-[25px] font-semibold">Cuotas</h1>
+        <h2 className="text-2xl font-semibold mt-4 mb-2">Cuotas</h2>
 
-      {cuotas.map((cuota, index) => (
-        <div key={index} className="flex flex-col justify-start gap-5 mt-5">
-          <div className="font-medium text-[20px]">{cuota.nombre}</div>
-          <div className="flex justify-between">
-            <div className="flex flex-col w-[390px] h-[82px] gap-[15px]">
-              <h2 className="font-medium">Monto:</h2>
-              <div className="flex items-center gap-1">
-                <p className="flex items-center justify-center bg-[#1C1C34] text-white rounded-full w-12 h-10 ">
-                  S/.
-                </p>
+        {/* Cuotas dinámicas */}
+        {cuotas.map((cuota, index) => (
+          <div key={index} className="mt-4 border-t pt-4">
+            <div className="font-medium text-lg mb-3">{cuota.nombre}</div>
+
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex flex-col w-full gap-2">
+                <label className="font-medium">Monto:</label>
+                <div className="flex items-center gap-2">
+                  <span className="bg-[#1C1C34] text-white rounded-full w-12 h-10 flex items-center justify-center font-bold">
+                    S/.
+                  </span>
+                  <input
+                    value={cuota.monto}
+                    onChange={(e) =>
+                      handleCuotaChange(index, "monto", e.target.value)
+                    }
+                    placeholder="Ingrese un monto"
+                    className="rounded-2xl text-[#1C1C34] bg-[#E9E7E7] px-4 py-2 font-medium w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col w-full gap-2">
+                <label className="font-medium">Fecha Pago:</label>
                 <input
-                  value={cuota.monto}
+                  type="date"
+                  value={cuota.fecha_pago}
                   onChange={(e) =>
-                    handleCuotaChange(index, "monto", e.target.value)
+                    handleCuotaChange(index, "fecha_pago", e.target.value)
                   }
-                  placeholder="Ingrese un monto"
-                  className="flex items-center rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
+                  className="rounded-2xl text-[#1C1C34] bg-[#E9E7E7] px-4 py-2 font-medium w-full"
                 />
               </div>
             </div>
-            <div className="flex flex-col w-[390px] h-[82px] gap-[15px]">
-              <h2 className="font-medium">Fecha Pago:</h2>
-              <input
-                type="date"
-                value={cuota.fecha_pago}
-                onChange={(e) =>
-                  handleCuotaChange(index, "fecha_pago", e.target.value)
-                }
-                className="flex justify-end rounded-2xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-              />
-            </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <div className="flex w-full py-4 px-1 h-[68px] justify-end gap-4">
-        <button
-          onClick={handleSubmit}
-          className="h-7 w-[100px] border border-black rounded-[4px] text-[11px] font-bold text-[#02242B]"
-        >
-          Actualizar
-        </button>
-        <button
-          onClick={onClose}
-          className="h-7 w-[100px] border bg-black rounded-[4px] text-[11px] font-bold text-white"
-        >
-          Cancelar
-        </button>
+        {/* Botones */}
+        <div className="flex justify-end mt-8 gap-4">
+          <button
+            onClick={handleSubmit}
+            className="h-9 w-[100px] border border-black rounded-[4px] text-[13px] font-bold text-[#02242B]"
+          >
+            Actualizar
+          </button>
+          <button
+            onClick={onClose}
+            className="h-9 w-[100px] bg-black rounded-[4px] text-[13px] font-bold text-white"
+          >
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
   );

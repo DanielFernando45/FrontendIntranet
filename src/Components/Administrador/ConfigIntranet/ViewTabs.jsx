@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 const ViewTabs = ({ vista, setVista }) => {
   const views = [
     "agregar-noticias",
     "agregar-tutoriales",
     "agregar-guias",
-    "agregar-herramientas"
+    "agregar-herramientas",
   ];
 
   return (
@@ -18,9 +18,7 @@ const ViewTabs = ({ vista, setVista }) => {
           }`}
           onClick={() => setVista(opcion)}
         >
-          {opcion
-            .replace("-", " ")
-            .replace(/\b\w/g, (l) => l.toUpperCase())}
+          {opcion.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase())}
         </button>
       ))}
     </div>

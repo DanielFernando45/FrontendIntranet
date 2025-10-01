@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import EditarAlContado from "../../../../Components/Administrador/Pagos/EditarAlContado";
 import tachoelimanar from "../../../../assets/icons/tacho.svg";
+import toast from "react-hot-toast";
 
 const EnActividad = () => {
   const [clientes, setClientes] = useState([]);
@@ -58,15 +59,19 @@ const EnActividad = () => {
       );
 
       // Actualizar el estado local eliminando el cliente
-      setClientes(
-        clientes.filter((cliente) => cliente.id_infoPago !== clienteAEliminar)
+      setClientes((prevClientes) =>
+        prevClientes.filter(
+          (cliente) => cliente.id_infoPago !== clienteAEliminar
+        )
       );
+
+      toast.success("Pago eliminado correctamente");
 
       setMostrarConfirmacion(false);
       setClienteAEliminar(null);
     } catch (err) {
       console.error("Error al eliminar el pago:", err);
-      setError("Error al eliminar el pago");
+      toast.error("Error al eliminar el pago");
       setMostrarConfirmacion(false);
     }
   };
@@ -79,8 +84,8 @@ const EnActividad = () => {
       );
 
       // Actualizar el estado local
-      setClientes(
-        clientes.map((cliente) =>
+      setClientes((prevClientes) =>
+        prevClientes.map((cliente) =>
           cliente.id_infoPago === id
             ? {
                 ...cliente,
@@ -90,25 +95,14 @@ const EnActividad = () => {
             : cliente
         )
       );
-      alert("Servicio actualizado correctamente");
+
+      toast.success("Servicio actualizado correctamente");
       setEditar(false);
-      window.location.reload();
     } catch (err) {
       console.error("Error al actualizar el pago:", err);
+      toast.error("Error al actualizar el servicio");
     }
   };
-
-  if (loading) {
-    return <div className="flex justify-center py-4">Cargando datos...</div>;
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center py-4 text-red-500">
-        Error: {error}
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col">

@@ -1,66 +1,64 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 const EditarTutoriales = ({ close, tutorialId }) => {
-  const [formData, setFormData] = useState({
-    titulo: '',
-    enlace: ''
-  });
+  const [formData, setFormData] = useState({ titulo: "", enlace: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [youtubeEmbedUrl, setYoutubeEmbedUrl] = useState(null);
 
-  // Extraer el ID del video de YouTube cuando cambia el enlace
   useEffect(() => {
-    if (formData.enlace.includes('youtube.com') || formData.enlace.includes('youtu.be')) {
+    if (
+      formData.enlace.includes("youtube.com") ||
+      formData.enlace.includes("youtu.be")
+    ) {
       const videoId = extractYoutubeId(formData.enlace);
-      if (videoId) {
+      if (videoId)
         setYoutubeEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
-      }
     } else {
       setYoutubeEmbedUrl(null);
     }
   }, [formData.enlace]);
 
   const extractYoutubeId = (url) => {
-    // Extraer ID para diferentes formatos de URL de YouTube
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match && match[2].length === 11 ? match[2] : null;
   };
 
   useEffect(() => {
     const fetchTutorial = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_PORT_ENV}/recursos/tutoriales/list/${tutorialId}`);
-        
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_API_PORT_ENV
+          }/recursos/tutoriales/list/${tutorialId}`
+        );
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
           throw new Error(
-            errorData.message || `Error ${response.status}: ${response.statusText}`
+            errorData.message ||
+              `Error ${response.status}: ${response.statusText}`
           );
         }
 
         const data = await response.json();
-        
-        if (!data || typeof data !== 'object') {
-          throw new Error('Formato de datos inválido recibido del servidor');
-        }
+        if (!data || typeof data !== "object")
+          throw new Error("Formato de datos inválido recibido del servidor");
 
         setFormData({
-          titulo: data.titulo || '',
-          enlace: data.enlace || ''
+          titulo: data.titulo || "",
+          enlace: data.enlace || "",
         });
 
-        // Si ya existe un enlace, generar la URL de embed
         if (data.enlace) {
           const videoId = extractYoutubeId(data.enlace);
-          if (videoId) {
+          if (videoId)
             setYoutubeEmbedUrl(`https://www.youtube.com/embed/${videoId}`);
-          }
         }
       } catch (err) {
-        console.error('Error al cargar el tutorial:', err);
+        console.error("Error al cargar el tutorial:", err);
         setError(`Error al cargar el tutorial: ${err.message}`);
       } finally {
         setIsLoading(false);
@@ -72,10 +70,7 @@ const EditarTutoriales = ({ close, tutorialId }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -84,36 +79,39 @@ const EditarTutoriales = ({ close, tutorialId }) => {
     setError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_PORT_ENV}/recursos/tutoriales/update/${tutorialId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/recursos/tutoriales/update/${tutorialId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      location.reload();
-      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          errorData.message || `Error ${response.status}: ${response.statusText}`
+          errorData.message ||
+            `Error ${response.status}: ${response.statusText}`
         );
       }
 
-      close();
+      toast.success("Tutorial actualizado correctamente");
+      close(); // cerrar modal
     } catch (err) {
-      console.error('Error al actualizar el tutorial:', err);
+      console.error("Error al actualizar el tutorial:", err);
       setError(`Error al actualizar el tutorial: ${err.message}`);
+      toast.error("Error al actualizar el tutorial");
     } finally {
       setIsSubmitting(false);
     }
   };
-
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/4 text-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md text-center">
           Cargando datos del tutorial...
         </div>
       </div>
@@ -122,15 +120,15 @@ const EditarTutoriales = ({ close, tutorialId }) => {
 
   if (error && !isLoading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md">
           <h2 className="text-xl font-medium mb-4 text-[#2B2829]">Error</h2>
           <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
             {error}
           </div>
           <button
             onClick={close}
-            className="px-16 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100"
+            className="w-full sm:w-auto px-8 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100"
           >
             Cerrar
           </button>
@@ -140,10 +138,12 @@ const EditarTutoriales = ({ close, tutorialId }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/3">
-        <h2 className="text-xl font-medium mb-4 text-[#2B2829]">Editar Tutorial</h2>
-        
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+      <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md">
+        <h2 className="text-xl font-medium mb-4 text-[#2B2829]">
+          Editar Tutorial
+        </h2>
+
         {error && (
           <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
             {error}
@@ -152,7 +152,9 @@ const EditarTutoriales = ({ close, tutorialId }) => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Título</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Título
+            </label>
             <input
               type="text"
               name="titulo"
@@ -163,7 +165,9 @@ const EditarTutoriales = ({ close, tutorialId }) => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Enlace de YouTube</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Enlace de YouTube
+            </label>
             <input
               type="url"
               name="enlace"
@@ -175,35 +179,41 @@ const EditarTutoriales = ({ close, tutorialId }) => {
             />
             {youtubeEmbedUrl && (
               <div className="mt-4">
-                <h3 className="text-sm font-medium text-gray-700 mb-1">Vista previa:</h3>
-                <div className="aspect-w-16 aspect-h-9">
+                <h3 className="text-sm font-medium text-gray-700 mb-1">
+                  Vista previa:
+                </h3>
+                <div className="relative w-full overflow-hidden rounded pb-[56.25%]">
                   <iframe
                     src={youtubeEmbedUrl}
                     title="Vista previa del video"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
-                    className="w-full h-48 rounded"
+                    className="absolute top-0 left-0 w-full h-full rounded"
                   ></iframe>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Esta es una vista previa del video que se actualizará</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Esta es una vista previa del video que se actualizará
+                </p>
               </div>
             )}
-            <p className="text-xs text-gray-500 mt-1">Solo enlaces de YouTube son soportados</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Solo enlaces de YouTube son soportados
+            </p>
           </div>
-          <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row justify-between gap-2 mt-4">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-16 py-2 bg-[#1C1C34] text-white rounded hover:bg-[#2a2a4a] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-2 bg-[#1C1C34] text-white rounded hover:bg-[#2a2a4a] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Editando...' : 'Editar'}
+              {isSubmitting ? "Editando..." : "Editar"}
             </button>
             <button
               onClick={close}
               type="button"
               disabled={isSubmitting}
-              className="px-16 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancelar
             </button>
