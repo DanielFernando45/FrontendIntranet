@@ -1,13 +1,15 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Asegúrate de tener esta línea arriba
 
 const AsignarPago = ({ Cerrar, asesoramiento }) => {
-  const [numeroCuotas, setNumeroCuotas] = useState(1);
+  const [numeroCuotas, setNumeroCuotas] = useState(2);
   const [pagoTotal, setPagoTotal] = useState("");
   const [montosCuotas, setMontosCuotas] = useState({});
   const [fechaPago, setFechaPago] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Dentro del componente
 
   const handleNumeroCuotasChange = (e) => {
     setNumeroCuotas(Number(e.target.value));
@@ -34,7 +36,6 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
       return;
     }
 
-    // Validar que todos los montos de cuotas estén completos
     for (let i = 1; i <= numeroCuotas; i++) {
       if (!montosCuotas[`monto${i}`]) {
         setError(`Por favor complete el monto para la cuota ${i}`);
@@ -46,7 +47,6 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
     setError(null);
 
     try {
-      // Preparar el objeto cuotas según el formato requerido
       const cuotasData = {};
       for (let i = 1; i <= numeroCuotas; i++) {
         cuotasData[`monto${i}`] = parseFloat(montosCuotas[`monto${i}`]);
@@ -75,11 +75,9 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
         }
       );
 
-      // Primero verificar si la respuesta tiene contenido
       const text = await response.text();
 
       if (!response.ok) {
-        // Intentar parsear como JSON si hay contenido, sino mostrar el texto
         let errorData;
         try {
           errorData = text
@@ -91,26 +89,8 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
         throw new Error(errorData.message || "Error al asignar el pago");
       }
 
-      // Si la respuesta es exitosa pero no es JSON válido
-      if (!text) {
-        console.log("Pago asignado con éxito (respuesta vacía)");
-        Cerrar();
-        return;
-      }
-
-      // Intentar parsear como JSON solo si hay contenido
-      let data;
-      try {
-        data = text ? JSON.parse(text) : {};
-      } catch {
-        console.log("Respuesta del servidor (no JSON):", text);
-        // Si no es JSON válido pero la respuesta fue exitosa
-        Cerrar();
-        return;
-      }
-
-      console.log("Pago asignado con éxito:", data);
-      Cerrar(); // Cerrar el modal después de éxito
+      // ✅ Redirigir después del éxito
+      navigate("/cont-pago/pagos/cuotas?vista=GestionPagos");
     } catch (err) {
       setError(err.message);
     } finally {
