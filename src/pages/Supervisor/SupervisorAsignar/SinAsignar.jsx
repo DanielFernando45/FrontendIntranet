@@ -6,7 +6,7 @@ import { supervisorService } from "../../../services/supervisor/supervisorServic
 import { getUsuarioDesdeToken } from "../../../utils/validateToken";
 import { asesoriasService } from "../../../services/asesoriasService";
 import { useNavigate } from "react-router-dom";
-
+import toast from "react-hot-toast";
 const SinAsignar = () => {
   const [delegado, setDelegado] = useState(null);
   const [estudiantes, setEstudiantes] = useState([]);
@@ -19,7 +19,6 @@ const SinAsignar = () => {
 
   const usuario = getUsuarioDesdeToken();
   const navigate = useNavigate();
-  console.log(usuario?.id_supervisor);
   const idSupervisor = usuario?.id_supervisor;
 
   const {
@@ -43,7 +42,8 @@ const SinAsignar = () => {
   const mutationAsignar = useMutation({
     mutationFn: asesoriasService.crearAsignacion,
     onSuccess: () => {
-      alert("¡Asignación creada exitosamente!");
+      toast.success("¡Asignación creada exitosamente!");
+
       // Limpiar estados
       setDelegado(null);
       setEstudiantes([]);
@@ -51,19 +51,21 @@ const SinAsignar = () => {
       setAreaSeleccionada(null);
       setAsesorSeleccionado(null);
       setReferencia("");
-      // Redirigir si quieres
+
+      // Redirigir si es necesario
       navigate("/supervisor/asignaciones?tab=asignados");
     },
     onError: (err) => {
       console.error("Error al asignar:", err);
-      alert("Ocurrió un error al asignar.");
+      toast.error("❌ Ocurrió un error al asignar.");
     },
   });
+
   const handleElegir = (cliente) => {
     const totalSeleccionados = 1 + estudiantes.length;
 
     if (totalSeleccionados >= 5) {
-      alert(
+      toast.error(
         "Solo puedes seleccionar hasta 5 alumnos (incluyendo al delegado)."
       );
       return;
@@ -102,16 +104,17 @@ const SinAsignar = () => {
       cliente.carrera.toLowerCase().includes(termino)
     );
   };
+
   const handleAsignar = () => {
     if (!delegado || !areaSeleccionada || !asesorSeleccionado) {
-      alert("Debes seleccionar un delegado, un área y un asesor.");
+      toast.error("Debes seleccionar un delegado, un área y un asesor.");
       return;
     }
 
     const body = {
       asesorId: asesorSeleccionado.id,
       clientesIds: [delegado.id, ...estudiantes.map((e) => e.id)],
-      profesionAsesoria: referencia || "Asesoría académica", // o como prefieras
+      profesionAsesoria: referencia || "Asesoría académica",
       area: areaSeleccionada.nombre,
     };
 

@@ -58,7 +58,6 @@ const CalendarioEstudiante = () => {
     }
   }, [selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
 
-
   useEffect(() => {
     if (selectedAsesoriaId) {
       fetchEventosDia();
@@ -77,44 +76,63 @@ const CalendarioEstudiante = () => {
 
       setEventos({ reuniones, contratos, asuntos });
 
+      // 🔹 Normalizamos la fecha a UTC
+      const getUTCDateParts = (dateString) => {
+        if (!dateString) return null;
+        // Convertir a formato ISO (aseguramos que no haya espacio entre la fecha)
+        const iso = dateString.replace(" ", "T");
+        const d = new Date(iso);
+        return {
+          day: d.getUTCDate(), // Obtener el día en UTC
+          month: d.getUTCMonth(), // Obtener el mes en UTC
+          year: d.getUTCFullYear(), // Obtener el año en UTC
+        };
+      };
+
       const eventosDelDia = [
-        ...reuniones.filter(
-          (evento) =>
-            new Date(evento.fecha).getDate() === selectedDay &&
-            new Date(evento.fecha).getMonth() === selectedMonth &&
-            new Date(evento.fecha).getFullYear() === selectedYear
-        ),
-        ...contratos.filter(
-          (evento) =>
-            (new Date(evento.fecha_inicio).getDate() === selectedDay &&
-              new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
-              new Date(evento.fecha_inicio).getFullYear() === selectedYear) ||
-            (evento.fecha_fin &&
-              new Date(evento.fecha_fin).getDate() === selectedDay &&
-              new Date(evento.fecha_fin).getMonth() === selectedMonth &&
-              new Date(evento.fecha_fin).getFullYear() === selectedYear)
-        ),
-        ...asuntos.filter(
-          (evento) =>
-            (evento.fecha_entregado &&
-              new Date(evento.fecha_entregado).getDate() === selectedDay &&
-              new Date(evento.fecha_entregado).getMonth() === selectedMonth &&
-              new Date(evento.fecha_entregado).getFullYear() ===
-                selectedYear) ||
-            (evento.fecha_revision &&
-              new Date(evento.fecha_revision).getDate() === selectedDay &&
-              new Date(evento.fecha_revision).getMonth() === selectedMonth &&
-              new Date(evento.fecha_revision).getFullYear() === selectedYear) ||
-            (evento.fecha_terminado &&
-              new Date(evento.fecha_terminado).getDate() === selectedDay &&
-              new Date(evento.fecha_terminado).getMonth() === selectedMonth &&
-              new Date(evento.fecha_terminado).getFullYear() ===
-                selectedYear) ||
-            (evento.fecha_estimada &&
-              new Date(evento.fecha_estimada).getDate() === selectedDay &&
-              new Date(evento.fecha_estimada).getMonth() === selectedMonth &&
-              new Date(evento.fecha_estimada).getFullYear() === selectedYear)
-        ),
+        // Filtramos reuniones
+        ...reuniones.filter((evento) => {
+          const d = getUTCDateParts(evento.fecha);
+          return (
+            d &&
+            d.day === selectedDay &&
+            d.month === selectedMonth &&
+            d.year === selectedYear
+          );
+        }),
+
+        // Filtramos contratos
+        ...contratos.filter((evento) => {
+          const inicio = getUTCDateParts(evento.fecha_inicio);
+          const fin = getUTCDateParts(evento.fecha_fin);
+          return (
+            (inicio &&
+              inicio.day === selectedDay &&
+              inicio.month === selectedMonth &&
+              inicio.year === selectedYear) ||
+            (fin &&
+              fin.day === selectedDay &&
+              fin.month === selectedMonth &&
+              fin.year === selectedYear)
+          );
+        }),
+
+        // Filtramos asuntos
+        ...asuntos.filter((evento) => {
+          const fechas = [
+            getUTCDateParts(evento.fecha_entregado),
+            getUTCDateParts(evento.fecha_revision),
+            getUTCDateParts(evento.fecha_terminado),
+            getUTCDateParts(evento.fecha_estimada),
+          ];
+          return fechas.some(
+            (d) =>
+              d &&
+              d.day === selectedDay &&
+              d.month === selectedMonth &&
+              d.year === selectedYear
+          );
+        }),
       ];
 
       setEventosDia(eventosDelDia);
@@ -236,46 +254,45 @@ const CalendarioEstudiante = () => {
             dayData.currentMonth && dayData.day === selectedDay;
           const isToday = dayData.isToday;
 
-          const eventosEnElDia = eventos.reuniones.filter(
-            (evento) =>
-              new Date(evento.fecha).getDate() === dayData.day &&
-              new Date(evento.fecha).getMonth() === selectedMonth &&
-              new Date(evento.fecha).getFullYear() === selectedYear
-          );
+          // Filtramos eventos con fechas en UTC
+          const eventosEnElDia = eventos.reuniones.filter((evento) => {
+            const eventDate = new Date(evento.fecha);
+            return (
+              eventDate.getUTCDate() === dayData.day &&
+              eventDate.getUTCMonth() === selectedMonth &&
+              eventDate.getUTCFullYear() === selectedYear
+            );
+          });
 
-          const eventosDeContrato = eventos.contratos.filter(
-            (evento) =>
-              (new Date(evento.fecha_inicio).getDate() === dayData.day &&
-                new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
-                new Date(evento.fecha_inicio).getFullYear() === selectedYear) ||
-              (evento.fecha_fin &&
-                new Date(evento.fecha_fin).getDate() === dayData.day &&
-                new Date(evento.fecha_fin).getMonth() === selectedMonth &&
-                new Date(evento.fecha_fin).getFullYear() === selectedYear)
-          );
+          const eventosDeContrato = eventos.contratos.filter((evento) => {
+            const inicio = new Date(evento.fecha_inicio);
+            const fin = new Date(evento.fecha_fin);
+            return (
+              (inicio.getUTCDate() === dayData.day &&
+                inicio.getUTCMonth() === selectedMonth &&
+                inicio.getUTCFullYear() === selectedYear) ||
+              (fin &&
+                fin.getUTCDate() === dayData.day &&
+                fin.getUTCMonth() === selectedMonth &&
+                fin.getUTCFullYear() === selectedYear)
+            );
+          });
 
-          const eventosDeAsunto = eventos.asuntos.filter(
-            (evento) =>
-              (evento.fecha_entregado &&
-                new Date(evento.fecha_entregado).getDate() === dayData.day &&
-                new Date(evento.fecha_entregado).getMonth() === selectedMonth &&
-                new Date(evento.fecha_entregado).getFullYear() ===
-                  selectedYear) ||
-              (evento.fecha_revision &&
-                new Date(evento.fecha_revision).getDate() === dayData.day &&
-                new Date(evento.fecha_revision).getMonth() === selectedMonth &&
-                new Date(evento.fecha_revision).getFullYear() ===
-                  selectedYear) ||
-              (evento.fecha_terminado &&
-                new Date(evento.fecha_terminado).getDate() === dayData.day &&
-                new Date(evento.fecha_terminado).getMonth() === selectedMonth &&
-                new Date(evento.fecha_terminado).getFullYear() ===
-                  selectedYear) ||
-              (evento.fecha_estimada &&
-                new Date(evento.fecha_estimada).getDate() === dayData.day &&
-                new Date(evento.fecha_estimada).getMonth() === selectedMonth &&
-                new Date(evento.fecha_estimada).getFullYear() === selectedYear)
-          );
+          const eventosDeAsunto = eventos.asuntos.filter((evento) => {
+            const fechas = [
+              new Date(evento.fecha_entregado),
+              new Date(evento.fecha_revision),
+              new Date(evento.fecha_terminado),
+              new Date(evento.fecha_estimada),
+            ];
+
+            return fechas.some(
+              (d) =>
+                d.getUTCDate() === dayData.day &&
+                d.getUTCMonth() === selectedMonth &&
+                d.getUTCFullYear() === selectedYear
+            );
+          });
 
           const tieneEventos =
             eventosEnElDia.length > 0 ||
@@ -291,9 +308,9 @@ const CalendarioEstudiante = () => {
           const esFinDeContrato = eventosDeContrato.some(
             (evento) =>
               evento.fecha_fin &&
-              new Date(evento.fecha_fin).getDate() === dayData.day &&
-              new Date(evento.fecha_fin).getMonth() === selectedMonth &&
-              new Date(evento.fecha_fin).getFullYear() === selectedYear
+              new Date(evento.fecha_fin).getUTCDate() === dayData.day &&
+              new Date(evento.fecha_fin).getUTCMonth() === selectedMonth &&
+              new Date(evento.fecha_fin).getUTCFullYear() === selectedYear
           );
 
           if (esFinDeContrato) {
@@ -302,9 +319,9 @@ const CalendarioEstudiante = () => {
           } else if (
             eventosDeContrato.some(
               (e) =>
-                new Date(e.fecha_inicio).getDate() === dayData.day &&
-                new Date(e.fecha_inicio).getMonth() === selectedMonth &&
-                new Date(e.fecha_inicio).getFullYear() === selectedYear
+                new Date(e.fecha_inicio).getUTCDate() === dayData.day &&
+                new Date(e.fecha_inicio).getUTCMonth() === selectedMonth &&
+                new Date(e.fecha_inicio).getUTCFullYear() === selectedYear
             )
           ) {
             dayBgClass = "bg-green-100";
@@ -360,7 +377,7 @@ const CalendarioEstudiante = () => {
               {tieneEventos || isActive ? (
                 <div
                   className={`aspect-square w-full max-w-[50px] sm:max-w-[60px] md:max-w-[70px] rounded-full flex items-center justify-center 
-                  text-[18px] sm:text-[20px] md:text-[22px] font-bold ${activeBg} ${activeText}`}
+                text-[18px] sm:text-[20px] md:text-[22px] font-bold ${activeBg} ${activeText}`}
                 >
                   {dayData.day}
                 </div>

@@ -18,7 +18,9 @@ const PagosEstudiante = () => {
       const user = JSON.parse(usuario);
       const id = user.id_cliente;
 
-      fetch(`${import.meta.env.VITE_API_PORT_ENV}/cliente/miAsesoramiento/${id}`)
+      fetch(
+        `${import.meta.env.VITE_API_PORT_ENV}/cliente/miAsesoramiento/${id}`
+      )
         .then((res) => res.json())
         .then((data) => {
           const asesoriasArray = Object.values(data).map((item) => ({
@@ -40,7 +42,11 @@ const PagosEstudiante = () => {
   useEffect(() => {
     if (selectedAsesoriaId) {
       // Obtener pagos de asesoría
-      fetch(`${import.meta.env.VITE_API_PORT_ENV}/pagos/misAsesorias/${selectedAsesoriaId}`)
+      fetch(
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/pagos/misAsesorias/${selectedAsesoriaId}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setPagosAsesoria(data);
@@ -50,7 +56,11 @@ const PagosEstudiante = () => {
         );
 
       // Obtener pagos de servicios (solo visualización)
-      fetch(`${import.meta.env.VITE_API_PORT_ENV}/pagos/misServicios/${selectedAsesoriaId}`)
+      fetch(
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/pagos/misServicios/${selectedAsesoriaId}`
+      )
         .then((res) => res.json())
         .then((data) => {
           setPagosServicios(data);
@@ -71,8 +81,17 @@ const PagosEstudiante = () => {
       return "Fecha no definida";
     }
 
-    const date = new Date(dateString);
+    // Asegurar formato ISO válido
+    const isoString = dateString.replace(" ", "T");
+
+    const date = new Date(isoString);
+
+    if (isNaN(date)) {
+      return "Fecha no definida";
+    }
+
     return date.toLocaleDateString("es-ES", {
+      timeZone: "UTC",
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -82,6 +101,7 @@ const PagosEstudiante = () => {
   const parseDate = (dateString) => {
     const fechita = new Date(`${dateString}`);
     return fechita.toLocaleDateString("es-ES", {
+      timeZone: "UTC",
       day: "numeric",
       month: "long",
       year: "numeric",

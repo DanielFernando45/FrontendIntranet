@@ -7,6 +7,7 @@ import { supervisorService } from "../../../services/supervisor/supervisorServic
 import { clientesService } from "../../../services/clientesService";
 import { asesoriasService } from "../../../services/asesoriasService";
 import { getUsuarioDesdeToken } from "../../../utils/validateToken";
+import toast from "react-hot-toast";
 
 const NuevaAsesoria = () => {
   // Estados similares a SinAsignar
@@ -46,28 +47,36 @@ const NuevaAsesoria = () => {
   const mutationAsignar = useMutation({
     mutationFn: asesoriasService.crearAsignacion,
     onSuccess: () => {
-      alert("¡Asignación creada exitosamente!");
-      // limpiar
+      toast.success("¡Asignación creada exitosamente!", { duration: 4000 });
+
+      // Limpiar formularios y estados
       setDelegado(null);
       setEstudiantes([]);
       setClientesSeleccionados([]);
       setAreaSeleccionada(null);
       setAsesorSeleccionado(null);
       setReferencia("");
-      navigate("/supervisor/asignaciones?tab=asignados");
+
+      // Esperar unos segundos antes de redirigir
+      setTimeout(() => {
+        navigate("/supervisor/asignaciones?tab=asignados");
+      }, 4500); // ligeramente más largo que el toast
     },
     onError: (err) => {
       console.error("Error al asignar:", err);
-      alert("Ocurrió un error al asignar.");
+      toast.error("Ocurrió un error al asignar.");
     },
   });
-
   // Handlers (idénticos a SinAsignar, adaptados aquí)
   const handleElegir = (cliente) => {
     const totalSeleccionados = 1 + estudiantes.length;
+
     if (totalSeleccionados >= 5) {
-      alert(
-        "Solo puedes seleccionar hasta 5 alumnos (incluyendo al delegado)."
+      toast.error(
+        "Solo puedes seleccionar hasta 5 alumnos (incluyendo al delegado).",
+        {
+          duration: 4000,
+        }
       );
       return;
     }
@@ -79,6 +88,7 @@ const NuevaAsesoria = () => {
       if (estudiantes.some((e) => e.id === cliente.id)) return;
       setEstudiantes((prev) => [...prev, cliente]);
     }
+
     setClientesSeleccionados((prev) => [...prev, cliente.id]);
   };
 
@@ -109,7 +119,9 @@ const NuevaAsesoria = () => {
 
   const handleAsignar = () => {
     if (!delegado || !areaSeleccionada || !asesorSeleccionado) {
-      alert("Debes seleccionar un delegado, un área y un asesor.");
+      toast.error("Debes seleccionar un delegado, un área y un asesor.", {
+        duration: 4000,
+      });
       return;
     }
 
@@ -120,7 +132,31 @@ const NuevaAsesoria = () => {
       area: areaSeleccionada.nombre,
     };
 
-    mutationAsignar.mutate(body);
+    toast.loading("Asignando...");
+    mutationAsignar.mutate(body, {
+      onSuccess: () => {
+        toast.dismiss(); // Quitar el loading
+        toast.success("¡Asignación creada exitosamente!", { duration: 4000 });
+
+        // Limpiar estado
+        setDelegado(null);
+        setEstudiantes([]);
+        setClientesSeleccionados([]);
+        setAreaSeleccionada(null);
+        setAsesorSeleccionado(null);
+        setReferencia("");
+
+        // Redirigir después de un pequeño delay
+        setTimeout(() => {
+          navigate("/supervisor/asignaciones?tab=asignados");
+        }, 3000);
+      },
+      onError: (err) => {
+        toast.dismiss(); // Quitar el loading
+        console.error("Error al asignar:", err);
+        toast.error("Ocurrió un error al asignar.", { duration: 5000 });
+      },
+    });
   };
 
   if (loadingAreas || loadingClientes) return <div>Cargando datos…</div>;
