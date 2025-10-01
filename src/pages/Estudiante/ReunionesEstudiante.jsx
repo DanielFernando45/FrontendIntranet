@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { induccionesService } from "../../services/induccionesService";
 import ReactPlayer from "react-player";
 import VideoPlayer from "../../Components/VideoPlayer";
+import { VideoOff, GraduationCap } from "lucide-react";
 
 const ReunionesEstudiante = () => {
   const [asesorias, setAsesorias] = useState([]);
@@ -23,7 +24,6 @@ const ReunionesEstudiante = () => {
       induccionesService.obtenerInduccionesByIdAsesoria(selectedAsesoriaId),
     enabled: !!selectedAsesoriaId,
   });
-
 
   useEffect(() => {
     const usuario = localStorage.getItem("user");
@@ -70,9 +70,7 @@ const ReunionesEstudiante = () => {
         .then((data) => {
           setProximasReuniones(data);
         })
-        .catch((error) =>
-          console.error("Error al obtener reuniones próximas:")
-        )
+        .catch((error) => console.error("Error al obtener reuniones próximas:"))
         .finally(() => setLoading(false));
     }
   }, [selectedAsesoriaId]);
@@ -135,53 +133,66 @@ const ReunionesEstudiante = () => {
             <>
               <div className="flex flex-col gap-5">
                 <div className="flex flex-wrap justify-start gap-6">
-                  {proximasReuniones.map((reunion, index) => {
-                    const formattedDate = formatDate(reunion.fecha_reunion);
-                    return (
-                      <div
-                        key={index}
-                        className="flex flex-col sm:flex-row w-full sm:w-[310px] h-auto sm:h-[170px] items-center"
-                      >
-                        {/* Sección de fecha */}
-                        <div className="flex flex-col justify-between items-center rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none w-full sm:w-[104px] h-[100px] sm:h-full bg-[#17162E] p-4 text-white">
-                          <div className="flex flex-col items-center gap-2">
-                            <p className="text-xs">{formattedDate.month}</p>
-                            <h1 className="text-3xl font-semibold">
-                              {formattedDate.day}
-                            </h1>
+                  {Array.isArray(proximasReuniones) &&
+                  proximasReuniones.length > 0 ? (
+                    proximasReuniones.map((reunion, index) => {
+                      const formattedDate = formatDate(reunion.fecha_reunion);
+                      return (
+                        <div
+                          key={index}
+                          className="flex flex-col sm:flex-row w-full sm:w-[310px] h-auto sm:h-[170px] items-center"
+                        >
+                          {/* Fecha */}
+                          <div className="flex flex-col justify-between items-center rounded-t-xl sm:rounded-l-xl sm:rounded-tr-none w-full sm:w-[104px] h-[100px] sm:h-full bg-[#17162E] p-4 text-white">
+                            <div className="flex flex-col items-center gap-2">
+                              <p className="text-xs">{formattedDate.month}</p>
+                              <h1 className="text-3xl font-semibold">
+                                {formattedDate.day}
+                              </h1>
+                            </div>
+                            <p className="text-[10px]">{formattedDate.time}</p>
                           </div>
-                          
-                          <p className="text-[10px]">{formattedDate.time}</p>
-                        </div>
 
-                        {/* Sección de reunión */}
-                        <div className="flex flex-col justify-between w-full h-full border border-[#E0E0E0] bg-[#F9F9F9] p-4 rounded-b-xl sm:rounded-r-xl sm:rounded-bl-none">
-                          <span className="flex flex-col gap-2">
-                            <p className="font-medium text-[#333333]">
-                              {reunion.titulo}
-                            </p>
-                            <h1 className="text-[#999999] text-sm">
-                              Código: {reunion.meetingId}
-                            </h1>
-                          </span>
-                          <div className="w-full px-4">
-                            <button className="flex gap-4 justify-between items-center h-10 px-6 bg-[#1271ED] hover:bg-[#1E85F6] text-white rounded-full transition-all duration-200">
-                              <a
-                                href={reunion.enlace_zoom}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <p className="font-medium text-sm">
-                                  Enlace Zoom
-                                </p>
-                              </a>
-                              <img src={Zoom} alt="Zoom" className="w-5 h-5" />
-                            </button>
+                          {/* Detalle de la reunión */}
+                          <div className="flex flex-col justify-between w-full h-full border border-[#E0E0E0] bg-[#F9F9F9] p-4 rounded-b-xl sm:rounded-r-xl sm:rounded-bl-none">
+                            <span className="flex flex-col gap-2">
+                              <p className="font-medium text-[#333333]">
+                                {reunion.titulo}
+                              </p>
+                              <h1 className="text-[#999999] text-sm">
+                                Código: {reunion.meetingId}
+                              </h1>
+                            </span>
+                            <div className="w-full px-4">
+                              <button className="flex gap-4 justify-between items-center h-10 px-6 bg-[#1271ED] hover:bg-[#1E85F6] text-white rounded-full transition-all duration-200">
+                                <a
+                                  href={reunion.enlace_zoom}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <p className="font-medium text-sm">
+                                    Enlace Zoom
+                                  </p>
+                                </a>
+                                <img
+                                  src={Zoom}
+                                  alt="Zoom"
+                                  className="w-5 h-5"
+                                />
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  ) : (
+                    <div className="flex flex-col items-center justify-center w-full py-10 text-center text-gray-500">
+                      <VideoOff className="w-10 h-10 mb-2" />
+                      <p className="text-sm italic">
+                        Aún no tienes reuniones programadas.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -195,57 +206,62 @@ const ReunionesEstudiante = () => {
 
               {/* Contenido para reuniones terminadas */}
               <div className="flex flex-col gap-5">
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
-                  {induccionesLoading ? (
-                    <p>Cargando inducciones...</p>
-                  ) : inducciones && inducciones.length > 0 ? (
-                    <>
-                      {inducciones.map((induccion, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className="flex flex-col sm:flex-row items-center relative"
-                          >
-                            <img
-                              src="/preview.png"
-                              className="block w-full rounded-md shadow-lg"
-                              alt="back_image-induccion"
-                            />
+                {induccionesLoading ? (
+                  <p className="text-gray-500 text-sm italic">
+                    Cargando inducciones...
+                  </p>
+                ) : inducciones && inducciones.length > 0 ? (
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-6">
+                    {inducciones.map((induccion, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="flex flex-col sm:flex-row items-center relative"
+                        >
+                          <img
+                            src="/preview.png"
+                            className="block w-full rounded-md shadow-lg"
+                            alt="back_image-induccion"
+                          />
 
-                            <div className="absolute w-full h-full top-0 flex flex-col justify-between p-6 bg-gradient-to-t from-black to-transparent opacity-80">
-                              {/* Título */}
-                              <p className="text-white mn:text-2xl sm:text-xl font-bold text-shadow-md mb-4">
-                                {induccion?.titulo}
-                              </p>
+                          <div className="absolute w-full h-full top-0 flex flex-col justify-between p-6 bg-gradient-to-t from-black to-transparent opacity-80">
+                            {/* Título */}
+                            <p className="text-white mn:text-2xl sm:text-xl font-bold text-shadow-md mb-4">
+                              {induccion?.titulo}
+                            </p>
 
-                              <div className="flex justify-between items-center mt-auto">
-                                {/* Botón de ver */}
-                                <button
-                                  onClick={() => {
-                                    setUrlVideo(induccion.url);
-                                    setShowModalVideo(true);
-                                  }}
-                                  className="ml-auto text-sm bg-blue-500 text-white border-2 border-blue-500 rounded-md p-3 flex gap-2 items-center hover:bg-white hover:text-blue-500 transition-all duration-300 ease-in-out"
-                                >
-                                  Ver
-                                  <span>
-                                    <img
-                                      src={play_icon}
-                                      alt="play-icon"
-                                      className="w-5 h-5"
-                                    />
-                                  </span>
-                                </button>
-                              </div>
+                            <div className="flex justify-between items-center mt-auto">
+                              {/* Botón de ver */}
+                              <button
+                                onClick={() => {
+                                  setUrlVideo(induccion.url);
+                                  setShowModalVideo(true);
+                                }}
+                                className="ml-auto text-sm bg-blue-500 text-white border-2 border-blue-500 rounded-md p-3 flex gap-2 items-center hover:bg-white hover:text-blue-500 transition-all duration-300 ease-in-out"
+                              >
+                                Ver
+                                <span>
+                                  <img
+                                    src={play_icon}
+                                    alt="play-icon"
+                                    className="w-5 h-5"
+                                  />
+                                </span>
+                              </button>
                             </div>
                           </div>
-                        );
-                      })}
-                    </>
-                  ) : (
-                    <p>No hay inducciones disponibles</p>
-                  )}
-                </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="w-full flex flex-col items-center justify-center py-10 text-center text-gray-500">
+                    <GraduationCap className="w-10 h-10 mb-2" />
+                    <p className="text-sm italic">
+                      No hay inducciones disponibles.
+                    </p>
+                  </div>
+                )}
               </div>
             </>
           )}

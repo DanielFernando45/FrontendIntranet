@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import toast from "react-hot-toast";
 const EditarHerramientas = ({ close, herramientaId }) => {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -31,7 +31,6 @@ const EditarHerramientas = ({ close, herramientaId }) => {
         }
 
         const data = await response.json();
-
         if (!data || typeof data !== "object") {
           throw new Error("Formato de datos inválido recibido del servidor");
         }
@@ -43,10 +42,7 @@ const EditarHerramientas = ({ close, herramientaId }) => {
           enlace: data.enlace || "",
         });
 
-        // Establecer previsualizaciones iniciales
-        if (data.url_imagen) {
-          setImagePreview(data.imagen);
-        }
+        if (data.imagen) setImagePreview(data.imagen);
         if (data.enlace) {
           try {
             const url = new URL(data.enlace);
@@ -73,12 +69,8 @@ const EditarHerramientas = ({ close, herramientaId }) => {
     const { name, value } = e.target;
 
     if (name === "enlace") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
 
-      // Generar previsualización del enlace
       if (value) {
         try {
           const url = new URL(value);
@@ -95,18 +87,13 @@ const EditarHerramientas = ({ close, herramientaId }) => {
       return;
     }
 
-    // Manejo normal para otros campos de texto
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validar que sea una imagen
     if (!file.type.match("image.*")) {
       setError(
         "Por favor, selecciona un archivo de imagen válido (JPEG, PNG, GIF)"
@@ -114,18 +101,11 @@ const EditarHerramientas = ({ close, herramientaId }) => {
       return;
     }
 
-    // Crear previsualización de la imagen
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
 
-    // Actualizar el estado con el archivo
-    setFormData((prev) => ({
-      ...prev,
-      url_imagen: file,
-    }));
+    setFormData((prev) => ({ ...prev, url_imagen: file }));
     setError(null);
   };
 
@@ -140,7 +120,6 @@ const EditarHerramientas = ({ close, herramientaId }) => {
       formDataToSend.append("descripcion", formData.descripcion);
       formDataToSend.append("enlace", formData.enlace);
 
-      // Adjuntar la imagen si es un archivo nuevo o la URL existente
       if (formData.url_imagen instanceof File) {
         formDataToSend.append("url_imagen", formData.url_imagen);
       }
@@ -163,11 +142,12 @@ const EditarHerramientas = ({ close, herramientaId }) => {
         );
       }
 
-      location.reload();
+      toast.success("Herramienta actualizada correctamente");
       close();
     } catch (err) {
-      console.error("Error al actualizar la herramienta:", err);
-      setError(`Error al actualizar la herramienta: ${err.message}`);
+      const message = `Error al actualizar la herramienta: ${err.message}`;
+      setError(message);
+      toast.error(`❌ ${message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -175,8 +155,8 @@ const EditarHerramientas = ({ close, herramientaId }) => {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/4 text-center">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md text-center">
           Cargando datos de la herramienta...
         </div>
       </div>
@@ -185,15 +165,15 @@ const EditarHerramientas = ({ close, herramientaId }) => {
 
   if (error && !isLoading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md">
           <h2 className="text-xl font-medium mb-4 text-[#2B2829]">Error</h2>
           <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
             {error}
           </div>
           <button
             onClick={close}
-            className="px-16 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100"
+            className="w-full px-4 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100"
           >
             Cerrar
           </button>
@@ -203,8 +183,8 @@ const EditarHerramientas = ({ close, herramientaId }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-[#F0EFEF] p-6 rounded-lg w-1/3">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+      <div className="bg-[#F0EFEF] p-6 rounded-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
         <h2 className="text-xl font-medium mb-4 text-[#2B2829]">
           Editar Herramienta
         </h2>
@@ -215,8 +195,9 @@ const EditarHerramientas = ({ close, herramientaId }) => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Nombre */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nombre
             </label>
@@ -229,7 +210,9 @@ const EditarHerramientas = ({ close, herramientaId }) => {
               required
             />
           </div>
-          <div className="mb-4">
+
+          {/* Descripción */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Descripción
             </label>
@@ -243,8 +226,8 @@ const EditarHerramientas = ({ close, herramientaId }) => {
             />
           </div>
 
-          {/* Campo para subir imagen */}
-          <div className="mb-4">
+          {/* Imagen */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Imagen
             </label>
@@ -262,7 +245,7 @@ const EditarHerramientas = ({ close, herramientaId }) => {
                 </h3>
                 <img
                   src={imagePreview}
-                  alt="Vista previa de la imagen"
+                  alt="Vista previa"
                   className="max-h-40 rounded object-contain"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -272,8 +255,8 @@ const EditarHerramientas = ({ close, herramientaId }) => {
             )}
           </div>
 
-          {/* Campo para enlace web */}
-          <div className="mb-4">
+          {/* Enlace */}
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Enlace a la herramienta
             </label>
@@ -299,11 +282,12 @@ const EditarHerramientas = ({ close, herramientaId }) => {
             )}
           </div>
 
-          <div className="flex justify-between">
+          {/* Botones */}
+          <div className="flex flex-col sm:flex-row justify-between gap-2 pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-16 py-2 bg-[#1C1C34] text-white rounded hover:bg-[#2a2a4a] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-2 bg-[#1C1C34] text-white rounded hover:bg-[#2a2a4a] disabled:opacity-50"
             >
               {isSubmitting ? "Editando..." : "Editar"}
             </button>
@@ -311,7 +295,7 @@ const EditarHerramientas = ({ close, herramientaId }) => {
               onClick={close}
               type="button"
               disabled={isSubmitting}
-              className="px-16 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-2 border border-[#1C1C34] rounded text-[#1C1C34] hover:bg-gray-100 disabled:opacity-50"
             >
               Cancelar
             </button>

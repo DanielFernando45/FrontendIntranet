@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AsignarAlContado = ({ close, asesoramiento }) => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
     pago_total: "",
     fecha_pago: "",
   });
-
+  const navigate = useNavigate();
   const getCurrentDate = () => {
     const now = new Date();
     const year = now.getFullYear();
@@ -98,7 +99,7 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
         throw new Error(data.message || "Error al registrar el pago");
       }
 
-      close(); // Cerrar el modal después de éxito
+      navigate("/cont-pago/pagos/al-contado?tab=actividad");
     } catch (error) {
       console.error("Error completo:", error);
       setErrorMessage(error.message || "Ocurrió un error al registrar el pago");
