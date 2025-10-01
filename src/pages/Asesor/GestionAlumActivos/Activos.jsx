@@ -36,11 +36,17 @@ const Activos = () => {
     fetchAsesorias();
   }, []);
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    const date = new Date(dateString);
-    return date.toLocaleDateString("es-ES", options);
+  const formatDate = (fecha) => {
+    const date = new Date(fecha);
+    return date.toLocaleDateString("es-PE", {
+      timeZone: "UTC",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
+
+
 
   if (loading) {
     return (

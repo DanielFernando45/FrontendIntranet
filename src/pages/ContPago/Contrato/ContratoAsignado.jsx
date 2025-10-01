@@ -27,6 +27,16 @@ const ContratoAsignado = () => {
     initialData: [],
   });
 
+  const formatDate = (fecha) => {
+    const date = new Date(fecha);
+    return date.toLocaleDateString("es-PE", {
+      timeZone: "UTC",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
   const formatDateToInput = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -153,9 +163,7 @@ const ContratoAsignado = () => {
               </div>
               <div className="text-center">{c.trabajo_investigacion}</div>
               <div className="text-center col-span-2">{c.delegado}</div>
-              <div className="text-center ">
-                {new Date(c.fecha_inicio).toLocaleDateString()}
-              </div>
+              <div className="text-center ">{formatDate(c.fecha_inicio)}</div>
               <div className="text-center">{c.modalidad}</div>
               <div className="text-center">{c.tipo_pago}</div>
               <div className="flex justify-center gap-2">

@@ -71,13 +71,29 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
     return documents;
   };
 
-  const cortarTexto = (texto) => {
-    const index = texto.indexOf("-");
-    if (index !== -1) {
-      return texto.substring(index + 1);
-    }
-    return texto;
-  };
+  const formatearTextoArchivoConGuion = (texto) => {
+  // Buscar el primer guion
+  const index = texto.indexOf("-");
+  
+  // Si hay un guion, tomar la parte después de él
+  const textoDespuésDelGuion = index !== -1 ? texto.substring(index + 1) : texto;
+  
+  // Extraer la extensión del archivo
+  const extension = textoDespuésDelGuion.substring(textoDespuésDelGuion.lastIndexOf("."));
+  
+  // Obtener el nombre del archivo sin la extensión
+  const nombreArchivo = textoDespuésDelGuion.substring(0, textoDespuésDelGuion.lastIndexOf("."));
+  
+  // Verificar si el nombre antes de la extensión es mayor a 20 caracteres
+  if (nombreArchivo.length > 20) {
+    // Si es mayor, recortar a 20 caracteres y agregar "..."
+    return nombreArchivo.substring(0, 20) + "..." + extension;
+  }
+  
+  // Si no es mayor a 20, devolver el nombre completo con su extensión
+  return textoDespuésDelGuion;
+};
+
 
   const handleDownload = async (url, filename) => {
     try {
@@ -158,7 +174,7 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
                   </div>
                   <div className="w-[250px] hidden md:flex justify-center">
                     {hasDocuments
-                      ? cortarTexto(documents[0].name)
+                      ? formatearTextoArchivoConGuion(documents[0].name)
                       : "No hay archivos"}
                   </div>
                   <div className="mn:w-[65px] flex justify-center">
@@ -197,7 +213,7 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
                             className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
                           >
                             <div className="flex justify-start">
-                              {cortarTexto(doc.name)}
+                              {formatearTextoArchivoConGuion(doc.name)}
                             </div>
                             <div className="w-[65px] flex justify-center">
                               <button

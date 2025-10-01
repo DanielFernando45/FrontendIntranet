@@ -150,7 +150,7 @@ const ReunionProximo = () => {
                 <p className="text-[12px]">{fechaFormateada.time}</p>
               </div>
 
-              <div className="flex flex-col w-full bg-white p-4 rounded-xl shadow-sm border border-[#EAEAEA]">
+              <div className="flex flex-col w-full bg-white p-4 rounded-r-xl shadow-sm border border-[#EAEAEA]">
                 <div className="flex justify-between items-center mb-4">
                   <p className="font-semibold text-[#333333]">
                     {reunion.delegado}

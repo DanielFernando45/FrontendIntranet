@@ -26,15 +26,16 @@ const parseToDate = (input) => {
   return null;
 };
 
-const safeFormatDate = (value, locale = "es-PE") => {
-  const d = parseToDate(value);
-  if (!d) return null;
-  return d.toLocaleDateString(locale, {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-};
+const safeFormatDate = (fecha) => {
+    const date = new Date(fecha);
+    return date.toLocaleDateString("es-PE", {
+      timeZone: "UTC",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
 
 const JefeOpeAsignar = () => {
   const [expandedIds, setExpandedIds] = useState([]);

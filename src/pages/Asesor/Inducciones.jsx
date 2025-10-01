@@ -27,13 +27,16 @@ const Induccion = () => {
     navigate(`/asesor/induccion/${id}`);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    const options = { month: "short", day: "numeric", year: "numeric" };
-    return date.toLocaleDateString("es-PE", options);
-  };
 
+  const formatDate = (fecha) => {
+    const date = new Date(fecha);
+    return date.toLocaleDateString("es-PE", {
+      timeZone: "UTC",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
 
   return (
     <LayoutApp>

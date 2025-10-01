@@ -116,13 +116,29 @@ const Pendientes = () => {
     return hora12ConAmPm;
   };
 
-  const cortarTexto = (texto) => {
-    const index = texto.indexOf("-");
-    if (index !== -1) {
-      return texto.substring(index + 1);
-    }
-    return texto;
-  };
+  const formatearTextoArchivoConGuion = (texto) => {
+  // Buscar el primer guion
+  const index = texto.indexOf("-");
+  
+  // Si hay un guion, tomar la parte después de él
+  const textoDespuésDelGuion = index !== -1 ? texto.substring(index + 1) : texto;
+  
+  // Extraer la extensión del archivo
+  const extension = textoDespuésDelGuion.substring(textoDespuésDelGuion.lastIndexOf("."));
+  
+  // Obtener el nombre del archivo sin la extensión
+  const nombreArchivo = textoDespuésDelGuion.substring(0, textoDespuésDelGuion.lastIndexOf("."));
+  
+  // Verificar si el nombre antes de la extensión es mayor a 20 caracteres
+  if (nombreArchivo.length > 20) {
+    // Si es mayor, recortar a 20 caracteres y agregar "..."
+    return nombreArchivo.substring(0, 20) + "..." + extension;
+  }
+  
+  // Si no es mayor a 20, devolver el nombre completo con su extensión
+  return textoDespuésDelGuion;
+};
+
 
   // Componente Skeleton para la fila principal
   const SkeletonRow = () => (
@@ -227,7 +243,7 @@ const Pendientes = () => {
                 {pendiente.estado === "entregado" ? (
                   <div className="flex flex-col gap-2 transition-all duration-300 ease-in-out mt-5">
                     <div className="flex flex-col lg:flex-row justify-between text-xs md:text-sm xl:text-base gap-y-4 border border-gray-300 lg:border-none rounded-lg p-3 lg:p-0">
-                      <div>{cortarTexto(pendiente.documento_0)}</div>
+                      <div>{formatearTextoArchivoConGuion(pendiente.documento_0)}</div>
                       <div className="flex xl:w-[450px] gap-4">
                         <p>
                           Enviado: {formatDateExpan(pendiente.fecha_entrega)}
@@ -260,7 +276,7 @@ const Pendientes = () => {
                 ) : (
                   <div className="flex flex-col gap-2 transition-all duration-300 ease-in-out mt-5">
                     <div className="flex flex-col lg:flex-row justify-between text-xs md:text-sm xl:text-base gap-y-4 border border-gray-300 lg:border-none rounded-lg p-3 lg:p-0">
-                      <div>{cortarTexto(pendiente.documento_0)}</div>
+                      <div>{formatearTextoArchivoConGuion(pendiente.documento_0)}</div>
                       <div className="flex  gap-4">
                         <p>
                           Enviado: {formatDateExpan(pendiente.fecha_entrega)}
@@ -272,7 +288,7 @@ const Pendientes = () => {
                       </div>
                     </div>
                     <div className="flex flex-col lg:flex-row justify-between text-xs md:text-sm xl:text-base gap-y-4 border border-gray-300 lg:border-none rounded-lg p-3 lg:p-0">
-                      <div>{cortarTexto(pendiente.documento_0)}</div>
+                      <div>{formatearTextoArchivoConGuion(pendiente.documento_0)}</div>
                       <div className="flex w-[450px] gap-4">
                         <p>
                           Enviado: {formatDateExpan(pendiente.fecha_revision)}
