@@ -128,7 +128,7 @@ const NuevaAsesoria = () => {
 
   return (
     <LayoutApp>
-      <div className="ml-16 flex flex-col gap-[10px] pt-3 p-[30px] w-[1200px] xl:w-full bg-white rounded-[10px] drop-shadow-lg border-3">
+      <div className="mx-1 flex flex-col gap-[10px] pt-3 p-[30px]  xl:w-full bg-white rounded-[10px] drop-shadow-lg border-3">
         <h1 className="text-[20px] font-medium">Nueva Asignación</h1>
 
         {/* Delegado y estudiantes */}
@@ -187,31 +187,31 @@ const NuevaAsesoria = () => {
         </div>
 
         {/* Tabla de clientes */}
-        <div>
-          <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-            <div className="w-[40px] flex justify-center">ID</div>
-            <div className="w-[300px] flex justify-center">Alumno</div>
-            <div className="w-[160px] flex justify-center">
-              Fecha de Creación
-            </div>
-            <div className="w-[360px] flex justify-center">Carrera</div>
-            <div className="w-[180px] flex justify-center">Acción</div>
-          </div>
-
-          {clientes.filter(filtrarClientes).map((cliente, index) => (
-            <div
-              key={cliente.id}
-              className={`flex justify-between text-[#2B2829] font-normal ${
-                index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-              } p-[6px] rounded-md`}
-            >
-              <div className="w-[40px] flex justify-center">{cliente.id}</div>
-              <div className="w-[300px] flex justify-center">
-                {cliente.nombre}
-              </div>
+        <div className="overflow-x-auto ">
+          <div className="flex flex-col  min-w-[920px] ">
+            <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
+              <div className="w-[40px] flex justify-center">ID</div>
+              <div className="w-[300px] flex justify-center">Alumno</div>
               <div className="w-[160px] flex justify-center">
-                {cliente.fecha_creacion
-                  ? new Date(cliente.fecha_creacion).toLocaleDateString(
+                Fecha de Creación
+              </div>
+              <div className="w-[360px] flex justify-center">Carrera</div>
+              <div className="w-[180px] flex justify-center">Acción</div>
+            </div>
+
+            {clientes.filter(filtrarClientes).map((cliente, index) => (
+              <div
+                key={cliente.id}
+                className={`flex justify-between text-[#2B2829] font-normal ${index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                  } p-[6px] rounded-md`}
+              >
+                <div className="w-[40px] flex justify-center">{cliente.id}</div>
+                <div className="w-[300px] flex justify-center">
+                  {cliente.nombre}
+                </div>
+                <div className="w-[160px] flex justify-center">
+                  {cliente.fecha_creacion
+                    ? new Date(cliente.fecha_creacion).toLocaleDateString(
                       "es-PE",
                       {
                         day: "2-digit",
@@ -219,20 +219,22 @@ const NuevaAsesoria = () => {
                         year: "numeric",
                       }
                     )
-                  : "—"}
+                    : "—"}
+                </div>
+                <div className="w-[360px] flex justify-center">
+                  {cliente.carrera || "—"}
+                </div>
+                <button
+                  className="w-[180px] rounded-md bg-[#1C1C34] flex justify-center text-white"
+                  onClick={() => handleElegir(cliente)}
+                >
+                  Elegir
+                </button>
               </div>
-              <div className="w-[360px] flex justify-center">
-                {cliente.carrera || "—"}
-              </div>
-              <button
-                className="w-[180px] rounded-md bg-[#1C1C34] flex justify-center text-white"
-                onClick={() => handleElegir(cliente)}
-              >
-                Elegir
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
 
         {/* Selects y referencia */}
         <div className="flex justify-between xl:flex-row flex-col gap-4 mt-5">
@@ -277,10 +279,10 @@ const NuevaAsesoria = () => {
           </select>
         </div>
 
-        <div className="flex gap-5 mt-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-5 mt-4 items-center">
           <p>Referencia: </p>
           <input
-            className="rounded-md border border-black p-1 bg-transparent w-[350px] focus:outline-none text-black placeholder:text-[#888]"
+            className="rounded-md border border-black p-1 bg-transparent w-full xl:w-[450px] focus:outline-none text-black placeholder:text-[#888]"
             type="text"
             value={referencia}
             onChange={(e) => setReferencia(e.target.value)}

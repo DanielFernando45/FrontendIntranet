@@ -49,124 +49,125 @@ const Asignados = () => {
     <div>
       <h1 className="text-[20px] font-medium">Clientes Asignados</h1>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between px-1 text-[#495D72] font-medium">
-          <div className="w-[100px]">IdAsesoria</div>
-          <div className="w-[220px] text-center">Delegado</div>
-          <div className="w-[160px] text-center">Área</div>
-          <div className="w-[260px] text-center">Alumnos</div>
-          <div className="w-[220px] text-center">Asesor</div>
-          <div className="w-[220px] text-center">Acciones</div>
-        </div>
+      <div className="overflow-x-auto ">
+        <div className="flex flex-col gap-2 min-w-[805px]">
+          <div className="flex justify-between px-1 text-[#495D72] font-medium">
+            <div className="w-[100px]">IdAsesoria</div>
+            <div className="w-[220px] text-center">Delegado</div>
+            <div className="w-[160px] text-center">Área</div>
+            <div className="w-[260px] text-center">Alumnos</div>
+            <div className="w-[220px] text-center">Asesor</div>
+            <div className="w-[220px] text-center">Acciones</div>
+          </div>
 
-        <div className="flex flex-col gap-1 px-1">
-          {asesorias.map((asesoria, index) => (
-            <React.Fragment key={asesoria.id_asesoramiento}>
-              <div
-                className={`flex justify-between items-center px-1 rounded-md ${
-                  index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-                } py-2`}
-              >
-                <div className="w-[100px]">
-                  {String(asesoria.id_asesoramiento ?? "").padStart(4, "0")}
-                </div>
-
-                <div className="w-[220px] truncate" title={asesoria.delegado}>
-                  {asesoria.delegado || "—"}
-                </div>
-
-                <div className="w-[160px] text-center">
-                  {asesoria.area || "—"}
-                </div>
-
+          <div className="flex flex-col gap-1 px-1">
+            {asesorias.map((asesoria, index) => (
+              <React.Fragment key={asesoria.id_asesoramiento}>
                 <div
-                  className="w-[260px] truncate"
-                  title={displayStudents(asesoria.clientes)}
+                  className={`flex justify-between items-center px-1 rounded-md ${index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                    } py-2`}
                 >
-                  {displayStudents(asesoria.clientes)}
-                </div>
+                  <div className="w-[100px]">
+                    {String(asesoria.id_asesoramiento ?? "").padStart(4, "0")}
+                  </div>
 
-                <div className="w-[220px] text-center">
-                  {asesoria.asesor || "—"}
-                </div>
+                  <div className="w-[220px] truncate" title={asesoria.delegado}>
+                    {asesoria.delegado || "—"}
+                  </div>
 
-                <div className="flex w-[220px] justify-around px-3">
-                  <button
-                    className="bg-[#1C1C34] text-white font-medium px-6 py-1 rounded-md"
-                    onClick={() =>
-                      Navigate(
-                        `/supervisor/edit-asig/${asesoria.id_asesoramiento}`
-                      )
-                    }
+                  <div className="w-[160px] text-center">
+                    {asesoria.area || "—"}
+                  </div>
+
+                  <div
+                    className="w-[260px] truncate"
+                    title={displayStudents(asesoria.clientes)}
                   >
-                    Editar
-                  </button>
+                    {displayStudents(asesoria.clientes)}
+                  </div>
 
-                  <button
-                    onClick={() => toggleExpand(asesoria.id_asesoramiento)}
-                    aria-label={
-                      expandedIds.includes(asesoria.id_asesoramiento)
-                        ? "Cerrar detalle"
-                        : "Ver detalle"
-                    }
-                    title={
-                      expandedIds.includes(asesoria.id_asesoramiento)
-                        ? "Cerrar detalle"
-                        : "Ver detalle"
-                    }
-                  >
-                    <img
-                      src={
-                        expandedIds.includes(asesoria.id_asesoramiento)
-                          ? flechaarriba
-                          : flechaabajo
-                      }
-                      alt={
-                        expandedIds.includes(asesoria.id_asesoramiento)
-                          ? "Cerrar"
-                          : "Expandir"
-                      }
-                    />
-                  </button>
-                </div>
-              </div>
+                  <div className="w-[220px] text-center">
+                    {asesoria.asesor || "—"}
+                  </div>
 
-              {expandedIds.includes(asesoria.id_asesoramiento) && (
-                <div
-                  className={`px-4 py-2 rounded-b-md ${
-                    index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
-                  }`}
-                >
-                  <div className="font-medium mb-2">Estudiantes:</div>
-
-                  {Array.isArray(asesoria.clientes) &&
-                  asesoria.clientes.length > 0 ? (
-                    <ul className="list-disc pl-5">
-                      {asesoria.clientes.map(
-                        (
-                          c // ✅ usar clientes (plural)
-                        ) => (
-                          <li key={c.id_estudiante}>{c.estudiante}</li>
+                  <div className="flex w-[220px] justify-around px-3">
+                    <button
+                      className="bg-[#1C1C34] text-white font-medium px-6 py-1 rounded-md"
+                      onClick={() =>
+                        Navigate(
+                          `/supervisor/edit-asig/${asesoria.id_asesoramiento}`
                         )
-                      )}
-                    </ul>
-                  ) : (
-                    <div className="text-gray-500">
-                      Sin estudiantes asignados.
-                    </div>
-                  )}
-                </div>
-              )}
-            </React.Fragment>
-          ))}
+                      }
+                    >
+                      Editar
+                    </button>
 
-          {!asesorias.length && (
-            <div className="text-gray-500 py-4 text-center">
-              No hay asesorías asignadas.
-            </div>
-          )}
+                    <button
+                      onClick={() => toggleExpand(asesoria.id_asesoramiento)}
+                      aria-label={
+                        expandedIds.includes(asesoria.id_asesoramiento)
+                          ? "Cerrar detalle"
+                          : "Ver detalle"
+                      }
+                      title={
+                        expandedIds.includes(asesoria.id_asesoramiento)
+                          ? "Cerrar detalle"
+                          : "Ver detalle"
+                      }
+                    >
+                      <img
+                        src={
+                          expandedIds.includes(asesoria.id_asesoramiento)
+                            ? flechaarriba
+                            : flechaabajo
+                        }
+                        alt={
+                          expandedIds.includes(asesoria.id_asesoramiento)
+                            ? "Cerrar"
+                            : "Expandir"
+                        }
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                {expandedIds.includes(asesoria.id_asesoramiento) && (
+                  <div
+                    className={`px-4 py-2 rounded-b-md ${index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
+                      }`}
+                  >
+                    <div className="font-medium mb-2">Estudiantes:</div>
+
+                    {Array.isArray(asesoria.clientes) &&
+                      asesoria.clientes.length > 0 ? (
+                      <ul className="list-disc pl-5">
+                        {asesoria.clientes.map(
+                          (
+                            c // ✅ usar clientes (plural)
+                          ) => (
+                            <li key={c.id_estudiante}>{c.estudiante}</li>
+                          )
+                        )}
+                      </ul>
+                    ) : (
+                      <div className="text-gray-500">
+                        Sin estudiantes asignados.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+
+            {!asesorias.length && (
+              <div className="text-gray-500 py-4 text-center">
+                No hay asesorías asignadas.
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
 
       <div className="flex justify-env mt-4">
         <button

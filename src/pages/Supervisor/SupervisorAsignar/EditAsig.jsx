@@ -260,7 +260,7 @@ const EditAsig = () => {
       );
       alert(
         err?.response?.data?.message ||
-          "Error al guardar. Revisa la consola para más detalles."
+        "Error al guardar. Revisa la consola para más detalles."
       );
     },
   });
@@ -335,12 +335,12 @@ const EditAsig = () => {
 
   return (
     <LayoutApp>
-      <div className="ml-16 flex flex-col gap-[10px] pt-3 p-[30px] w-[1200px] xl:w-full bg-white rounded-[10px] drop-shadow-lg border-3">
+      <div className="mx-1 flex flex-col gap-[10px] pt-3 p-[30px]  xl:w-full bg-white rounded-[10px] drop-shadow-lg border-3">
         <h1 className="text-[20px] font-medium">Editar Asignado</h1>
 
         {/* Delegado */}
         <div className="mb-2">
-          <div className="flex flex-row gap-1 mb-2 items-center">
+          <div className="flex flex-col items-start mn:flex-row gap-1 mb-2 mn:items-center">
             <p className="font-medium">Delegado:</p>
             {delegado ? (
               <div className="flex items-center justify-between border gap-2 rounded px-2 py-[5px] bg-white shadow-sm">
@@ -397,59 +397,61 @@ const EditAsig = () => {
         </div>
 
         {/* Tabla de clientes disponibles */}
-        <div>
-          <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-            <div className="w-[80px] flex justify-center">#</div>
-            <div className="w-[300px] flex justify-center">Nombre</div>
-            <div className="w-[200px] flex justify-center">
-              Fecha de creación
+        <div className="overflow-x-auto ">
+          <div className="flex flex-col  min-w-[920px] ">
+            <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
+              <div className="w-[80px] flex justify-center">#</div>
+              <div className="w-[300px] flex justify-center">Nombre</div>
+              <div className="w-[200px] flex justify-center">
+                Fecha de creación
+              </div>
+              <div className="w-[260px] flex justify-center">Carrera</div>
+              <div className="w-[180px] flex justify-center">Acción</div>
             </div>
-            <div className="w-[260px] flex justify-center">Carrera</div>
-            <div className="w-[180px] flex justify-center">Acción</div>
-          </div>
 
-          {disponiblesFiltrados.length === 0 ? (
-            <div className="text-center text-gray-500 py-4">
-              No hay clientes sin asignar o ya seleccionaste a todos.
-            </div>
-          ) : (
-            disponiblesFiltrados.map((c, i) => (
-              <div
-                key={c.id}
-                className={`flex justify-between text-[#2B2829] font-normal ${
-                  i % 2 === 0 ? "bg-[#E9E7E7]" : ""
-                } p-[6px] rounded-md`}
-              >
-                <div className="w-[80px] flex justify-center">{i + 1}</div>
-                <div className="w-[300px] flex justify-center">{c.nombre}</div>
-                <div className="w-[200px] flex justify-center">
-                  {c.fecha_creacion
-                    ? new Date(c.fecha_creacion).toLocaleDateString("es-PE", {
+            {disponiblesFiltrados.length === 0 ? (
+              <div className="text-center text-gray-500 py-4">
+                No hay clientes sin asignar o ya seleccionaste a todos.
+              </div>
+            ) : (
+              disponiblesFiltrados.map((c, i) => (
+                <div
+                  key={c.id}
+                  className={`flex justify-between text-[#2B2829] font-normal ${i % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                    } p-[6px] rounded-md`}
+                >
+                  <div className="w-[80px] flex justify-center">{i + 1}</div>
+                  <div className="w-[300px] flex justify-center">{c.nombre}</div>
+                  <div className="w-[200px] flex justify-center">
+                    {c.fecha_creacion
+                      ? new Date(c.fecha_creacion).toLocaleDateString("es-PE", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
                       })
-                    : "—"}
+                      : "—"}
+                  </div>
+                  <div className="w-[260px] flex justify-center">{c.carrera}</div>
+                  <div className="w-[180px] flex justify-center">
+                    <button
+                      className="px-2 py-1 rounded-md bg-[#1C1C34] text-white"
+                      onClick={() => handleElegirCliente(c)}
+                      title={
+                        !delegado ? "Elegir como delegado" : "Elegir (estudiante)"
+                      }
+                    >
+                      Elegir
+                    </button>
+                  </div>
                 </div>
-                <div className="w-[260px] flex justify-center">{c.carrera}</div>
-                <div className="w-[180px] flex justify-center">
-                  <button
-                    className="px-2 py-1 rounded-md bg-[#1C1C34] text-white"
-                    onClick={() => handleElegirCliente(c)}
-                    title={
-                      !delegado ? "Elegir como delegado" : "Elegir (estudiante)"
-                    }
-                  >
-                    Elegir
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
 
+
         {/* Área y asesor */}
-        <div className="flex justify-between xl:flex-row flex-col gap-4 mt-5">
+        <div className="flex justify-between md:flex-row flex-col gap-4 mt-5">
           <select
             className="border border-black rounded-md px-[14px] xl:w-[275px] h-9"
             value={areaSeleccionada?.id ?? ""}
@@ -490,10 +492,10 @@ const EditAsig = () => {
         </div>
 
         {/* Referencia */}
-        <div className="flex gap-5 mt-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-5 mt-4 items-center ">
           <p>Referencia: </p>
           <input
-            className="rounded-md border border-black p-1 bg-transparent w-[350px] focus:outline-none text-black placeholder:text-[#888]"
+            className="w-full xl:w-[450px] rounded-md border border-black p-1 bg-transparent  focus:outline-none text-black placeholder:text-[#888]"
             type="text"
             value={referencia}
             onChange={(e) => setReferencia(e.target.value)}

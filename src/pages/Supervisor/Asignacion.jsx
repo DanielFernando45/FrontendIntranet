@@ -14,7 +14,7 @@ const Asignacion = () => {
 
   return (
     <LayoutApp>
-      <div className="flex flex-col items-start overflow-auto ml-16 mt-5">
+      <div className="flex flex-col items-start overflow-auto ml-1 mt-5">
         <div className="flex w-full border-b-2 gap-3 border-black font-normal">
           <button
             className={`px-3 rounded-t-[5px] w-[115px] ${
@@ -34,7 +34,7 @@ const Asignacion = () => {
           </button>
         </div>
 
-        <div className="flex flex-col gap-[10px] pt-3 p-[30px] w-[1200px] xl:w-full bg-white rounded-b-[10px] drop-shadow-lg border-3">
+        <div className="flex flex-col gap-[10px] pt-3 p-[30px] w-full xl:w-full bg-white rounded-b-[10px] drop-shadow-lg border-3">
           {tab === "asignados" ? <Asignados /> : <SinAsignados />}
         </div>
       </div>

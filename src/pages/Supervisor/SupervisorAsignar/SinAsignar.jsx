@@ -176,45 +176,47 @@ const SinAsignar = () => {
       </div>
 
       {/* Tabla de clientes */}
-      <div>
-        <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-          <div className="w-[40px] flex justify-center">ID</div>
-          <div className="w-[300px] flex justify-center">Alumno</div>
-          <div className="w-[160px] flex justify-center">Fecha de Creación</div>
-          <div className="w-[360px] flex justify-center">Carrera</div>
-          <div className="w-[180px] flex justify-center">Acción</div>
-        </div>
-
-        {clientes.filter(filtrarClientes).map((cliente, index) => (
-          <div
-            key={cliente.id}
-            className={`flex justify-between text-[#2B2829] font-normal ${
-              index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-            } p-[6px] rounded-md`}
-          >
-            <div className="w-[40px] flex justify-center">{cliente.id}</div>
-            <div className="w-[300px] flex justify-center">
-              {cliente.nombre}
-            </div>
-            <div className="w-[160px] flex justify-center">
-              {new Date(cliente.fecha_creacion).toLocaleDateString("es-PE", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
-            </div>
-            <div className="w-[360px] flex justify-center">
-              {cliente.carrera}
-            </div>
-            <button
-              className="w-[180px] rounded-md bg-[#1C1C34] flex justify-center text-white"
-              onClick={() => handleElegir(cliente)}
-            >
-              Elegir
-            </button>
+      <div className="overflow-x-auto " >
+        <div className="flex flex-col  min-w-[920px] " >
+          <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
+            <div className="w-[40px] flex justify-center">ID</div>
+            <div className="w-[300px] flex justify-center">Alumno</div>
+            <div className="w-[160px] flex justify-center">Fecha de Creación</div>
+            <div className="w-[360px] flex justify-center">Carrera</div>
+            <div className="w-[180px] flex justify-center">Acción</div>
           </div>
-        ))}
+
+          {clientes.filter(filtrarClientes).map((cliente, index) => (
+            <div
+              key={cliente.id}
+              className={`flex justify-between text-[#2B2829] font-normal ${index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                } p-[6px] rounded-md`}
+            >
+              <div className="w-[40px] flex justify-center">{cliente.id}</div>
+              <div className="w-[300px] flex justify-center">
+                {cliente.nombre}
+              </div>
+              <div className="w-[160px] flex justify-center">
+                {new Date(cliente.fecha_creacion).toLocaleDateString("es-PE", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </div>
+              <div className="w-[360px] flex justify-center">
+                {cliente.carrera}
+              </div>
+              <button
+                className="w-[180px] rounded-md bg-[#1C1C34] flex justify-center text-white"
+                onClick={() => handleElegir(cliente)}
+              >
+                Elegir
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
+
 
       {/* Selects y referencia */}
       <div className="flex justify-between xl:flex-row flex-col gap-4 mt-5">
@@ -253,10 +255,10 @@ const SinAsignar = () => {
         </select>
       </div>
 
-      <div className="flex gap-5 mt-4 items-center">
+      <div className="flex flex-col sm:flex-row gap-5 mt-4 items-center">
         <p>Referencia: </p>
         <input
-          className="rounded-md border border-black p-1 bg-transparent w-[350px] focus:outline-none text-black placeholder:text-[#888]"
+          className="rounded-md border border-black p-1 bg-transparent w-full xl:w-[450px] focus:outline-none text-black placeholder:text-[#888]"
           type="text"
           value={referencia}
           onChange={(e) => setReferencia(e.target.value)}
