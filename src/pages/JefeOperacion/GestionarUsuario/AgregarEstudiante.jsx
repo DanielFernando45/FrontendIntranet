@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import LayoutApp from "../../../layout/LayoutApp";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const AgregarEstudiante = () => {
   const navigate = useNavigate();
@@ -37,14 +38,13 @@ const AgregarEstudiante = () => {
         `${import.meta.env.VITE_API_PORT_ENV}/cliente/add`,
         clienteData
       );
-      alert("Cliente añadido exitosamente");
+      toast.success("Cliente añadido exitosamente ✅");
       navigate("/jefe-operaciones/gestionar-usuarios");
     } catch (error) {
       console.error("Error al añadir estudiante:", error);
-      alert("Error al guardar estudiante. Revisa los datos.");
+      toast.error("❌ Error al guardar estudiante. Revisa los datos.");
     }
   };
-
   return (
     <LayoutApp>
       <main className="px-4 md:px-20 py-10">

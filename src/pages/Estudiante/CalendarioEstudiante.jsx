@@ -9,6 +9,7 @@ import {
   NotepadText,
   ClipboardX,
 } from "lucide-react";
+import { commonService } from "../../services/commonService";
 
 const CalendarioEstudiante = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -57,72 +58,71 @@ const CalendarioEstudiante = () => {
     }
   }, [selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
 
-  const fetchEventosDia = () => {
-    fetch(
-      `${
-        import.meta.env.VITE_API_PORT_ENV
-      }/common/calendario_estudiante/${selectedAsesoriaId}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          const reuniones = data.reuniones || [];
-          const contratos = data.contratos || [];
-          const asuntos = data.asuntos || [];
-          setEventos({ reuniones, contratos, asuntos });
-          const eventosDelDia = [
-            ...reuniones.filter(
-              (evento) =>
-                new Date(evento.fecha).getDate() === selectedDay &&
-                new Date(evento.fecha).getMonth() === selectedMonth &&
-                new Date(evento.fecha).getFullYear() === selectedYear
-            ),
-            ...contratos.filter(
-              (evento) =>
-                (new Date(evento.fecha_inicio).getDate() === selectedDay &&
-                  new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
-                  new Date(evento.fecha_inicio).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_fin &&
-                  new Date(evento.fecha_fin).getDate() === selectedDay &&
-                  new Date(evento.fecha_fin).getMonth() === selectedMonth &&
-                  new Date(evento.fecha_fin).getFullYear() === selectedYear)
-            ),
-            ...asuntos.filter(
-              (evento) =>
-                (evento.fecha_entregado &&
-                  new Date(evento.fecha_entregado).getDate() === selectedDay &&
-                  new Date(evento.fecha_entregado).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_entregado).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_revision &&
-                  new Date(evento.fecha_revision).getDate() === selectedDay &&
-                  new Date(evento.fecha_revision).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_revision).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_terminado &&
-                  new Date(evento.fecha_terminado).getDate() === selectedDay &&
-                  new Date(evento.fecha_terminado).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_terminado).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_estimada &&
-                  new Date(evento.fecha_estimada).getDate() === selectedDay &&
-                  new Date(evento.fecha_estimada).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_estimada).getFullYear() ===
-                    selectedYear)
-            ),
-          ];
-          setEventosDia(eventosDelDia);
-        }
-      })
-      .catch((error) =>
-        console.error("Error al obtener eventos del día:", error)
+
+  useEffect(() => {
+    if (selectedAsesoriaId) {
+      fetchEventosDia();
+    }
+  }, [selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
+
+  const fetchEventosDia = async () => {
+    try {
+      const data = await commonService.getCalendarioEstudiante(
+        selectedAsesoriaId
       );
+
+      const reuniones = data.reuniones || [];
+      const contratos = data.contratos || [];
+      const asuntos = data.asuntos || [];
+
+      setEventos({ reuniones, contratos, asuntos });
+
+      const eventosDelDia = [
+        ...reuniones.filter(
+          (evento) =>
+            new Date(evento.fecha).getDate() === selectedDay &&
+            new Date(evento.fecha).getMonth() === selectedMonth &&
+            new Date(evento.fecha).getFullYear() === selectedYear
+        ),
+        ...contratos.filter(
+          (evento) =>
+            (new Date(evento.fecha_inicio).getDate() === selectedDay &&
+              new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
+              new Date(evento.fecha_inicio).getFullYear() === selectedYear) ||
+            (evento.fecha_fin &&
+              new Date(evento.fecha_fin).getDate() === selectedDay &&
+              new Date(evento.fecha_fin).getMonth() === selectedMonth &&
+              new Date(evento.fecha_fin).getFullYear() === selectedYear)
+        ),
+        ...asuntos.filter(
+          (evento) =>
+            (evento.fecha_entregado &&
+              new Date(evento.fecha_entregado).getDate() === selectedDay &&
+              new Date(evento.fecha_entregado).getMonth() === selectedMonth &&
+              new Date(evento.fecha_entregado).getFullYear() ===
+                selectedYear) ||
+            (evento.fecha_revision &&
+              new Date(evento.fecha_revision).getDate() === selectedDay &&
+              new Date(evento.fecha_revision).getMonth() === selectedMonth &&
+              new Date(evento.fecha_revision).getFullYear() === selectedYear) ||
+            (evento.fecha_terminado &&
+              new Date(evento.fecha_terminado).getDate() === selectedDay &&
+              new Date(evento.fecha_terminado).getMonth() === selectedMonth &&
+              new Date(evento.fecha_terminado).getFullYear() ===
+                selectedYear) ||
+            (evento.fecha_estimada &&
+              new Date(evento.fecha_estimada).getDate() === selectedDay &&
+              new Date(evento.fecha_estimada).getMonth() === selectedMonth &&
+              new Date(evento.fecha_estimada).getFullYear() === selectedYear)
+        ),
+      ];
+
+      setEventosDia(eventosDelDia);
+    } catch (error) {
+      console.error("Error al obtener eventos del día:", error);
+    }
   };
+
   const handleChange = (e) => {
     const idSeleccionado = parseInt(e.target.value); // asegura que sea número
     setSelectedAsesoriaId(idSeleccionado);

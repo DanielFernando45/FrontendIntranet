@@ -9,6 +9,9 @@ import {
   NotepadText,
   ClipboardX,
 } from "lucide-react";
+import { commonService } from "../../services/commonService";
+import { asesoriasService } from "../../services/asesoriasService";
+import { asesorService } from "../../services/administracion/asesorService";
 
 const CalendarioAsesor = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -26,31 +29,35 @@ const CalendarioAsesor = () => {
     contratos: [],
     asuntos: [],
   });
-
+  
   useEffect(() => {
     const userString = localStorage.getItem("user");
-    if (userString) {
-      const user = JSON.parse(userString);
-      const id = user.id_asesor;
-      fetch(
-        `${
-          import.meta.env.VITE_API_PORT_ENV
-        }/asesor/asesoramientosYDelegado/${id}`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          const asesoriasArray = Object.values(data).map((item) => ({
-            id: item.id_asesoramiento,
-            profesion: item.profesion_asesoria,
-            delegado: item.delegado,
-          }));
-          setAsesorias(asesoriasArray);
-          if (asesoriasArray.length > 0) {
-            setSelectedAsesoriaId(asesoriasArray[0].id);
-          }
-        })
-        .catch((error) => console.error("Error al obtener asesorías:", error));
-    }
+    if (!userString) return;
+
+    const user = JSON.parse(userString);
+    const id = user.id_asesor;
+
+    const fetchAsesoramientos = async () => {
+      try {
+        const data = await asesorService.getAsesoramientosYDelegado(id);
+
+        const asesoriasArray = data.map((item) => ({
+          id: item.id_asesoramiento,
+          profesion: item.profesion_asesoria,
+          delegado: item.delegado,
+        }));
+
+        setAsesorias(asesoriasArray);
+
+        if (asesoriasArray.length > 0) {
+          setSelectedAsesoriaId(asesoriasArray[0].id);
+        }
+      } catch (error) {
+        console.error("Error al obtener asesorías:", error);
+      }
+    };
+
+    fetchAsesoramientos();
   }, []);
 
   useEffect(() => {
@@ -60,93 +67,83 @@ const CalendarioAsesor = () => {
     }
   }, [selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
 
-  const fetchFechaVencimiento = () => {
-    fetch(
-      `${
-        import.meta.env.VITE_API_PORT_ENV
-      }/asesoramiento/vencimiento/${selectedAsesoriaId}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.fecha_fin) {
-          const fecha = new Date(data.fecha_fin);
-          setFechaVencimiento({
-            day: fecha.getUTCDate(),
-            month: fecha.getUTCMonth(),
-            year: fecha.getUTCFullYear(),
-          });
-        }
-      })
-      .catch((error) =>
-        console.error("Error al obtener fecha de vencimiento:", error)
+  const fetchFechaVencimiento = async () => {
+    try {
+      const data = await asesoriasService.asesoramientoVencimiento(
+        selectedAsesoriaId
       );
+
+      if (data?.fecha_fin) {
+        const fecha = new Date(data.fecha_fin);
+        setFechaVencimiento({
+          day: fecha.getUTCDate(),
+          month: fecha.getUTCMonth(),
+          year: fecha.getUTCFullYear(),
+        });
+      }
+    } catch (error) {
+      console.error("Error al obtener fecha de vencimiento:", error);
+    }
   };
 
-  const fetchEventosDia = () => {
-    fetch(
-      `${
-        import.meta.env.VITE_API_PORT_ENV
-      }/common/calendario_asesor/${selectedAsesoriaId}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          const reuniones = data.reuniones || [];
-          const contratos = data.contratos || [];
-          const asuntos = data.asuntos || [];
-          setEventos({ reuniones, contratos, asuntos });
-          const eventosDelDia = [
-            ...reuniones.filter(
-              (evento) =>
-                new Date(evento.fecha).getDate() === selectedDay &&
-                new Date(evento.fecha).getMonth() === selectedMonth &&
-                new Date(evento.fecha).getFullYear() === selectedYear
-            ),
-            ...contratos.filter(
-              (evento) =>
-                (new Date(evento.fecha_inicio).getDate() === selectedDay &&
-                  new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
-                  new Date(evento.fecha_inicio).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_fin &&
-                  new Date(evento.fecha_fin).getDate() === selectedDay &&
-                  new Date(evento.fecha_fin).getMonth() === selectedMonth &&
-                  new Date(evento.fecha_fin).getFullYear() === selectedYear)
-            ),
-            ...asuntos.filter(
-              (evento) =>
-                (evento.fecha_entregado &&
-                  new Date(evento.fecha_entregado).getDate() === selectedDay &&
-                  new Date(evento.fecha_entregado).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_entregado).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_revision &&
-                  new Date(evento.fecha_revision).getDate() === selectedDay &&
-                  new Date(evento.fecha_revision).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_revision).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_terminado &&
-                  new Date(evento.fecha_terminado).getDate() === selectedDay &&
-                  new Date(evento.fecha_terminado).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_terminado).getFullYear() ===
-                    selectedYear) ||
-                (evento.fecha_estimada &&
-                  new Date(evento.fecha_estimada).getDate() === selectedDay &&
-                  new Date(evento.fecha_estimada).getMonth() ===
-                    selectedMonth &&
-                  new Date(evento.fecha_estimada).getFullYear() ===
-                    selectedYear)
-            ),
-          ];
-          setEventosDia(eventosDelDia);
-        }
-      })
-      .catch((error) =>
-        console.error("Error al obtener eventos del día:", error)
-      );
+  const fetchEventosDia = async () => {
+    try {
+      // Llamada directa al servicio
+      const data = await commonService.getCalendarioAsesor(selectedAsesoriaId);
+
+      if (data) {
+        const reuniones = data.reuniones || [];
+        const contratos = data.contratos || [];
+        const asuntos = data.asuntos || [];
+
+        setEventos({ reuniones, contratos, asuntos });
+
+        const eventosDelDia = [
+          ...reuniones.filter(
+            (evento) =>
+              new Date(evento.fecha).getDate() === selectedDay &&
+              new Date(evento.fecha).getMonth() === selectedMonth &&
+              new Date(evento.fecha).getFullYear() === selectedYear
+          ),
+          ...contratos.filter(
+            (evento) =>
+              (new Date(evento.fecha_inicio).getDate() === selectedDay &&
+                new Date(evento.fecha_inicio).getMonth() === selectedMonth &&
+                new Date(evento.fecha_inicio).getFullYear() === selectedYear) ||
+              (evento.fecha_fin &&
+                new Date(evento.fecha_fin).getDate() === selectedDay &&
+                new Date(evento.fecha_fin).getMonth() === selectedMonth &&
+                new Date(evento.fecha_fin).getFullYear() === selectedYear)
+          ),
+          ...asuntos.filter(
+            (evento) =>
+              (evento.fecha_entregado &&
+                new Date(evento.fecha_entregado).getDate() === selectedDay &&
+                new Date(evento.fecha_entregado).getMonth() === selectedMonth &&
+                new Date(evento.fecha_entregado).getFullYear() ===
+                  selectedYear) ||
+              (evento.fecha_revision &&
+                new Date(evento.fecha_revision).getDate() === selectedDay &&
+                new Date(evento.fecha_revision).getMonth() === selectedMonth &&
+                new Date(evento.fecha_revision).getFullYear() ===
+                  selectedYear) ||
+              (evento.fecha_terminado &&
+                new Date(evento.fecha_terminado).getDate() === selectedDay &&
+                new Date(evento.fecha_terminado).getMonth() === selectedMonth &&
+                new Date(evento.fecha_terminado).getFullYear() ===
+                  selectedYear) ||
+              (evento.fecha_estimada &&
+                new Date(evento.fecha_estimada).getDate() === selectedDay &&
+                new Date(evento.fecha_estimada).getMonth() === selectedMonth &&
+                new Date(evento.fecha_estimada).getFullYear() === selectedYear)
+          ),
+        ];
+
+        setEventosDia(eventosDelDia);
+      }
+    } catch (error) {
+      console.error("Error al obtener eventos del día:", error);
+    }
   };
 
   const handleChange = (e) => setSelectedAsesoriaId(e.target.value);
@@ -341,15 +338,9 @@ const CalendarioAsesor = () => {
                 let icon = null;
                 if (evento.estado === "terminado" && evento.fecha_terminado)
                   icon = <CalendarCheck2 size={18} className="text-gray-500" />;
-                else if (
-                  evento.estado === "proceso" &&
-                  evento.fecha_revision
-                )
+                else if (evento.estado === "proceso" && evento.fecha_revision)
                   icon = <Clock size={18} className="text-gray-500" />;
-                else if (
-                  evento.estado === "proceso" &&
-                  evento.fecha_estimada
-                )
+                else if (evento.estado === "proceso" && evento.fecha_estimada)
                   icon = <Clock size={18} className="text-gray-500" />;
                 else if (
                   evento.estado === "entregado" &&

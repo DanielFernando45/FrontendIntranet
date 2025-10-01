@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Buscar from "../../../Components/Administrador/GestionarUsuario/Buscar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast"; // 👈 Asegúrate de importar
 
 const ListarEstudiante = () => {
   const navigate = useNavigate();
@@ -60,21 +61,25 @@ const ListarEstudiante = () => {
     setEstudiantes(estudiantesBase);
   };
 
+
   const handleEliminarEstudiante = async (id) => {
-    if (!window.confirm("¿Estas Seguro de Eliminar?")) return;
+    if (!window.confirm("¿Estás seguro de eliminar?")) return;
 
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_PORT_ENV}/cliente/delete/${id}`
       );
+
       const nuevosEstudiantes = estudiantes.filter(
         (estudiante) => estudiante.id !== id
       );
       setEstudiantes(nuevosEstudiantes);
       setEstudiantesBase(nuevosEstudiantes);
+
+      toast.success("Estudiante eliminado correctamente ✅");
     } catch (error) {
-      console.log("Error al eliminar el estudiante:", error);
-      alert("Error al eliminar el estudiante.");
+      console.error("Error al eliminar el estudiante:", error);
+      toast.error("❌ Error al eliminar el estudiante.");
     }
   };
 

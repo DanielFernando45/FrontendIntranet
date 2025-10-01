@@ -119,13 +119,24 @@ const obtenerAsesoramiento = async (id) => {
 
 const listarAsignadosJefeOpe = async () => {
   try {
-    const { data } = await api.get(`/asesoramiento/listarAsignadosJefeOpe`)
+    const { data } = await api.get(`/asesoramiento/listarAsignadosJefeOpe`);
     return data;
   } catch (error) {
-    console.log("Error al obtener asignados")
+    console.log("Error al obtener asignados");
     throw error;
   }
-}
+};
+const asesoramientoVencimiento = async (selectedAsesoriaId) => {
+  try {
+    const res = await api.get(
+      `/asesoramiento/vencimiento/${selectedAsesoriaId}`
+    );
+    return res.data;
+  } catch (error) {
+    console.error("Error al obtener vencimiento del asesoramiento:", error);
+    throw error;
+  }
+};
 
 export const asesoriasService = {
   listarAsignadosJefeOpe,
@@ -140,4 +151,5 @@ export const asesoriasService = {
   obtenerAsesoramiento,
   actualizarAsignamiento,
   asesoramientoSupervisor,
+  asesoramientoVencimiento
 };

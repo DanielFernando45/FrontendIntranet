@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LayoutApp from "../../../layout/LayoutApp";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const EditarEstudiante = () => {
   const { id } = useParams();
@@ -67,11 +68,11 @@ const EditarEstudiante = () => {
         `${import.meta.env.VITE_API_PORT_ENV}/cliente/update/${id}`,
         payload
       );
-      alert("Estudiante actualizado correctamente");
+      toast.success("Estudiante actualizado correctamente");
       navigate("/jefe-operaciones/gestionar-usuarios");
     } catch (error) {
       console.error("Error al guardar cambios:", error);
-      alert("Error al actualizar estudiante.");
+      toast.error("❌ Error al actualizar estudiante.");
     }
   };
 

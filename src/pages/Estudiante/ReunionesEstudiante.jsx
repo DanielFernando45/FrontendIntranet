@@ -24,7 +24,6 @@ const ReunionesEstudiante = () => {
     enabled: !!selectedAsesoriaId,
   });
 
-  console.log(inducciones);
 
   useEffect(() => {
     const usuario = localStorage.getItem("user");
@@ -38,7 +37,6 @@ const ReunionesEstudiante = () => {
         .then((res) => res.json())
         .then((data) => {
           if (data.isEmpty) {
-            console.warn(data.message);
             setAsesorias([]);
             return;
           }
@@ -47,7 +45,6 @@ const ReunionesEstudiante = () => {
             profesion: item.profesion_asesoria,
           }));
           setAsesorias(() => {
-            console.log(data);
             return asesoriasArray;
           });
 
@@ -74,7 +71,7 @@ const ReunionesEstudiante = () => {
           setProximasReuniones(data);
         })
         .catch((error) =>
-          console.error("Error al obtener reuniones próximas:", error)
+          console.error("Error al obtener reuniones próximas:")
         )
         .finally(() => setLoading(false));
     }

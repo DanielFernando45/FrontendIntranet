@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import documentosVacios from "../../../assets/icons/documentosVacios.png";
+import { ClipboardX } from "lucide-react";
 
 const Activos = () => {
   const [asesorias, setAsesorias] = useState([]);
@@ -54,7 +55,7 @@ const Activos = () => {
   if (asesorias.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center h-64 gap-4 text-[#82777A]">
-        <img src={documentosVacios} alt="Sin asesorías" className="w-28 h-28" />
+        <ClipboardX className="w-12 h-12 text-slate-800 font-medium" />{" "}
         <p className="text-sm font-medium">No tienes asesorías activas</p>
       </div>
     );

@@ -66,7 +66,6 @@ const MiAsesor = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Datos del asesor:", data);
         setAsesor(data);
       })
       .catch((error) => {

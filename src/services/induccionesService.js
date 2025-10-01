@@ -15,12 +15,10 @@ const registrarInduccion = async (body) => {
 };
 
 const obtenerInduccionesByIdAsesoria = async (idAsesoramiento) => {
-  console.log(typeof idAsesoramiento);
   try {
     const { data } = await api.get(
       `/inducciones/induccionesByAsesoria/${idAsesoramiento}`
     );
-    console.log(data);
 
     return data;
   } catch (error) {

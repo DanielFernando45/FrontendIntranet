@@ -34,7 +34,6 @@ const Induccion = () => {
     return date.toLocaleDateString("es-PE", options);
   };
 
-  console.log(asesoramientos);
 
   return (
     <LayoutApp>

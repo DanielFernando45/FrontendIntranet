@@ -27,7 +27,6 @@ const MisEnvios = ({ idAsesoramiento }) => {
           setOpenItems(initialOpenState);
         })
         .catch((error) => {
-          console.error("Error al obtener los envíos:", error);
         })
         .finally(() => setLoading(false));
     } else {

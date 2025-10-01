@@ -6,7 +6,7 @@ import { useOutletContext } from "react-router-dom";
 const Terminados = () => {
   const [terminados, setTerminado] = useState([]);
   const [loading, setLoading] = useState(true);
-  const idAsesoramiento = useOutletContext();
+  const { id: idAsesoramiento } = useOutletContext(); // 👈 solo el ID
 
   useEffect(() => {
     if (idAsesoramiento) {
@@ -28,9 +28,7 @@ const Terminados = () => {
             }));
           });
         })
-        .catch((error) => {
-          console.error("Error al obtener los pendientes:", error);
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
