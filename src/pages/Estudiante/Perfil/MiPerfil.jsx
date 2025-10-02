@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import LayoutApp from "../../../layout/LayoutApp";
-import perfil from "../../../assets/icons/PerfilIcon.svg";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const MiPerfil = () => {
-  const navigate = useNavigate();
   const [perfilData, setPerfilData] = useState(null);
 
   useEffect(() => {

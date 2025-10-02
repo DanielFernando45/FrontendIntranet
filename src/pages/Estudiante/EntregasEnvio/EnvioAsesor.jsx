@@ -28,7 +28,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch((error) => {
+        .catch(() => {
         })
 
         .finally(() => {

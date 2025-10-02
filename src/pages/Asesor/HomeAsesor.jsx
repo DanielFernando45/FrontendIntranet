@@ -1,6 +1,5 @@
 import LayoutApp from "../../layout/LayoutApp";
 import portada from "../../assets/images/PortadaAsesor.png";
-import flechaAzul from "../../assets/icons/arrowAzul.svg";
 import Zoom from "../../assets/icons/IconEstudiante/ZoomLink.svg";
 import { useState, useEffect } from "react";
 import EnviosClientes from "../Asesor/EnviosCliente/EnviosCliente";

@@ -6,8 +6,8 @@ import toast from "react-hot-toast";
 
 const EnActividad = () => {
   const [clientes, setClientes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState(null);
   const [editar, setEditar] = useState(false);
   const [clienteEdit, setClienteEdit] = useState(null);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);

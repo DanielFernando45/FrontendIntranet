@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ActualizarPago from "../../../../Components/Administrador/Pagos/ActualizarPago";
-import tachoeliminar from "../../../../assets/icons/tacho.svg";
 
 const GestionPagos = () => {
   const [actualizar, setActualizar] = useState(false);

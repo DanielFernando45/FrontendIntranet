@@ -1,9 +1,7 @@
 import LayoutApp from "../../layout/LayoutApp";
 import portada from "../../assets/images/portadaMobile.png";
 import portada2 from "../../assets/images/portada.png";
-import flechaVer from "../../assets/icons/flechaMorada.svg";
-import flechaAzul from "../../assets/icons/arrowAzul.svg";
-import NoticiaUno from "../../assets/images/NoticiaAsesor.png";
+import flechaVer from "../../assets/icons/flechaMorada.svg";;
 import FeclaIzqui from "../../assets/icons/arrow-left.svg";
 import FechaDerec from "../../assets/icons/arrow-right.svg";
 import flechaCirculo from "../../assets/icons/arrow-left-circulo.svg";
@@ -25,7 +23,6 @@ const HomeEstudiante = () => {
   const [loadingNoticias, setLoadingNoticias] = useState(true);
   const [loadingReuniones, setLoadingReuniones] = useState(true);
 
-  const usuario = localStorage.getItem("user");
   const user = useSelector((state) => state.auth.user);
   const id = user.id_cliente;
 

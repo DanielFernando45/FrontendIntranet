@@ -10,7 +10,6 @@ const ReunionesAsesor = () => {
   const location = useLocation();
 
   const isProximo = location.pathname.includes("proximo");
-  const isAnteriores = location.pathname.includes("anteriores");
 
   useEffect(() => {
     const userString = localStorage.getItem("user");

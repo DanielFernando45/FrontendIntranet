@@ -1,6 +1,5 @@
 import LayoutApp from "../../layout/LayoutApp";
 import { useState, useEffect } from "react";
-import flechaAzul from "../../assets/icons/arrowAzul.svg";
 import plus from "../../assets/icons/IconEstudiante/add.svg";
 import EnvioArchivo from "../../Components/Cliente/EnvioArchivos";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";

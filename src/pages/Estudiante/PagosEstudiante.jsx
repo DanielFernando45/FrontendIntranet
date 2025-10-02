@@ -393,7 +393,7 @@ const PagosEstudiante = () => {
           {showOtrosPagos ? (
             <div>
               {pagosServicios.length > 0 ? (
-                pagosServicios.map((pago, index) => (
+                pagosServicios.map((pago) => (
                   <div
                     key={pago.titulo}
                     className="bg-white rounded-lg shadow-sm border"

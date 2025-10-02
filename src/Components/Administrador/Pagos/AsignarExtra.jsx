@@ -6,7 +6,7 @@ const AsignarExtra = ({ close }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const [selectedAlumno, setSelectedAlumno] = useState(null);
+  const [, setSelectedAlumno] = useState(null);
   const [allAlumnos, setAllAlumnos] = useState([]);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);

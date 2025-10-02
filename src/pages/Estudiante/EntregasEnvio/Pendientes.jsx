@@ -63,7 +63,7 @@ const Pendientes = () => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch((error) => {
+        .catch(() => {
         })
         .finally(() => {
           setLoading(false);

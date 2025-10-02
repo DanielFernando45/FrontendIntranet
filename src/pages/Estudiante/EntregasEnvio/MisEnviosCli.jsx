@@ -28,7 +28,7 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch((error) => {
+        .catch(() => {
         })
         .finally(() => {
           setLoading(false);

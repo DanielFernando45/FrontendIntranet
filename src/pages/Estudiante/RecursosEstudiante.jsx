@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import LayoutApp from "../../layout/LayoutApp";
 import FeclaIzqui from "../../assets/icons/arrow-left.svg";
 import FechaDerec from "../../assets/icons/arrow-right.svg";
-import flechaAzul from "../../assets/icons/arrowAzul.svg";
 import play from "../../assets/icons/play.svg";
 import youtube from "../../assets/images/ImagenYouTube.png";
 import ver from "../../assets/icons/ver.svg";
@@ -80,7 +79,7 @@ const RecursosEstudiante = () => {
   // Función para cargar imágenes y verificar cuando están listas
   const loadImages = async (items, imageKey) => {
     const imagePromises = items.map((item) => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
         img.src = item[imageKey] || youtube;
         img.onload = resolve;

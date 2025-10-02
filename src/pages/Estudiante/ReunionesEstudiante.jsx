@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import LayoutApp from "../../layout/LayoutApp";
 import Zoom from "../../assets/icons/IconEstudiante/ZoomLink.svg";
-import download_icon from "../../assets/icons/download.png";
 import play_icon from "../../assets/icons/play-white.png";
 import { useQuery } from "@tanstack/react-query";
 import { induccionesService } from "../../services/induccionesService";
@@ -70,7 +69,7 @@ const ReunionesEstudiante = () => {
         .then((data) => {
           setProximasReuniones(data);
         })
-        .catch((error) => console.error("Error al obtener reuniones próximas:"))
+        .catch(() => console.error("Error al obtener reuniones próximas:"))
         .finally(() => setLoading(false));
     }
   }, [selectedAsesoriaId]);
