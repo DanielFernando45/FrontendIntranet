@@ -63,8 +63,7 @@ const Pendientes = () => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch((error) => {
-          console.error("Error al obtener los pendientes:", error);
+        .catch(() => {
         })
         .finally(() => {
           setLoading(false);

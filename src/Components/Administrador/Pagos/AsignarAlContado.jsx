@@ -90,8 +90,7 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
       const text = await response.text();
       try {
         data = text ? JSON.parse(text) : {};
-      } catch (e) {
-        // Si no es JSON válido, usar el texto plano como mensaje
+      } catch {
         data = { message: text };
       }
 

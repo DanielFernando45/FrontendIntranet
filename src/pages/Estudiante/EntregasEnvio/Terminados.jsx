@@ -28,7 +28,7 @@ const Terminados = () => {
             }));
           });
         })
-        .catch((error) => {})
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });

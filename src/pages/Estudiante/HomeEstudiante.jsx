@@ -1,9 +1,7 @@
 import LayoutApp from "../../layout/LayoutApp";
 import portada from "../../assets/images/portadaMobile.png";
 import portada2 from "../../assets/images/portada.png";
-import flechaVer from "../../assets/icons/flechaMorada.svg";
-import flechaAzul from "../../assets/icons/arrowAzul.svg";
-import NoticiaUno from "../../assets/images/NoticiaAsesor.png";
+import flechaVer from "../../assets/icons/flechaMorada.svg";;
 import FeclaIzqui from "../../assets/icons/arrow-left.svg";
 import FechaDerec from "../../assets/icons/arrow-right.svg";
 import flechaCirculo from "../../assets/icons/arrow-left-circulo.svg";
@@ -25,7 +23,6 @@ const HomeEstudiante = () => {
   const [loadingNoticias, setLoadingNoticias] = useState(true);
   const [loadingReuniones, setLoadingReuniones] = useState(true);
 
-  const usuario = localStorage.getItem("user");
   const user = useSelector((state) => state.auth.user);
   const id = user.id_cliente;
 
@@ -73,7 +70,8 @@ const HomeEstudiante = () => {
     if (selectedAsesoriaId) {
       setLoadingReuniones(true);
       fetch(
-        `${import.meta.env.VITE_API_PORT_ENV
+        `${
+          import.meta.env.VITE_API_PORT_ENV
         }/reuniones/espera/${selectedAsesoriaId}`
       )
         .then((res) => res.json())
@@ -406,8 +404,8 @@ const HomeEstudiante = () => {
 
             <select
               onChange={handleChange}
-              value={selectedAsesoriaId || ''}
-              className='border rounded border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center '
+              value={selectedAsesoriaId || ""}
+              className="border rounded border-[#b4a6aa] text-[10px] sm:text-[13px] lg:text-[15px] text-center "
             >
               {asesorias?.isEmpty ? (
                 <option value="" disabled>
@@ -424,7 +422,9 @@ const HomeEstudiante = () => {
 
             <div className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <div className="flex justify-between ">
-                <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Envios Asesor</h1>
+                <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
+                  Envios Asesor
+                </h1>
               </div>
               <DocsAsesor
                 key={selectedAsesoriaId}
@@ -434,7 +434,9 @@ const HomeEstudiante = () => {
 
             <div className="max-xl:hidden flex flex-col gap-5 xl:gap-2  bg-white px-4 pb-2 rounded-lg shadow-md">
               <div className="flex justify-between ">
-                <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Reuniones</h2>
+                <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">
+                  Reuniones
+                </h2>
               </div>
               <div className="flex flex-col gap-5 md:px-20 xl:px-0">
                 <div className="flex flex-wrap justify-start gap-6 ">
@@ -496,7 +498,7 @@ const HomeEstudiante = () => {
                     })
                   ) : (
                     <div className="flex justify-center mt-5">
-                      <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.25)]">
+                      <div className="flex flex-col rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A] ">
                         <img src={videoOff} alt="" />
                         No hay reuniones programadas
                       </div>
@@ -509,7 +511,9 @@ const HomeEstudiante = () => {
 
           <div className="xl:hidden flex flex-col gap-2 mt-4 bg-white px-4 py-2 rounded-lg shadow-md">
             <div className=" flex justify-between">
-              <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">Reuniones</h2>
+              <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
+                Reuniones
+              </h2>
             </div>
 
             <div className="flex flex-col gap-5 md:px-20 lg:px-1">
@@ -567,7 +571,7 @@ const HomeEstudiante = () => {
                 })
               ) : (
                 <div className="flex justify-center mt-5">
-                  <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A] shadow-[0px_4px_4px_4px_rgba(0,0,0,0.25)]">
+                  <div className="flex flex-col rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A]">
                     <img src={videoOff} alt="" />
                     No hay reuniones programadas
                   </div>
@@ -578,7 +582,9 @@ const HomeEstudiante = () => {
 
           <div className=" bg-white p-4 rounded-lg shadow-md max-xl:hidden xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
             <div className="flex justify-between">
-              <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">Envios Asesor</h1>
+              <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">
+                Envios Asesor
+              </h1>
             </div>
             <DocsAsesor
               key={selectedAsesoriaId}

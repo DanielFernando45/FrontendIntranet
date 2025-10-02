@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import documentosVacios from "../../../assets/icons/documentosVacios.png";
 import { ClipboardX } from "lucide-react";
+
 const Desactivados = () => {
   const [asesorias, setAsesorias] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import LayoutApp from "../../layout/LayoutApp";
 import ContratoNuevo from "../ContPago/Contrato/ContratoNuevo";
 import ContratoAsignado from "../ContPago/Contrato/ContratoAsignado";

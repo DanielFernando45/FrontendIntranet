@@ -45,8 +45,6 @@ const InduccionById = () => {
     );
   }
 
-  console.log(isLoadingInducciones);
-
   return (
     <LayoutApp>
       <div className="p-4 ml-[100px] xl:ml-0 relative">

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import AsignarPago from "../../../../Components/Administrador/Pagos/AsignarPago";
-import { pagosService } from "../../../../services/pagos/pagosService";
 
 const CuotasNuevo = () => {
   const [asigPago, setAsigPago] = useState(false);

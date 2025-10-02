@@ -7,6 +7,7 @@ import { clientesService } from "../../../services/clientesService";
 import LayoutApp from "../../../layout/LayoutApp";
 import { getUsuarioDesdeToken } from "../../../utils/validateToken";
 import { asesoriasService } from "../../../services/asesoriasService";
+import toast from "react-hot-toast";
 
 // Helpers
 const toId = (v) => (v == null ? "" : String(v));
@@ -107,8 +108,6 @@ const EditAsig = () => {
       if (asesoramiento.profesion_asesoria) {
         setReferencia(asesoramiento.profesion_asesoria);
       }
-
-      console.log("Referencia inicial:", asesoramiento.profesion_asesoria);
     }
   }, [asesoramiento, areas]);
 
@@ -251,24 +250,27 @@ const EditAsig = () => {
         queryClient.invalidateQueries({ queryKey: ["asesoramiento", id] }),
         queryClient.invalidateQueries({ queryKey: ["clientesSinAsignar"] }),
       ]);
-      navigate("/supervisor/asignaciones?tab=asignados");
+
+      toast.success("Asignación actualizada correctamente", {
+        duration: 5000, // ⏳ duración visible más larga
+      });
+
+      // ⏱️ Espera 5.5s antes de redirigir
+      setTimeout(() => {
+        navigate("/supervisor/asignaciones?tab=asignados");
+      }, 5500);
     },
     onError: (err) => {
-      console.error(
-        "Error al actualizar la asignación:",
-        err?.response?.data || err
-      );
-      alert(
+      toast.error(
         err?.response?.data?.message ||
-        "Error al guardar. Revisa la consola para más detalles."
+          "Error al guardar. Revisa la consola para más detalles."
       );
     },
   });
-
   // Guardado con payload que acepta tu backend
   const handleSubmit = () => {
     if (!asesorSeleccionado?.id) {
-      alert("Selecciona un asesor.");
+      toast.error("Selecciona un asesor.");
       return;
     }
 
@@ -278,18 +280,37 @@ const EditAsig = () => {
     ].filter((x) => x != null);
 
     if (idsSeleccionados.length === 0) {
-      alert("Debes seleccionar al menos un cliente.");
+      toast.error("Debes seleccionar al menos un cliente.");
       return;
     }
 
     const payload = {
       asesorId: toNum(asesorSeleccionado.id),
-      clientesIds: idsSeleccionados, // number[]
+      clientesIds: idsSeleccionados,
       profesionAsesoria: referencia || "Proyecto de Investigación",
-      area: areaSeleccionada?.nombre || "Legal", // tu backend espera NOMBRE
+      area: areaSeleccionada?.nombre || "Legal",
     };
 
-    actualizarMutation.mutate({ idAsesoramiento: id, data: payload });
+    toast
+      .promise(
+        asesoriasService.actualizarAsignamiento(id, payload),
+        {
+          loading: "Actualizando asignación...",
+          success: "Asignación actualizada correctamente",
+          error: "Error al guardar asignación",
+        },
+        { duration: 5000 }
+      )
+      .then(() => {
+        // invalidar después del éxito
+        queryClient.invalidateQueries({ queryKey: ["asesoria"] });
+        queryClient.invalidateQueries({ queryKey: ["asesoramiento", id] });
+        queryClient.invalidateQueries({ queryKey: ["clientesSinAsignar"] });
+
+        setTimeout(() => {
+          navigate("/supervisor/asignaciones?tab=asignados");
+        }, 5500);
+      });
   };
 
   // Fusionar disponibles: baseLibresFiltrados + extrasDisponibles (únicos y no seleccionados)
