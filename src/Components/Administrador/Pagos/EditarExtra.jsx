@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import busqueda from "../../../assets/icons/busqueda.svg";
 import toast from "react-hot-toast";
 
 const EditarExtra = ({ closeEdit, servicio }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [allAlumnos, setAllAlumnos] = useState([]);
+  const [, setAllAlumnos] = useState([]);
   const [formData, setFormData] = useState({
     titulo: "",
     pago_total: "",

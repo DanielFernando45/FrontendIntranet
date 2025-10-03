@@ -56,13 +56,8 @@ const CalendarioEstudiante = () => {
     if (selectedAsesoriaId) {
       fetchEventosDia();
     }
-  }, [selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
+  }, [ selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
 
-  useEffect(() => {
-    if (selectedAsesoriaId) {
-      fetchEventosDia();
-    }
-  }, [selectedAsesoriaId, selectedYear, selectedMonth, selectedDay]);
 
   const fetchEventosDia = async () => {
     try {

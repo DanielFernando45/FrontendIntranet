@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import check from "../../../assets/icons/check.svg";
 
 const EditarCuotaEdit = ({ Close }) => {
   const [numeroCuotas, setNumeroCuotas] = useState(1);

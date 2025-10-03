@@ -4,7 +4,7 @@ const listarContratosAsignados = async () => {
   try {
     const { data } = await api.get(`/asesoramiento/listarContratosAsignados`);
     return data;
-  } catch (error) {
+  } catch {
     console.log("Error al obtener contratos asignados");
   }
 };

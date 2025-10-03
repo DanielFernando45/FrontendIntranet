@@ -64,7 +64,7 @@ const SoporteEstudiante = () => {
       try {
         // Intentar parsear como JSON solo si hay contenido
         responseData = responseText ? JSON.parse(responseText) : {};
-      } catch (e) {
+      } catch {
         // Si falla el parseo JSON, usar el texto plano como mensaje
         responseData = { message: responseText };
       }
