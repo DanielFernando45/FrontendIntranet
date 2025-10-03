@@ -15,7 +15,7 @@ const listarContratosAsignados = async () => {
   try {
     const { data } = await api.get(`/asesoramiento/listarContratosAsignados`);
     return data;
-  } catch (error) {
+  } catch  {
     console.log("Error al obtener contratos asignados");
   }
 };
@@ -24,7 +24,7 @@ const asignacionesContratos = async () => {
   try {
     const { data } = await api.get(`/asesoramiento/listarAsignados`);
     return data;
-  } catch (error) {
+  } catch {
     console.log("Error al obtener asignaciones y Contratos");
   }
 };
@@ -35,7 +35,7 @@ const asesorinducciones = async (id) => {
       `/procesos-asesoria/listadoInducciones/${id}`
     );
     return data;
-  } catch (error) {
+  } catch  {
     console.error("Error al obtener los clientes de este asesor");
   }
 };

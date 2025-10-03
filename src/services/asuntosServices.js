@@ -58,7 +58,6 @@ const agregarAsuntosFinales = async (id, formData) => {
       { headers: { "Content-Type": "multipart/form-data" } }
     );
     console.log("Avance enviado:", res.data);
-    fetchPendientes(); // refresca lista
   } catch (err) {
     console.error("Error al enviar avance:", err.response?.data || err);
   }

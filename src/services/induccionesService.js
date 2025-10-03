@@ -30,7 +30,8 @@ const obtenerInduccionesByIdAsesoria = async (idAsesoramiento) => {
 
 const borrarInduccionById = async (idAsesoramiento) => {
   try {
-    return ({ data } = await api.delete(`/inducciones/${idAsesoramiento}`));
+    const { data } = await api.delete(`/inducciones/${idAsesoramiento}`);
+    return data;
   } catch (error) {
     return error.message
       ? error.message

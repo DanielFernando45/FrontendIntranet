@@ -42,11 +42,13 @@ const DocTerminado = () => {
   const formatTime = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
-    let horas = date.getUTCHours();
-    const minutos = date.getUTCMinutes().toString().padStart(2, "0");
-    const ampm = horas >= 12 ? "PM" : "AM";
-    horas = horas % 12 || 12;
-    return `${horas.toString().padStart(2, "0")}:${minutos} ${ampm}`;
+
+    return new Intl.DateTimeFormat("es-PE", {
+      timeZone: "America/Lima",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
   };
 
   const SkeletonRow = () => (

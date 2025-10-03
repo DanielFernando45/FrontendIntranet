@@ -90,7 +90,6 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
         </button>
 
         <h1 className="font-medium text-center">Agregar reunión</h1>
-        {error && <p className="text-red-500 text-center">{error}</p>}
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-5 mb-10 w-full px-4 sm:px-10"

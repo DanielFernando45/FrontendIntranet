@@ -1,4 +1,3 @@
-import { getAdapter } from "axios";
 import api from "./api";
 
 const getCalendarioEstudiante = async (selectedAsesoriaId) => {
