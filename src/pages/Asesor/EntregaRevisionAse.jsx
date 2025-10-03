@@ -118,7 +118,7 @@ const EntregaRevisionAse = () => {
             </button>
           </div>
 
-          <div className="w-full overflow-x-auto">
+          <div className="">
             {docEnvio === "MisEnvios" ? (
               <MiEnvioAsesor idAsesoramiento={selectedAsesoriaId} />
             ) : (

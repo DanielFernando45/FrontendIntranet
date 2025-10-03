@@ -15,8 +15,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
       setLoading(true);
       axios
         .get(
-          `${
-            import.meta.env.VITE_API_PORT_ENV
+          `${import.meta.env.VITE_API_PORT_ENV
           }/documentos/asesor/list/${idAsesoramiento}`
         )
         .then((response) => {
@@ -28,7 +27,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch(() => {})
+        .catch(() => { })
 
         .finally(() => {
           setLoading(false);
@@ -70,12 +69,27 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
     return documents;
   };
 
-  const cortarTexto = (texto) => {
+  const formatearTextoArchivoConGuion = (texto) => {
+    // Buscar el primer guion
     const index = texto.indexOf("-");
-    if (index !== -1) {
-      return texto.substring(index + 1);
+
+    // Si hay un guion, tomar la parte después de él
+    const textoDespuésDelGuion = index !== -1 ? texto.substring(index + 1) : texto;
+
+    // Extraer la extensión del archivo
+    const extension = textoDespuésDelGuion.substring(textoDespuésDelGuion.lastIndexOf("."));
+
+    // Obtener el nombre del archivo sin la extensión
+    const nombreArchivo = textoDespuésDelGuion.substring(0, textoDespuésDelGuion.lastIndexOf("."));
+
+    // Verificar si el nombre antes de la extensión es mayor a 20 caracteres
+    if (nombreArchivo.length > 20) {
+      // Si es mayor, recortar a 20 caracteres y agregar "..."
+      return nombreArchivo.substring(0, 20) + "..." + extension;
     }
-    return texto;
+
+    // Si no es mayor a 20, devolver el nombre completo con su extensión
+    return textoDespuésDelGuion;
   };
 
   const handleDownload = async (url, filename) => {
@@ -131,7 +145,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
         <>
           {/* Cabecera SOLO si hay datos */}
           <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-            <div className="w-[160px] flex text-[8px] sm:text-[12px] lg:text-[17px]">
+            <div className="w-[200px] flex text-[8px] sm:text-[12px] lg:text-[17px]">
               Titulo
             </div>
             <div className="w-[102px] justify-center hidden lg:text-[17px] 1xl:flex">
@@ -156,7 +170,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
               return (
                 <React.Fragment key={envio.id_asunto || index}>
                   <div className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2">
-                    <div className="w-[160px] flex text-[8px] sm:text-[12px] lg:text-[14px]">
+                    <div className="w-[200px] flex text-[8px] sm:text-[12px] lg:text-[14px]">
                       {envio.asunto.asesor}
                     </div>
                     <div className="text-white bg-[#353563] rounded px-3 hidden lg:text-[14px] 1xl:flex">
@@ -167,7 +181,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
                     </div>
                     <div className="w-[250px] justify-center hidden md:flex md:text-[10px] lg:text-[14px]">
                       {hasDocuments
-                        ? cortarTexto(documents[0].name)
+                        ? formatearTextoArchivoConGuion(documents[0].name)
                         : "No hay archivos"}
                     </div>
                     <div className="w-[100px] flex justify-center">
@@ -179,9 +193,8 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
                           <img
                             src={arrowIcon}
                             alt="toggle"
-                            className={`w-[10px] sm:w-[14px] transform transition-transform duration-300 ${
-                              openItems[index] ? "rotate-180" : "rotate-0"
-                            }`}
+                            className={`w-[10px] sm:w-[14px] transform transition-transform duration-300 ${openItems[index] ? "rotate-180" : "rotate-0"
+                              }`}
                           />
                         </button>
                       )}
@@ -204,7 +217,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
                             className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
                           >
                             <div className="flex justify-start">
-                              {cortarTexto(doc.name)}
+                              {formatearTextoArchivoConGuion(doc.name)}
                             </div>
                             <div className="w-[65px] flex justify-center">
                               <button
