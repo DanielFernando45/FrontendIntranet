@@ -1,13 +1,15 @@
 import React, { useState, useRef } from "react";
 import agregar from "../../assets/icons/IconEstudiante/add.svg";
 import eliminar from "../../assets/icons/delete.svg";
+import { useNavigate } from "react-router-dom";
 
+import toast from "react-hot-toast";
 const EnviarAvance = ({ show, onClose, onSubmit }) => {
   const [titulo, setTitulo] = useState("");
   const [archivos, setArchivos] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
-
+  const navigate = useNavigate();
   const tiposPermitidos = [
     "application/pdf",
     "application/msword",
@@ -37,8 +39,9 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
 
     if (archivos.length + archivosValidos.length <= 7) {
       setArchivos((prev) => [...prev, ...archivosValidos]);
+      toast.success("Archivos añadidos correctamente", {});
     } else {
-      alert("Solo puedes subir un máximo de 7 archivos.");
+      toast.error("Solo puedes subir un máximo de 7 archivos ", {});
     }
   };
 
@@ -55,16 +58,22 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
       onClose();
     }
   };
+
   const handleSubmit = async () => {
-    if (titulo.trim() === "" || archivos.length === 0) return;
+    if (titulo.trim() === "" || archivos.length === 0) {
+      toast.error("Debes ingresar un título y al menos un archivo", {
+        position: "top-right",
+      });
+      return;
+    }
 
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append("titulo", titulo); // 👈 exacto como en UpdateAsuntoDto
+      formData.append("titulo", titulo);
 
       archivos.forEach((file) => {
-        formData.append("files", file); // 👈 coincide con FilesInterceptor('files')
+        formData.append("files", file);
       });
 
       await onSubmit(formData);
@@ -72,9 +81,13 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
       setTitulo("");
       setArchivos([]);
       onClose();
-    } catch (error) {
-      console.error("Error al enviar avance:", error.response?.data || error);
-      alert("Ocurrió un error al enviar el avance");
+
+      toast.success("Avance enviado correctamente ✅", {});
+
+      // 👇 Redirección después de guardar
+      navigate("/asesor/entrega/terminados");
+    } catch {
+      toast.error("Ocurrió un error al enviar el avance ", {});
     } finally {
       setIsSubmitting(false);
     }
