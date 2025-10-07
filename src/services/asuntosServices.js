@@ -53,12 +53,11 @@ const editarFechaTerminadoAsuntoAsesor = async ({
 const agregarAsuntosFinales = async (id, formData) => {
   try {
     const res = await api.patch(
-      `http://localhost:3001/asuntos/finished/${id}`,
+      `/asuntos/finished/${id}`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } }
     );
     console.log("Avance enviado:", res.data);
-    fetchPendientes(); // refresca lista
   } catch (err) {
     console.error("Error al enviar avance:", err.response?.data || err);
   }
