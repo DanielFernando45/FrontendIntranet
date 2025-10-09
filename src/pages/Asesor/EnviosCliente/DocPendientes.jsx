@@ -144,10 +144,14 @@ const DocPendientes = () => {
   const handleSubmitAvance = async (id, formData) => {
     try {
       const res = await asuntosService.agregarAsuntosFinales(id, formData);
-      console.log("Avance enviado:", res.data);
+      const msg = res?.data?.message || res?.data || res;
+      console.log("✅ Avance enviado:", msg);
       fetchPendientes(); // refresca lista
     } catch (err) {
-      console.error("Error al enviar avance:", err.response?.data || err);
+      console.error(
+        "❌ Error al enviar avance:",
+        err.response?.data?.message || err.message
+      );
     }
   };
 
