@@ -52,14 +52,14 @@ const editarFechaTerminadoAsuntoAsesor = async ({
 };
 const agregarAsuntosFinales = async (id, formData) => {
   try {
-    const res = await api.patch(
-      `/asuntos/finished/${id}`,
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
+    const res = await api.patch(`/asuntos/finished/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     console.log("Avance enviado:", res.data);
+    return res; // 👈 Aquí está la clave
   } catch (err) {
     console.error("Error al enviar avance:", err.response?.data || err);
+    throw err; // 👈 re-lanza el error para que el try/catch del caller lo capture
   }
 };
 
