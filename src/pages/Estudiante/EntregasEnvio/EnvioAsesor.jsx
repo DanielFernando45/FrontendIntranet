@@ -15,7 +15,8 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
       setLoading(true);
       axios
         .get(
-          `${import.meta.env.VITE_API_PORT_ENV
+          `${
+            import.meta.env.VITE_API_PORT_ENV
           }/documentos/asesor/list/${idAsesoramiento}`
         )
         .then((response) => {
@@ -27,7 +28,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch(() => { })
+        .catch(() => {})
 
         .finally(() => {
           setLoading(false);
@@ -74,13 +75,19 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
     const index = texto.indexOf("-");
 
     // Si hay un guion, tomar la parte después de él
-    const textoDespuésDelGuion = index !== -1 ? texto.substring(index + 1) : texto;
+    const textoDespuésDelGuion =
+      index !== -1 ? texto.substring(index + 1) : texto;
 
     // Extraer la extensión del archivo
-    const extension = textoDespuésDelGuion.substring(textoDespuésDelGuion.lastIndexOf("."));
+    const extension = textoDespuésDelGuion.substring(
+      textoDespuésDelGuion.lastIndexOf(".")
+    );
 
     // Obtener el nombre del archivo sin la extensión
-    const nombreArchivo = textoDespuésDelGuion.substring(0, textoDespuésDelGuion.lastIndexOf("."));
+    const nombreArchivo = textoDespuésDelGuion.substring(
+      0,
+      textoDespuésDelGuion.lastIndexOf(".")
+    );
 
     // Verificar si el nombre antes de la extensión es mayor a 20 caracteres
     if (nombreArchivo.length > 20) {
@@ -92,17 +99,33 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
     return textoDespuésDelGuion;
   };
 
-  const handleDownload = async (url, filename) => {
+  const handleDownload = (url, filename) => {
     try {
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // ✅ Si la URL no es completa, la reconstruimos manualmente
+      const fullUrl = url?.startsWith("http")
+        ? url
+        : `https://f004.backblazeb2.com/file/IntranetAlejandria/documentos/${filename}`;
+
+      // ✅ Escapamos caracteres raros (espacios, paréntesis, acentos)
+      const safeUrl = encodeURI(fullUrl);
+
+      console.log("🌐 Redirigiendo descarga externa:", safeUrl);
+
+      // ✅ Abre en nueva pestaña (más seguro)
+      window.open(safeUrl, "_blank", "noopener,noreferrer");
+
+      // 🧩 Fallback: si el router intenta redirigir a localhost, forzamos la navegación
+      setTimeout(() => {
+        if (
+          window.location.href.includes("localhost") ||
+          window.location.href.includes("asesor/entrega")
+        ) {
+          window.location.replace(safeUrl);
+        }
+      }, 500);
     } catch (error) {
-      console.error("Error al descargar el archivo:", error);
-      alert("Error al descargar el archivo");
+      console.error("❌ Error al abrir el archivo:", error);
+      alert("No se pudo abrir el archivo, intenta nuevamente.");
     }
   };
 
@@ -193,8 +216,9 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
                           <img
                             src={arrowIcon}
                             alt="toggle"
-                            className={`w-[10px] sm:w-[14px] transform transition-transform duration-300 ${openItems[index] ? "rotate-180" : "rotate-0"
-                              }`}
+                            className={`w-[10px] sm:w-[14px] transform transition-transform duration-300 ${
+                              openItems[index] ? "rotate-180" : "rotate-0"
+                            }`}
                           />
                         </button>
                       )}
