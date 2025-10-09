@@ -15,8 +15,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
       setLoading(true);
       axios
         .get(
-          `${
-            import.meta.env.VITE_API_PORT_ENV
+          `${import.meta.env.VITE_API_PORT_ENV
           }/documentos/asesor/list/${idAsesoramiento}`
         )
         .then((response) => {
@@ -28,8 +27,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch(() => {
-        })
+        .catch(() => { })
 
         .finally(() => {
           setLoading(false);
@@ -71,12 +69,27 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
     return documents;
   };
 
-  const cortarTexto = (texto) => {
+  const formatearTextoArchivoConGuion = (texto) => {
+    // Buscar el primer guion
     const index = texto.indexOf("-");
-    if (index !== -1) {
-      return texto.substring(index + 1);
+
+    // Si hay un guion, tomar la parte después de él
+    const textoDespuésDelGuion = index !== -1 ? texto.substring(index + 1) : texto;
+
+    // Extraer la extensión del archivo
+    const extension = textoDespuésDelGuion.substring(textoDespuésDelGuion.lastIndexOf("."));
+
+    // Obtener el nombre del archivo sin la extensión
+    const nombreArchivo = textoDespuésDelGuion.substring(0, textoDespuésDelGuion.lastIndexOf("."));
+
+    // Verificar si el nombre antes de la extensión es mayor a 20 caracteres
+    if (nombreArchivo.length > 20) {
+      // Si es mayor, recortar a 20 caracteres y agregar "..."
+      return nombreArchivo.substring(0, 20) + "..." + extension;
     }
-    return texto;
+
+    // Si no es mayor a 20, devolver el nombre completo con su extensión
+    return textoDespuésDelGuion;
   };
 
   const handleDownload = async (url, filename) => {
@@ -119,24 +132,6 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-        <div className="w-[160px] flex text-[8px] sm:text-[12px] lg:text-[17px]">
-          Titulo
-        </div>
-        <div className="w-[102px] justify-center hidden lg:text-[17px] 1xl:flex">
-          Estado
-        </div>
-        <div className="w-[100px] flex justify-center text-[8px] sm:text-[12px] lg:text-[17px]">
-          Fecha
-        </div>
-        <div className="w-[250px] justify-center hidden md:flex md:text-[12px] lg:text-[17px]">
-          Archivo
-        </div>
-        <div className="w-[100px] rounded-md px-3 flex justify-center text-[8px] sm:text-[12px] lg:text-[17px]">
-          Descargas
-        </div>
-      </div>
-
       {loading ? (
         // Mostrar skeletons durante la carga
         <>
@@ -147,86 +142,103 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
         </>
       ) : misEnvios.length > 0 ? (
         // Mostrar datos cuando están cargados
-        <div className="max-h-[280px] overflow-auto">
-          {misEnvios.map((envio, index) => {
-            const documents = getDocuments(envio);
-            const hasDocuments = documents.length > 0;
+        <>
+          {/* Cabecera SOLO si hay datos */}
+          <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
+            <div className="w-[200px] flex text-[8px] sm:text-[12px] lg:text-[17px]">
+              Titulo
+            </div>
+            <div className="w-[102px] justify-center hidden lg:text-[17px] 1xl:flex">
+              Estado
+            </div>
+            <div className="w-[100px] flex justify-center text-[8px] sm:text-[12px] lg:text-[17px]">
+              Fecha
+            </div>
+            <div className="w-[250px] justify-center hidden md:flex md:text-[12px] lg:text-[17px]">
+              Archivo
+            </div>
+            <div className="w-[100px] rounded-md px-3 flex justify-center text-[8px] sm:text-[12px] lg:text-[17px]">
+              Descargas
+            </div>
+          </div>
 
-            return (
-              <React.Fragment key={envio.id_asunto || index}>
-                <div
-                  className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2
-                "
-                >
-                  <div className="w-[160px] flex text-[8px] sm:text-[12px] lg:text-[14px]">
-                    {envio.asunto.asesor}
-                  </div>
-                  <div className="text-white bg-[#353563] rounded px-3 hidden lg:text-[14px] 1xl:flex">
-                    {envio.estado}
-                  </div>
-                  <div className="w-[100px] flex justify-center text-[8px] sm:text-[12px] lg:text-[14px]">
-                    {formatDate(envio.fecha)}
-                  </div>
-                  <div className="w-[250px] justify-center hidden md:flex md:text-[10px] lg:text-[14px]">
-                    {hasDocuments
-                      ? cortarTexto(documents[0].name)
-                      : "No hay archivos"}
-                  </div>
-                  <div className="w-[100px] flex justify-center">
-                    {hasDocuments && (
-                      <button
-                        onClick={() => toggleOpen(index)}
-                        className="transition-transform duration-300"
-                      >
-                        <img
-                          src={arrowIcon}
-                          alt="toggle"
-                          className={`w-[10px] sm:w-[14px] transform transition-transform duration-300 ${
-                            openItems[index] ? "rotate-180" : "rotate-0"
-                          }`}
-                        />
-                      </button>
-                    )}
-                  </div>
-                </div>
+          <div className="max-h-[280px] overflow-auto">
+            {misEnvios.map((envio, index) => {
+              const documents = getDocuments(envio);
+              const hasDocuments = documents.length > 0;
 
-                {openItems[index] && hasDocuments && (
-                  <div className="flex flex-col md:flex-row justify-between text-[#2B2829] font-normal items-center py-2 border-b text-xs md:text-base">
-                    <div className="flex-1 flex">{envio.asunto.cliente}</div>
-                    <div className="hidden lg:block text-white bg-[#353563] rounded px-3">
+              return (
+                <React.Fragment key={envio.id_asunto || index}>
+                  <div className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2">
+                    <div className="w-[200px] flex text-[8px] sm:text-[12px] lg:text-[14px]">
+                      {envio.asunto.asesor}
+                    </div>
+                    <div className="text-white bg-[#353563] rounded px-3 hidden lg:text-[14px] 1xl:flex">
                       {envio.estado}
                     </div>
-                    <div className="flex-1 flex justify-center">
+                    <div className="w-[100px] flex justify-center text-[8px] sm:text-[12px] lg:text-[14px]">
                       {formatDate(envio.fecha)}
                     </div>
-                    <div className="flex-1 flex flex-col gap-1 justify-center  font-semibold text-[#495D72]">
-                      {documents.map((doc, docIndex) => (
-                        <div
-                          key={docIndex}
-                          className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
+                    <div className="w-[250px] justify-center hidden md:flex md:text-[10px] lg:text-[14px]">
+                      {hasDocuments
+                        ? formatearTextoArchivoConGuion(documents[0].name)
+                        : "No hay archivos"}
+                    </div>
+                    <div className="w-[100px] flex justify-center">
+                      {hasDocuments && (
+                        <button
+                          onClick={() => toggleOpen(index)}
+                          className="transition-transform duration-300"
                         >
-                          <div className="flex justify-start">
-                            {cortarTexto(doc.name)}
-                          </div>
-                          <div className="w-[65px] flex justify-center">
-                            <button
-                              onClick={() =>
-                                handleDownload(doc.pathFile, doc.name)
-                              }
-                              className="transition-transform duration-300 hover:scale-110"
-                            >
-                              <img src={descargar} alt="Descargar" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                          <img
+                            src={arrowIcon}
+                            alt="toggle"
+                            className={`w-[10px] sm:w-[14px] transform transition-transform duration-300 ${openItems[index] ? "rotate-180" : "rotate-0"
+                              }`}
+                          />
+                        </button>
+                      )}
                     </div>
                   </div>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </div>
+
+                  {openItems[index] && hasDocuments && (
+                    <div className="flex flex-col md:flex-row justify-between text-[#2B2829] font-normal items-center py-2 border-b text-xs md:text-base">
+                      <div className="flex-1 flex">{envio.asunto.cliente}</div>
+                      <div className="hidden lg:block text-white bg-[#353563] rounded px-3">
+                        {envio.estado}
+                      </div>
+                      <div className="flex-1 flex justify-center">
+                        {formatDate(envio.fecha)}
+                      </div>
+                      <div className="flex-1 flex flex-col gap-1 justify-center  font-semibold text-[#495D72]">
+                        {documents.map((doc, docIndex) => (
+                          <div
+                            key={docIndex}
+                            className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
+                          >
+                            <div className="flex justify-start">
+                              {formatearTextoArchivoConGuion(doc.name)}
+                            </div>
+                            <div className="w-[65px] flex justify-center">
+                              <button
+                                onClick={() =>
+                                  handleDownload(doc.pathFile, doc.name)
+                                }
+                                className="transition-transform duration-300 hover:scale-110"
+                              >
+                                <img src={descargar} alt="Descargar" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })}
+          </div>
+        </>
       ) : (
         // Mostrar cuando no hay datos
         <div className="flex justify-center">

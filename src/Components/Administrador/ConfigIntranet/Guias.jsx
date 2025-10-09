@@ -19,7 +19,7 @@ const Guias = () => {
       const urlObj = new URL(url);
       const pathParts = urlObj.pathname.split("/");
       return pathParts[pathParts.length - 1];
-    } catch (e) {
+    } catch {
       const parts = url.split("/");
       return parts[parts.length - 1];
     }

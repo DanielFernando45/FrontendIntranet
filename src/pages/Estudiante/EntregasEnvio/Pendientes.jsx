@@ -63,8 +63,7 @@ const Pendientes = () => {
           });
           setOpenItems(initialOpenState);
         })
-        .catch(() => {
-        })
+        .catch(() => {})
         .finally(() => {
           setLoading(false);
         });
@@ -98,21 +97,12 @@ const Pendientes = () => {
     if (!dateString) return "";
     const date = new Date(dateString);
 
-    // Obtener hora y minutos en UTC
-    let horas = date.getUTCHours();
-    const minutos = date.getUTCMinutes().toString().padStart(2, "0");
-
-    // Determinar AM/PM
-    const ampm = horas >= 12 ? "PM" : "AM";
-
-    // Convertir a formato de 12 horas con dos dígitos
-    horas = horas % 12;
-    horas = horas ? horas.toString().padStart(2, "0") : "12"; // La hora 0 se convierte en 12
-
-    // Concatenar
-    const hora12ConAmPm = `${horas}:${minutos} ${ampm}`;
-
-    return hora12ConAmPm;
+    return new Intl.DateTimeFormat("es-PE", {
+      timeZone: "America/Lima",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
   };
 
   const formatearTextoArchivoConGuion = (texto) => {

@@ -124,14 +124,12 @@ const DocPendientes = () => {
     if (!dateString) return "";
     const date = new Date(dateString);
 
-    let horas = date.getUTCHours();
-    const minutos = date.getUTCMinutes().toString().padStart(2, "0");
-    const ampm = horas >= 12 ? "PM" : "AM";
-
-    horas = horas % 12;
-    horas = horas ? horas.toString().padStart(2, "0") : "12";
-
-    return `${horas}:${minutos} ${ampm}`;
+    return new Intl.DateTimeFormat("es-PE", {
+      timeZone: "America/Lima",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
   };
 
   const formatDate = (dateString) => {
@@ -142,14 +140,18 @@ const DocPendientes = () => {
     const year = date.getFullYear();
     return `${day} ${month} de ${year}`;
   };
-  
+
   const handleSubmitAvance = async (id, formData) => {
     try {
       const res = await asuntosService.agregarAsuntosFinales(id, formData);
-      console.log("Avance enviado:", res.data);
+      const msg = res?.data?.message || res?.data || res;
+      console.log("✅ Avance enviado:", msg);
       fetchPendientes(); // refresca lista
     } catch (err) {
-      console.error("Error al enviar avance:", err.response?.data || err);
+      console.error(
+        "❌ Error al enviar avance:",
+        err.response?.data?.message || err.message
+      );
     }
   };
 

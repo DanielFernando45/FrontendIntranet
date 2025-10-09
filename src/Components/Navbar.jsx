@@ -1,10 +1,9 @@
 // src/components/Navbar.jsx
-import { useContext, useState } from "react";
+import {useState } from "react";
 // import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 
 import logoaleja from "../assets/images/LogoAlejandriaSIN.png";
-import perfil from "../assets/icons/PerfilIcon.svg";
 import flechaabajo from "../assets/icons/Flecha.svg";
 import flechaarriba from "../assets/icons/arrow-up.svg";
 
