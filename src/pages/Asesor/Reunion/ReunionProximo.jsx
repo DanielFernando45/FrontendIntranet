@@ -79,7 +79,9 @@ const ReunionProximo = () => {
   const confirmDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:3001/reuniones/eliminar-reunion/${meetingToDelete}`,
+        `${
+          import.meta.env.VITE_API_PORT_ENV
+        }/reuniones/eliminar-reunion/${meetingToDelete}`,
         {
           data: {
             id_asesor: idAsesor,
