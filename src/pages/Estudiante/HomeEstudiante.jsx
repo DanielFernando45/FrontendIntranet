@@ -1,7 +1,7 @@
 import LayoutApp from "../../layout/LayoutApp";
 import portada from "../../assets/images/portadaMobile.png";
 import portada2 from "../../assets/images/portada.png";
-import flechaVer from "../../assets/icons/flechaMorada.svg";;
+import flechaVer from "../../assets/icons/flechaMorada.svg";
 import FeclaIzqui from "../../assets/icons/arrow-left.svg";
 import FechaDerec from "../../assets/icons/arrow-right.svg";
 import flechaCirculo from "../../assets/icons/arrow-left-circulo.svg";
@@ -76,13 +76,21 @@ const HomeEstudiante = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          setProximasReuniones(data);
-          setLoadingReuniones(false);
+          const reuniones = Array.isArray(data) ? data : data?.reuniones || [];
+          setProximasReuniones(reuniones);
         })
         .catch((error) => {
-          console.error("Error al obtener reuniones próximas:", error);
+          console.error("❌ Error al obtener reuniones próximas:", error);
+          setProximasReuniones([]);
+        })
+        .finally(() => {
           setLoadingReuniones(false);
         });
+    } else {
+      // 👇 Caso cuando el cliente no tiene asesoría
+      console.warn("⚠️ Cliente sin asesoría. No hay reuniones que mostrar.");
+      setProximasReuniones([]); // limpia la lista
+      setLoadingReuniones(false); // evita que quede cargando
     }
   }, [selectedAsesoriaId]);
 
