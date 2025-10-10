@@ -454,13 +454,15 @@ const CalendarioEstudiante = () => {
         <div className="flex flex-col gap-6 flex-1 xl:w-[40%] bg-white rounded-xl shadow-lg p-4 sm:p-6">
           {/* Encabezado y selects */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between w-full">
-            <p className="font-semibold text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[24px] text-gray-800 text-center md:text-left">
+            <p className="font-semibold text-[16px] sm:text-[18px] md:text-[20px] 4xl:text-[24px] text-gray-800 text-center md:text-left">
               Calendario de actividades
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full md:w-auto">
-              <select
-                className="bg-gray-900 w-full p-[5px] rounded-lg text-white sm:w-[130px] h-[35px] font-semibold"
+            <div className="flex flex-col gap-2 sm:gap-3 w-full md:w-auto">
+              
+              <div className="flex justify-start gap-1">
+                <select
+                className="bg-gray-900 w-full p-[5px] rounded-lg text-white  h-[35px] font-semibold"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               >
@@ -472,7 +474,7 @@ const CalendarioEstudiante = () => {
               </select>
 
               <select
-                className="bg-gray-900 text-white font-semibold rounded-md p-2 text-sm sm:text-base w-full sm:w-[120px] h-[35px]"
+                className="bg-gray-900 text-white font-semibold rounded-md p-2 text-sm sm:text-base w-full  h-[35px]"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               >
@@ -482,11 +484,13 @@ const CalendarioEstudiante = () => {
                   </option>
                 ))}
               </select>
+              </div>
+              
 
               <select
                 onChange={handleChange}
                 value={selectedAsesoriaId || ""}
-                className="border border-[#b4a6aa] rounded-md p-2 text-sm sm:text-base w-full sm:w-[150px] h-[35px]"
+                 className="border border-[#b4a6aa] rounded-md  text-sm sm:text-base w-full  h-[35px]"
               >
                 {asesorias.map((asesoria, index) => (
                   <option key={index} value={asesoria.id}>
