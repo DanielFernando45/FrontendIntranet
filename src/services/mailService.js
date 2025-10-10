@@ -3,14 +3,17 @@ import api from "./api";
 const sendResetPasswordEmail = async (email) => {
   try {
     const response = await api.post("/mail/reset-password", { email });
-    console.log(response);
-    return response.data;
+    console.log("✅ Respuesta backend:", response.data);
+    // Retorna el mensaje exacto del backend
+    return response.data.message;
   } catch (error) {
-    throw new Error(
-      error.response
-        ? error.response.data
-        : "Error al enviar el correo de recuperación de contraseña"
-    );
+    console.error("❌ Error al enviar correo:", error);
+    // Captura el mensaje exacto si existe
+    const backendMessage =
+      error.response?.data?.message ||
+      "Error al enviar el correo de recuperación de contraseña.";
+    // Lanza un error con el texto limpio
+    throw new Error(backendMessage);
   }
 };
 

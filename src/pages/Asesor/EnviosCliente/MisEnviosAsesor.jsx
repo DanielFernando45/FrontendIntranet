@@ -94,28 +94,15 @@ const MisEnvios = ({ idAsesoramiento }) => {
 
   const handleDownload = (url, filename) => {
     try {
-      // ✅ Si la URL no es completa, la reconstruimos manualmente
       const fullUrl = url?.startsWith("http")
         ? url
-        : `https://f004.backblazeb2.com/file/IntranetAlejandria/documentos/${filename}`;
+        : `https://f004.backblazeb2.com/file/IntranetAlejandria/documentos/${filename}?raw=1`;
 
-      // ✅ Escapamos caracteres raros (espacios, paréntesis, acentos)
       const safeUrl = encodeURI(fullUrl);
-
       console.log("🌐 Redirigiendo descarga externa:", safeUrl);
 
-      // ✅ Abre en nueva pestaña (más seguro)
+      // Abre solo una vez, sin duplicar ni forzar descarga dos veces
       window.open(safeUrl, "_blank", "noopener,noreferrer");
-
-      // 🧩 Fallback: si el router intenta redirigir a localhost, forzamos la navegación
-      setTimeout(() => {
-        if (
-          window.location.href.includes("localhost") ||
-          window.location.href.includes("asesor/entrega")
-        ) {
-          window.location.replace(safeUrl);
-        }
-      }, 500);
     } catch (error) {
       console.error("❌ Error al abrir el archivo:", error);
       alert("No se pudo abrir el archivo, intenta nuevamente.");
