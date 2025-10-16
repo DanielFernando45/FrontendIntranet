@@ -17,6 +17,7 @@ const ContratoNuevo = () => {
     idTipoPago: "",
     fechaInicio: "",
     fechaFin: "",
+    documentos: "",
   });
   const [currentIdAsesoramiento, setCurrentIdAsesoramiento] = useState(null);
   const navigate = useNavigate();
@@ -311,6 +312,34 @@ const ContratoNuevo = () => {
                     }
                   />
                 </div>
+              </div>
+              {/* Subida de documento */}
+              <div className="flex flex-col">
+                <label className="text-sm sm:text-base font-medium">
+                  Documento (Word o PDF):
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="bg-[#E9E7E7] rounded-lg p-2"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const validTypes = [
+                      "application/pdf",
+                      "application/msword",
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    ];
+                    if (!validTypes.includes(file.type)) {
+                      alert(
+                        "Solo se permiten archivos PDF o Word (.doc, .docx)"
+                      );
+                      e.target.value = ""; // limpia el input
+                      return;
+                    }
+                    setFormData({ ...formData, documentos: File });
+                  }}
+                />
               </div>
             </div>
 

@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { asesoriasService } from "../../../services/asesoriasService";
 import { contratosService } from "../../../services/contratosService";
 import toast from "react-hot-toast";
+import { TiDelete } from "react-icons/ti";
 
 const ContratoAsignado = () => {
   const [editContrato, setEditContrato] = useState(false);
@@ -18,6 +19,8 @@ const ContratoAsignado = () => {
     idTipoPago: "",
     fechaInicio: "",
     fechaFin: "",
+    documentos: "",
+    documentoUrl: "",
   });
 
   const { data: contrato = [], refetch } = useQuery({
@@ -80,6 +83,7 @@ const ContratoAsignado = () => {
       toast.error("Ambas fechas son obligatorias.");
       return;
     }
+
     const fechaInicio = new Date(formData.fechaInicio);
     const fechaFin = new Date(formData.fechaFin);
 
@@ -87,7 +91,6 @@ const ContratoAsignado = () => {
       toast.error("La fecha de inicio no puede ser mayor que la fecha de fin.");
       return;
     }
-    // Si el servicio es Completo, la categoría es obligatoria
 
     if (formData.servicio === "Completo" && !formData.idCategoria) {
       toast.error("Selecciona una categoría.");
@@ -95,23 +98,26 @@ const ContratoAsignado = () => {
     }
 
     if (currentContrato) {
-      const payload = {
-        modalidad: formData.modalidad,
-        servicio: formData.servicio,
-        idTipoTrabajo: Number(formData.idTipoTrabajo),
-        idTipoPago: Number(formData.idTipoPago),
-        fechaInicio: fechaInicio.toISOString().slice(0, 19).replace("T", " "),
-        fechaFin: fechaFin.toISOString().slice(0, 19).replace("T", " "),
-      };
+      const form = new FormData();
 
-      // Solo agregar idCategoria si aplica y tiene valor
+      form.append("modalidad", formData.modalidad);
+      form.append("servicio", formData.servicio);
+      form.append("idTipoTrabajo", formData.idTipoTrabajo);
+      form.append("idTipoPago", formData.idTipoPago);
+      form.append("fechaInicio", fechaInicio.toISOString());
+      form.append("fechaFin", fechaFin.toISOString());
+
       if (formData.servicio === "Completo" && formData.idCategoria) {
-        payload.idCategoria = formData.idCategoria;
+        form.append("idCategoria", formData.idCategoria);
+      }
+
+      if (formData.documentos instanceof File) {
+        form.append("files", formData.documentos); // nombre que debe coincidir con @UploadedFiles() o @UploadedFile()
       }
 
       mutationEditar.mutate({
-        id: currentContrato.id_contrato, // mantenemos tu key tal cual
-        payload,
+        id: currentContrato.id_contrato,
+        payload: form,
       });
     }
   };
@@ -124,13 +130,14 @@ const ContratoAsignado = () => {
     setEditContrato(true);
     setCurrentContrato(contrato);
     setFormData({
-      modalidad: contrato.modalidad || "",
-      servicio: contrato.servicio || "",
+      modalidad: contrato.modalidad?.toLowerCase() || "",
+      servicio: contrato.servicio?.toLowerCase() || "",
       idCategoria: contrato.idCategoria || "", // usa el nombre que viene del back
       idTipoTrabajo: contrato.idTipoTrabajo || "",
       idTipoPago: contrato.idTipoPago || "",
       fechaInicio: formatDateToInput(contrato.fecha_inicio),
       fechaFin: formatDateToInput(contrato.fecha_fin),
+      documentos: contrato.documentos || "",
     });
   };
 
@@ -214,7 +221,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, modalidad: e.target.value })
                     }
                   >
-                    <option >Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value="avance">Avance</option>
                     <option value="plazo">Plazo</option>
                   </select>
@@ -247,7 +254,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, idCategoria: e.target.value })
                     }
                   >
-                    <option >Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value="5f1b4ec3-3777-4cbc-82a0-cd33d9aec4a0">
                       Oro
                     </option>
@@ -275,7 +282,7 @@ const ContratoAsignado = () => {
                       })
                     }
                   >
-                    <option >Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value={1}>Proyecto Bachillerato</option>
                     <option value={2}>Tesis Pregrado</option>
                     <option value={3}>Tesis</option>
@@ -298,7 +305,7 @@ const ContratoAsignado = () => {
                       setFormData({ ...formData, idTipoPago: e.target.value })
                     }
                   >
-                    <option >Seleccionar</option>
+                    <option>Seleccionar</option>
                     <option value={1}>Contado</option>
                     <option value={2}>Cuotas</option>
                   </select>
@@ -329,6 +336,78 @@ const ContratoAsignado = () => {
                     }
                   />
                 </div>
+              </div>
+
+              {/* Subida de documento */}
+              <div className="flex flex-col">
+                <label className="text-sm sm:text-base font-medium">
+                  Documento (Word o PDF):
+                </label>
+
+                {/* Subida de documento */}
+                {!formData.documentos && (
+                  <>
+                    <input
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      className="bg-[#E9E7E7] rounded-lg p-2"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+
+                        const validTypes = [
+                          "application/pdf",
+                          "application/msword",
+                          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        ];
+
+                        if (!validTypes.includes(file.type)) {
+                          toast.error(
+                            "Solo se permiten archivos PDF o Word (.doc, .docx)"
+                          );
+                          e.target.value = ""; // Limpia el input
+                          return;
+                        }
+
+                        setFormData({ ...formData, documentos: file });
+                      }}
+                    />
+                  </>
+                )}
+
+                {/* Mostrar archivo existente o seleccionado */}
+                {formData.documentos && (
+                  <div className="mt-2 text-sm text-gray-700 flex items-center gap-2">
+                    {formData.documentos instanceof File ? (
+                      <>
+                        <span>Archivo seleccionado:</span>
+                        <span className="text-green-700">
+                          {formData.documentos.name}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Archivo actual:</span>
+                        <a
+                          href={formData.documentoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 underline"
+                        >
+                          {formData.documentos.split("/").pop()}
+                        </a>
+                      </>
+                    )}
+                    <button
+                      className="text-red-600 hover:text-red-800 ml-2"
+                      onClick={() => {
+                        setFormData((prev) => ({ ...prev, documentos: "" }));
+                      }}
+                    >
+                      <TiDelete size={20} />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

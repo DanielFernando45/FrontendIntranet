@@ -22,7 +22,6 @@ const InduccionById = () => {
     data: induccionesByIdAsesoramiento,
     isLoading: isLoadingInducciones,
     isError: isErrorInducciones,
-    error: errorInducciones,
   } = useQuery({
     queryKey: ["induccionesByIdAsesoramiento", id],
     queryFn: () => induccionesService.obtenerInduccionesByIdAsesoria(id),
@@ -30,11 +29,10 @@ const InduccionById = () => {
     enabled: !!id,
   });
 
-  const { 
-    data: asesoramientoById, 
+  const {
+    data: asesoramientoById,
     isLoading: isLoadingAsesoramiento,
     isError: isErrorAsesoramiento,
-    error: errorAsesoramiento,
   } = useQuery({
     queryKey: ["asesoramientoById", id],
     queryFn: () => asesoriasService.asesoramientoById(id),
@@ -44,27 +42,33 @@ const InduccionById = () => {
 
   const handleVideoAction = (video, action) => {
     setSelectedVideo(video);
-    if (action === 'delete') {
+    if (action === "delete") {
       setOpenModalDelete(true);
-    } else if (action === 'play') {
+    } else if (action === "play") {
       // Aquí podrías abrir un modal con el video en grande
-      const videoElement = document.createElement('video');
+      const videoElement = document.createElement("video");
       videoElement.src = video.url;
+      console.log("🧪 URL del video al hacer clic:", video.url);
+
       videoElement.controls = true;
-      videoElement.style.width = '80%';
-      videoElement.style.maxWidth = '800px';
-      videoElement.style.borderRadius = '12px';
-      
+      videoElement.style.width = "80%";
+      videoElement.style.maxWidth = "800px";
+      videoElement.style.borderRadius = "12px";
+
       // Modal simple para mostrar el video
-      if (window.confirm('¿Quieres ver el video en pantalla completa? Haz clic en OK y luego en el ícono de pantalla completa del reproductor.')) {
-        window.open(video.url, '_blank');
+      if (
+        window.confirm(
+          "¿Quieres ver el video en pantalla completa? Haz clic en OK y luego en el ícono de pantalla completa del reproductor."
+        )
+      ) {
+        window.open(video.url, "_blank");
       }
     }
   };
 
   const handleDownload = (video) => {
     // Simulación de descarga
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = video.url;
     link.download = `${video.titulo}.mp4`;
     document.body.appendChild(link);
@@ -89,9 +93,11 @@ const InduccionById = () => {
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h3 className="text-xl font-semibold mb-2">Error al cargar los datos</h3>
+            <h3 className="text-xl font-semibold mb-2">
+              Error al cargar los datos
+            </h3>
             <p className="text-gray-600 mb-4">Por favor, intenta nuevamente</p>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -111,8 +117,10 @@ const InduccionById = () => {
         <div className="flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <div className="text-gray-400 text-6xl mb-4">📄</div>
-            <h3 className="text-xl font-semibold mb-2">No se encontró el asesoramiento</h3>
-            <button 
+            <h3 className="text-xl font-semibold mb-2">
+              No se encontró el asesoramiento
+            </h3>
+            <button
               onClick={() => navigate("/asesor/inducciones")}
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -134,9 +142,13 @@ const InduccionById = () => {
             className="w-10 h-10 absolute rounded-full bg-gray-100 flex justify-center items-center right-4 top-4 hover:bg-gray-200 transition-colors group"
             title="Volver atrás"
           >
-            <img src={back} alt="back-icon" className="group-hover:scale-110 transition-transform" />
+            <img
+              src={back}
+              alt="back-icon"
+              className="group-hover:scale-110 transition-transform"
+            />
           </button>
-          
+
           <h3 className="text-2xl font-bold mb-4 text-gray-800 pr-16">
             {asesoramiento.referencia}
           </h3>
@@ -150,7 +162,7 @@ const InduccionById = () => {
                     {asesoramiento.delegado}
                   </span>
                 </p>
-                
+
                 <div className="mt-4">
                   <p className="font-semibold text-gray-700 mb-2">Área: </p>
                   <span className="font-medium text-gray-900 bg-green-50 px-3 py-1 rounded-full">
@@ -162,17 +174,21 @@ const InduccionById = () => {
               <div className="flex-1 min-w-[250px]">
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-semibold text-gray-700">Integrantes:</p>
-                  <button 
+                  <button
                     onClick={() => setExpandedInfo(!expandedInfo)}
                     className="text-blue-600 text-sm hover:text-blue-800 transition-colors"
                   >
-                    {expandedInfo ? 'Ver menos' : 'Ver todos'}
+                    {expandedInfo ? "Ver menos" : "Ver todos"}
                   </button>
                 </div>
-                <ul className={`space-y-1 transition-all duration-300 ${expandedInfo ? '' : 'max-h-20 overflow-hidden'}`}>
+                <ul
+                  className={`space-y-1 transition-all duration-300 ${
+                    expandedInfo ? "" : "max-h-20 overflow-hidden"
+                  }`}
+                >
                   {asesoramiento.estudiantes.map((item, index) => (
-                    <li 
-                      key={item.id} 
+                    <li
+                      key={item.id}
                       className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
                     >
                       <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm mr-2">
@@ -190,7 +206,9 @@ const InduccionById = () => {
         {/* Sección de videos */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between mb-6">
-            <h4 className="text-xl font-bold text-gray-800">Videos de Inducción</h4>
+            <h4 className="text-xl font-bold text-gray-800">
+              Videos de Inducción
+            </h4>
             <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
               {induccionesByIdAsesoramiento?.length || 0} videos
             </span>
@@ -201,7 +219,8 @@ const InduccionById = () => {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               <span className="ml-3">Cargando videos...</span>
             </div>
-          ) : !induccionesByIdAsesoramiento || induccionesByIdAsesoramiento.length === 0 ? (
+          ) : !induccionesByIdAsesoramiento ||
+            induccionesByIdAsesoramiento.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-gray-300 text-8xl mb-4">🎬</div>
               <h5 className="text-lg font-semibold text-gray-500 mb-2">
@@ -214,7 +233,7 @@ const InduccionById = () => {
           ) : (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {induccionesByIdAsesoramiento.map((item, index) => (
-                <div 
+                <div
                   key={item.id}
                   className="bg-gray-50 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] group"
                 >
@@ -226,7 +245,7 @@ const InduccionById = () => {
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <button
-                        onClick={() => handleVideoAction(item, 'play')}
+                        onClick={() => handleVideoAction(item, "play")}
                         className="bg-white bg-opacity-90 rounded-full p-3 mr-2 hover:scale-110 transition-transform"
                         title="Reproducir video"
                       >
@@ -237,18 +256,22 @@ const InduccionById = () => {
                         className="bg-white bg-opacity-90 rounded-full p-3 mr-2 hover:scale-110 transition-transform"
                         title="Descargar video"
                       >
-                        <img src={download_icon} alt="download" className="w-5 h-5" />
+                        <img
+                          src={download_icon}
+                          alt="download"
+                          className="w-5 h-5"
+                        />
                       </button>
                     </div>
                     <button
-                      onClick={() => handleVideoAction(item, 'delete')}
+                      onClick={() => handleVideoAction(item, "delete")}
                       className="absolute top-3 right-3 bg-white bg-opacity-80 rounded-full p-2 hover:bg-red-500 hover:scale-110 transition-all duration-200 opacity-0 group-hover:opacity-100"
                       title="Eliminar video"
                     >
                       <img src={trash_icon} alt="delete" className="w-4 h-4" />
                     </button>
                   </div>
-                  
+
                   <div className="p-4">
                     <h5 className="font-semibold text-gray-800 mb-1 line-clamp-1">
                       {item.titulo}

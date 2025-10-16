@@ -140,7 +140,6 @@ const MiContrato = () => {
                       {contrato?.categoria?.descripcion || "No asignado"}
                     </div>
                   </div>
-                  
 
                   <div className="flex flex-col gap-3 w-full">
                     <p className="pl-[1px]">Tipo de Pago</p>
@@ -153,7 +152,17 @@ const MiContrato = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-10">
+                <div className="flex gap-10 flex-col sm:flex-row">
+                  <div className="flex flex-col gap-3 w-full">
+                    <p className="pl-[1px]">Categoría</p>
+                    <div
+                      className="flex bg-[#F9F9F9] w-full h-[49px] rounded-lg 
+                      text-[#808080] items-center p-4"
+                    >
+                      {contrato?.categoria?.descripcion || "No asignado"}
+                    </div>
+                  </div>
+
                   <div className="flex flex-col gap-3 w-full">
                     <p className="pl-[1px]">Tipo de Trabajo</p>
                     <div
@@ -163,7 +172,32 @@ const MiContrato = () => {
                       {contrato?.tipoTrabajo?.nombre || "No asignado"}
                     </div>
                   </div>
-
+                </div>
+                {/* Campo de Documento */}
+                <div className="flex gap-10 flex-col sm:flex-row">
+                  <div className="flex flex-col gap-3 w-full">
+                    <p className="pl-[1px]">Documento</p>
+                    <div
+                      className="flex justify-between bg-[#F9F9F9] w-full h-[49px] rounded-lg 
+                 text-[#808080] items-center px-4"
+                    >
+                      <span>
+                        {contrato.documentos
+                          ? "Archivo disponible"
+                          : "No asignado"}
+                      </span>
+                      {contrato.documentos && (
+                        <a
+                          href={contrato.documentos}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-cyan-600 hover:text-cyan-800 text-sm font-medium transition-colors"
+                        >
+                          Ver / Descargar
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </>
             ) : (

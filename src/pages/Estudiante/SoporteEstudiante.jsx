@@ -1,47 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import LayoutApp from '../../layout/LayoutApp';
-import PreguntasFrecuentes from '../../Components/Cliente/PreguntasFrecuentes';
+import React, { useState, useEffect } from "react";
+import LayoutApp from "../../layout/LayoutApp";
+import PreguntasFrecuentes from "../../Components/Cliente/PreguntasFrecuentes";
 
 const SoporteEstudiante = () => {
   const [formData, setFormData] = useState({
-    asunto: '',
-    descripcion: '',
-    id_cliente: null
+    asunto: "",
+    descripcion: "",
+    id_cliente: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
-    const usuario = localStorage.getItem('user');
+    const usuario = localStorage.getItem("user");
     if (usuario) {
       try {
         const user = JSON.parse(usuario);
-        setFormData(prev => ({
+        setFormData((prev) => ({
           ...prev,
-          id_cliente: user.id_cliente
+          id_cliente: user.id_cliente,
         }));
         setUserLoaded(true);
       } catch (error) {
-        console.error('Error parsing user data:', error);
-        setSubmitStatus({ success: false, message: 'Error al cargar datos del usuario' });
+        console.error("Error parsing user data:", error);
+        setSubmitStatus({
+          success: false,
+          message: "Error al cargar datos del usuario",
+        });
       }
     }
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.id_cliente) {
-      setSubmitStatus({ success: false, message: 'No se pudo identificar al usuario. Por favor, inicie sesión nuevamente.' });
+      setSubmitStatus({
+        success: false,
+        message:
+          "No se pudo identificar al usuario. Por favor, inicie sesión nuevamente.",
+      });
       return;
     }
 
@@ -49,17 +56,20 @@ const SoporteEstudiante = () => {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_PORT_ENV}/soporte/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_PORT_ENV}/soporte/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       // Primero verificar si hay contenido en la respuesta
       const responseText = await response.text();
-      
+
       let responseData;
       try {
         // Intentar parsear como JSON solo si hay contenido
@@ -70,26 +80,26 @@ const SoporteEstudiante = () => {
       }
 
       if (!response.ok) {
-        throw new Error(responseData.message || 'Error en la solicitud');
+        throw new Error(responseData.message || "Error en la solicitud");
       }
 
-      setSubmitStatus({ 
-        success: true, 
-        message: responseData.message || 'Solicitud enviada con éxito' 
+      setSubmitStatus({
+        success: true,
+        message: responseData.message || "Solicitud enviada con éxito",
       });
-      
+
       // Resetear el formulario
-      setFormData(prev => ({
-        asunto: '',
-        descripcion: '',
-        id_cliente: prev.id_cliente
+      setFormData((prev) => ({
+        asunto: "",
+        descripcion: "",
+        id_cliente: prev.id_cliente,
       }));
     } catch (error) {
-      setSubmitStatus({ 
-        success: false, 
-        message: error.message || 'Error al procesar la respuesta del servidor' 
+      setSubmitStatus({
+        success: false,
+        message: error.message || "Error al procesar la respuesta del servidor",
       });
-      console.error('Error:', error);
+      console.error("Error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -107,57 +117,82 @@ const SoporteEstudiante = () => {
 
   return (
     <LayoutApp>
-      <main className='flex xl:mx-5 gap-8 justify-center lg:flex-row flex-col'>
-        <div className='flex flex-col flex-1 bg-white rounded-xl p-5 gap-10 lg:gap-24'>
-          <div className='flex w-full justify-center text-[20px] lg:text-[30px] font-semibold'>
+      <main className="flex xl:mx-5 gap-8 justify-center lg:flex-row flex-col">
+        <div className="flex flex-col flex-1 bg-white rounded-xl p-5 gap-10 lg:gap-24">
+          <div className="flex w-full justify-center text-[20px] lg:text-[30px] font-semibold">
             <h1>Formulario de soporte</h1>
           </div>
-          <form onSubmit={handleSubmit} className='flex flex-col gap-[31px]'>
-            <h2 className='lg:text-[20px]'>Asunto</h2>
-            <select 
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[31px]">
+            <h2 className="lg:text-[20px]">Asunto</h2>
+            <select
               name="asunto"
               value={formData.asunto}
               onChange={handleChange}
-              className='border p-5 rounded-lg'
+              className="border p-5 rounded-lg"
               required
             >
               <option value="">Seleccione un asunto</option>
-              <option value="Error_en_entrega_y_revision">Error en entrega y revisión</option>
+              <option value="Error_en_entrega_y_revision">
+                Error en entrega y revisión
+              </option>
               <option value="Error_en_reuniones">Error en reuniones</option>
               <option value="Error_en_calendario">Error en calendario</option>
               <option value="Error_en_recursos">Error en recursos</option>
               <option value="Otro">Otro</option>
             </select>
-            
-            <h2 className='lg:text-[20px]'>Descripción</h2>
-            <textarea 
+
+            <h2 className="lg:text-[20px]">Descripción</h2>
+            <textarea
               name="descripcion"
               value={formData.descripcion}
               onChange={handleChange}
-              className='border rounded-xl w-full h-[150px] lg:h-[318px] p-6 outline-none' 
-              placeholder='Ingrese una descripción'
+              className="border rounded-xl w-full h-[150px] lg:h-[318px] p-6 outline-none"
+              placeholder="Ingrese una descripción"
               required
             ></textarea>
-            
-            <button 
+
+            <button
               type="submit"
-              className='w-full h-[50px] lg:h-[79px] bg-[#1C1C34] text-white lg:text-[20px] font-semibold rounded-sm hover:bg-[#2d2d4a] transition-colors'
+              className="w-full h-[50px] lg:h-[79px] bg-[#1C1C34] text-white lg:text-[20px] font-semibold rounded-sm hover:bg-[#2d2d4a] transition-colors"
               disabled={isSubmitting || !formData.id_cliente}
             >
-              {isSubmitting ? 'Enviando...' : 'Enviar'}
+              {isSubmitting ? "Enviando..." : "Enviar"}
             </button>
-            
+
             {submitStatus && (
-              <div className={`p-4 rounded-lg ${submitStatus.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+              <div
+                className={`p-4 rounded-lg ${
+                  submitStatus.success
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                }`}
+              >
                 {submitStatus.message}
               </div>
             )}
           </form>
         </div>
 
-        <div className='flex flex-col gap-10 flex-1 h-[850px] overflow-auto bg-white rounded-xl p-10'>
-          <h1 className='text-[20px] lg:text-[30px]'>Soluciones Frecuentes</h1>
+        <div className="flex flex-col gap-10 flex-1 h-[850px] overflow-auto bg-white rounded-xl p-10">
+          <h1 className="text-[20px] lg:text-[30px]">Soluciones Frecuentes</h1>
           <PreguntasFrecuentes />
+          <div className="flex flex-col items-center mt-6">
+            <a
+              href="https://alejandriaconsultora.com/libro-de-reclamaciones" // cambia este enlace
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gradient-to-r from-[#1C1C34] to-[#2E3A59] p-4 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+            >
+              <img
+                src="/libro_reclamaciones.png"
+                alt="Libro de Reclamaciones"
+                className="w-[200px] sm:w-[250px] lg:w-[300px] filter brightness-0 invert"
+              />
+            </a>
+            <p className="text-sm text-[#1C1C34] mt-3 font-medium">
+              Haz clic para acceder al Libro de Reclamaciones
+            </p>
+          </div>
         </div>
       </main>
     </LayoutApp>
