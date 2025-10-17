@@ -47,6 +47,7 @@ import ModificarAsesor from "../pages/JefeOperacion/GestionarUsuario/EditarAseso
 import SupervisorAsig from "../pages/Supervisor/Asignacion";
 import NuevaAsesoria from "../pages/Supervisor/SupervisorAsignar/NuevaAsesoria";
 import EditAsig from "../pages/Supervisor/SupervisorAsignar/EditAsig";
+import PanelSupervisor from "../pages/Supervisor/PanelSupervisor";
 
 //Rutas ContratoYpago
 import Contrato from "../pages/ContPago/Contrato";
@@ -168,6 +169,7 @@ const RouterApp = () => {
         <Route path="/supervisor/asignaciones" element={<SupervisorAsig />} />
         <Route path="/supervisor/nueva-asesoria" element={<NuevaAsesoria />} />
         <Route path="/supervisor/edit-asig/:id" element={<EditAsig />} />
+        <Route path="/supervisor/panel" element={<PanelSupervisor />} />
       </Route>
 
       {/* RUTAS CONTRATO PAGO  */}

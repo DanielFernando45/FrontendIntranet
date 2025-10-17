@@ -84,7 +84,7 @@ const EditAsig = () => {
     queryKey: ["clientesSinAsignar"],
     queryFn: clientesService.clientesSinAsignar,
   });
-  // Cuando llegan los datos del asesoramiento, inicializar referencia
+  
   // Cuando llegan los datos del asesoramiento, inicializar referencia, área y asesor
   useEffect(() => {
     if (asesoramiento && areas.length > 0) {

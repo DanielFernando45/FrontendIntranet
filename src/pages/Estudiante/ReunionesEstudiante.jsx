@@ -19,8 +19,12 @@ const ReunionesEstudiante = () => {
 
   const { data: inducciones, isLoading: induccionesLoading } = useQuery({
     queryKey: ["inducciones", selectedAsesoriaId],
-    queryFn: () =>
-      induccionesService.obtenerInduccionesByIdAsesoria(selectedAsesoriaId),
+    queryFn: async () => {
+      const data = await induccionesService.obtenerInduccionesByIdAsesoria(
+        selectedAsesoriaId
+      );
+      return Array.isArray(data) ? data : []; // 👈 siempre devolvés array
+    },
     enabled: !!selectedAsesoriaId,
   });
 

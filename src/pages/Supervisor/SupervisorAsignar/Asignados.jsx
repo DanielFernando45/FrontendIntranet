@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import flechaabajo from "../../../assets/icons/Flecha.svg";
 import flechaarriba from "../../../assets/icons/arrow-up.svg";
-import eliminar from "../../../assets/icons/IconAdmin/tachoblanco.svg";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { asesoriasService } from "../../../services/asesoriasService";
