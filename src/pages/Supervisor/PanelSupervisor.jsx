@@ -13,19 +13,21 @@ import { getUsuarioDesdeToken } from "../../utils/validateToken";
 
 const PanelSupervisor = () => {
   const [filtros, setFiltros] = useState({
-    fecha: "",
     areaId: "",
     asesorId: "",
+    clienteId: "",
   });
   const [actividades, setActividades] = useState([]);
   const [expandedCliente, setExpandedCliente] = useState(null);
   const [areaSeleccionada, setAreaSeleccionada] = useState(null);
   const [asesorSeleccionado, setAsesorSeleccionado] = useState(null);
+  const [busqueda, setBusqueda] = useState("");
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 
   const usuario = getUsuarioDesdeToken();
   const idSupervisor = usuario?.id_supervisor;
 
-  // Obtener áreas del supervisor
+  // 🔹 Obtener áreas del supervisor
   const {
     data: areas = [],
     isLoading: loadingAreas,
@@ -33,18 +35,31 @@ const PanelSupervisor = () => {
   } = useQuery({
     queryKey: ["areasSupervisor", idSupervisor],
     queryFn: () => supervisorService.obtenerAreasPorSupervisor(idSupervisor),
+    enabled: !!idSupervisor, // 👈 evita que se resetee mientras carga
   });
 
-  // 🔄 Cargar actividades del backend cuando cambien los filtros
+  // 🔹 Obtener clientes delegados del asesor seleccionado
+  const {
+    data: clientes = [],
+    isLoading: loadingClientes,
+    isError: errorClientes,
+  } = useQuery({
+    queryKey: ["clientesAsesor", asesorSeleccionado?.id],
+    queryFn: () =>
+      supervisorService.obtenerClientesPorAsesor(asesorSeleccionado?.id),
+    enabled: !!asesorSeleccionado?.id,
+  });
+
+  // 🔹 Cargar auditorías cuando haya área, asesor y cliente seleccionados
   useEffect(() => {
     const fetchAuditorias = async () => {
-      if (!filtros.areaId || !filtros.asesorId || !filtros.fecha) return;
+      if (!filtros.areaId || !filtros.asesorId || !filtros.clienteId) return;
 
       try {
         const auditorias = await supervisorService.obtenerAuditorias(
           filtros.areaId,
           filtros.asesorId,
-          filtros.fecha
+          filtros.clienteId
         );
         setActividades(auditorias);
       } catch (error) {
@@ -54,7 +69,7 @@ const PanelSupervisor = () => {
     };
 
     fetchAuditorias();
-  }, [filtros]);
+  }, [filtros.areaId, filtros.asesorId, filtros.clienteId]);
 
   // 🔁 Agrupar actividades por cliente
   const clientesAgrupados = actividades.reduce((acc, act) => {
@@ -67,8 +82,8 @@ const PanelSupervisor = () => {
     setExpandedCliente(expandedCliente === cliente ? null : cliente);
   };
 
-  if (loadingAreas) return <p>Cargando áreas...</p>;
-  if (errorAreas) return <p>Error al cargar datos.</p>;
+  if (loadingClientes || loadingAreas) return <p>Cargando datos...</p>;
+  if (errorClientes || errorAreas) return <p>Error al cargar datos.</p>;
 
   return (
     <LayoutApp>
@@ -80,25 +95,17 @@ const PanelSupervisor = () => {
           </h1>
 
           <div className="flex flex-wrap gap-3 w-full sm:w-auto">
-            {/* 📅 FECHA */}
-            <input
-              type="date"
-              className="border rounded-lg p-2 text-sm w-full sm:w-auto"
-              value={filtros.fecha}
-              onChange={(e) =>
-                setFiltros({ ...filtros, fecha: e.target.value })
-              }
-            />
-
             {/* 🏢 ÁREA */}
             <select
               className="border rounded-lg p-2 text-sm w-full sm:w-auto"
+              value={filtros.areaId} // 👈 fuerza el valor visible
               onChange={(e) => {
-                const areaSeleccionada = areas.find(
-                  (a) => a.id === e.target.value
-                );
-                setAreaSeleccionada(areaSeleccionada);
+                const area = areas.find((a) => a.id === e.target.value);
+                setAreaSeleccionada(area);
                 setFiltros((prev) => ({ ...prev, areaId: e.target.value }));
+                setAsesorSeleccionado(null);
+                setClienteSeleccionado(null);
+                setBusqueda("");
               }}
             >
               <option value="">Selecciona un área</option>
@@ -119,6 +126,8 @@ const PanelSupervisor = () => {
                 );
                 setAsesorSeleccionado(selected);
                 setFiltros((prev) => ({ ...prev, asesorId: e.target.value }));
+                setClienteSeleccionado(null);
+                setBusqueda("");
               }}
               disabled={!areaSeleccionada}
             >
@@ -129,20 +138,85 @@ const PanelSupervisor = () => {
                 </option>
               ))}
             </select>
+
+            {/* 👥 CLIENTE CON BUSCADOR */}
+            {asesorSeleccionado && clientes?.length === 0 ? (
+              <p className="text-sm text-gray-500 italic py-2">
+                El asesor seleccionado no tiene clientes registrados.
+              </p>
+            ) : (
+              <>
+                <input
+                  list="clientesDelegados"
+                  className="border rounded-lg p-2 text-sm w-full sm:w-64"
+                  placeholder={
+                    asesorSeleccionado
+                      ? "Buscar o seleccionar cliente delegado..."
+                      : "Selecciona un asesor primero"
+                  }
+                  disabled={!asesorSeleccionado}
+                  value={busqueda}
+                  onChange={(e) => {
+                    const valor = e.target.value;
+                    setBusqueda(valor);
+
+                    const cliente = clientes.find(
+                      (c) =>
+                        c.nombre.toLowerCase() === valor.toLowerCase() ||
+                        `${c.nombre} ${c.apellido}`.toLowerCase() ===
+                          valor.toLowerCase()
+                    );
+
+                    if (cliente) {
+                      setClienteSeleccionado(cliente);
+                      setFiltros((prev) => ({
+                        ...prev,
+                        clienteId: cliente.id,
+                      }));
+                    } else {
+                      setClienteSeleccionado(null);
+                      setFiltros((prev) => ({ ...prev, clienteId: "" }));
+                    }
+                  }}
+                  onSelect={(e) => {
+                    const valor = e.target.value;
+                    const cliente = clientes.find(
+                      (c) =>
+                        c.nombre.toLowerCase() === valor.toLowerCase() ||
+                        `${c.nombre} ${c.apellido}`.toLowerCase() ===
+                          valor.toLowerCase()
+                    );
+                    if (cliente) {
+                      setClienteSeleccionado(cliente);
+                      setBusqueda(`${cliente.nombre} ${cliente.apellido}`);
+                      setFiltros((prev) => ({
+                        ...prev,
+                        clienteId: cliente.id,
+                      }));
+                    }
+                  }}
+                />
+
+                <datalist id="clientesDelegados">
+                  {clientes?.map((c) => (
+                    <option key={c.id} value={`${c.nombre} ${c.apellido}`} />
+                  ))}
+                </datalist>
+              </>
+            )}
           </div>
         </div>
 
         {/* 📊 TABLA PRINCIPAL */}
-        {asesorSeleccionado ? (
+        {clienteSeleccionado ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left border-collapse">
               <thead className="bg-gray-100 text-gray-700 hidden sm:table-header-group">
                 <tr>
                   <th className="p-3">Cliente</th>
-                  <th className="p-3">Área</th>
                   <th className="p-3">Asesoría</th>
-                  <th className="p-3">Tipo</th>
                   <th className="p-3">Descripción</th>
+                  <th className="p-3"> Accion</th>
                   <th className="p-3">Fecha</th>
                   <th className="p-3 text-center">Archivo</th>
                 </tr>
@@ -176,87 +250,41 @@ const PanelSupervisor = () => {
                             )}
                           </div>
                         </td>
-                        <td className="p-3 sm:table-cell">{a.area}</td>
                         <td className="p-3 italic text-gray-600 sm:table-cell">
                           {a.asesoría}
                         </td>
-                        <td className="p-3 sm:table-cell">{a.tipo}</td>
                         <td className="p-3 sm:table-cell">{a.descripcion}</td>
+                        <td className="text-xs flex items-center gap-1 text-gray-500 mb-2">
+                          {a.accion.includes("Agrego un avance") && (
+                            <PlusCircle size={12} className="text-green-600" />
+                          )}
+                          {a.accion.includes("Actualizó un asunto") && (
+                            <Edit size={12} className="text-yellow-600" />
+                          )}
+                          <span>{a.accion}</span>
+                        </td>
                         <td className="p-3 sm:table-cell">
                           {new Date(a.fecha).toLocaleDateString("es-PE")}
                         </td>
                         <td className="p-3 text-center sm:table-cell">
-                          {a.archivos ? (
-                            <a
-                              href={a.archivos}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline flex justify-center"
-                            >
-                              <FileText size={16} />
-                            </a>
+                          {a.archivos?.length > 0 ? (
+                            a.archivos.map((url, i) => (
+                              <a
+                                key={i}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline flex justify-center"
+                              >
+                                <FileText size={16} />
+                              </a>
+                            ))
                           ) : (
                             <span className="text-gray-400">—</span>
                           )}
                         </td>
                       </tr>
                     ))}
-
-                    {/* 🔽 Detalle expandido */}
-                    {expandedCliente === cliente && (
-                      <tr className="bg-gray-50 border-b">
-                        <td colSpan={8} className="p-4">
-                          <h3 className="font-semibold text-gray-800 mb-3">
-                            Detalles de {cliente}
-                          </h3>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {data.acts.map((a, i) => (
-                              <div
-                                key={i}
-                                className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition"
-                              >
-                                <p className="font-medium text-gray-700 text-sm mb-1">
-                                  <em>{a.asesoría}</em>
-                                </p>
-                                <p className="text-xs text-gray-600 mb-2">
-                                  {a.detalle}
-                                </p>
-                                <p className="text-xs flex items-center gap-1 text-gray-500 mb-2">
-                                  {a.accion.includes("Agrego un avance") && (
-                                    <PlusCircle
-                                      size={12}
-                                      className="text-green-600"
-                                    />
-                                  )}
-                                  {a.accion.includes("Actualizó un asunto") && (
-                                    <Edit
-                                      size={12}
-                                      className="text-yellow-600"
-                                    />
-                                  )}
-
-                                  <span>{a.accion}</span>
-                                </p>
-                                {a.archivos ? (
-                                  <a
-                                    href={a.archivos}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-600 hover:underline text-xs flex items-center gap-1"
-                                  >
-                                    <FileText size={12} /> Ver archivo
-                                  </a>
-                                ) : (
-                                  <span className="text-xs text-gray-400">
-                                    Sin archivo adjunto
-                                  </span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </td>
-                      </tr>
-                    )}
                   </React.Fragment>
                 ))}
               </tbody>
@@ -264,7 +292,7 @@ const PanelSupervisor = () => {
           </div>
         ) : (
           <p className="text-center text-gray-500 mt-10">
-            Seleccioná un asesor para visualizar sus clientes y actividades.
+            Seleccioná un cliente delegado para visualizar sus actividades.
           </p>
         )}
       </main>

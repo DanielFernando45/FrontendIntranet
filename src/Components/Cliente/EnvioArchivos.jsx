@@ -34,14 +34,13 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
   // Función simplificada para obtener el token y datos básicos del usuario
   const getAuthData = () => {
     let token = null;
-    let user = { role: "estudiante" }; // Valor por defecto
+    let user = { role: "estudiante" };
 
     try {
-      // Obtener token (si lo guardaste en localStorage como string JSON)
       const tokenString = localStorage.getItem("authToken");
-      token = tokenString ? JSON.parse(tokenString) : null;
+      const parsed = tokenString ? JSON.parse(tokenString) : null;
+      token = parsed?.access_token || parsed; // ✅ si es objeto, toma el access_token
 
-      // Obtener user limpio
       const userDataString = localStorage.getItem("user");
       if (userDataString) {
         const parsedUser = JSON.parse(userDataString);
@@ -53,10 +52,7 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
         }
       }
     } catch (e) {
-      console.warn(
-        "Error leyendo datos de auth, usando valores por defecto",
-        e
-      );
+      console.warn("Error leyendo datos de auth:", e);
     }
 
     return { token, user };
@@ -118,7 +114,7 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token?.access_token || token}`, // ✅ usa el campo correcto
           },
           body: formData,
         }
@@ -138,6 +134,7 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
       setIsSubmitting(false);
     }
   };
+
   useEffect(() => {
     if (!show) {
       setAsunto("");

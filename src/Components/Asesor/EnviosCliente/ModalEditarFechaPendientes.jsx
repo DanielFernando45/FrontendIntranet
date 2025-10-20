@@ -3,12 +3,8 @@ import { useState } from "react";
 import { asuntosService } from "../../../services/asuntosServices";
 import toast from "react-hot-toast";
 
-
 const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
   const [fecha, setFecha] = useState("");
-  const [hora, setHora] = useState("12");
-  const [minuto, setMinuto] = useState("00");
-  const [ampm, setAmpm] = useState("AM");
 
   const mutate = useMutation({
     mutationFn: ({ idAsunto, fecha_estimada }) =>
@@ -20,9 +16,6 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
       toast.success("Fecha actualizada correctamente");
       setShowModalEdit(false);
       setFecha("");
-      setHora("12");
-      setMinuto("00");
-      setAmpm("AM");
     },
     onError: (error) => {
       toast.error(`Error: ${error.message || "Ocurrió un error inesperado"}`);
@@ -32,26 +25,11 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!fecha || !hora || !minuto) {
-      return toast.error("Por favor ingrese la fecha y hora correctamente");
+    if (!fecha) {
+      return toast.error("Por favor selecciona una fecha válida");
     }
 
-    let hora12 = parseInt(hora, 10);
-    let minutos = parseInt(minuto, 10);
-
-    if (isNaN(hora12) || isNaN(minutos)) {
-      return toast.error("La hora o los minutos no son válidos");
-    }
-
-    // Convertir a formato 24h
-    let hora24 = hora12;
-    if (ampm === "PM" && hora12 !== 12) hora24 += 12;
-    if (ampm === "AM" && hora12 === 12) hora24 = 0;
-
-    const horaStr = hora24.toString().padStart(2, "0");
-    const minStr = minutos.toString().padStart(2, "0");
-
-    const fecha_estimada = `${fecha} ${horaStr}:${minStr}:00`;
+    const fecha_estimada = fecha; // ✅ solo la fecha sin hora
 
     console.log("✅ Fecha Estimada a enviar:", fecha_estimada);
 
@@ -77,47 +55,6 @@ const ModalEditarFechaPendientes = ({ idAsunto, setShowModalEdit }) => {
             type="date"
             className="border border-gray-300 py-2 px-3 outline-border"
           />
-        </div>
-
-        <div className="flex gap-x-2 items-center">
-          <label htmlFor="">Hora: </label>
-          <select
-            value={hora}
-            onChange={(e) => setHora(e.target.value)}
-            className="border border-gray-300 py-2 px-2"
-          >
-            {Array.from({ length: 12 }, (_, i) => {
-              const h = (i + 1).toString();
-              return (
-                <option key={h} value={h}>
-                  {h}
-                </option>
-              );
-            })}
-          </select>
-          :
-          <select
-            value={minuto}
-            onChange={(e) => setMinuto(e.target.value)}
-            className="border border-gray-300 py-2 px-2"
-          >
-            {Array.from({ length: 60 }, (_, i) => {
-              const m = i.toString().padStart(2, "0");
-              return (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              );
-            })}
-          </select>
-          <select
-            value={ampm}
-            onChange={(e) => setAmpm(e.target.value)}
-            className="border border-gray-300 py-2 px-2"
-          >
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-          </select>
         </div>
 
         <button
