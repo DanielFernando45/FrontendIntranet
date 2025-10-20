@@ -16,7 +16,13 @@ import miasesor from "../assets/icons/miAsesor.svg";
 import candadoblack from "../assets/icons/candadoPass.svg";
 import cerrarsesion from "../assets/icons/cerrarSesion.svg";
 
-import { BellRing, FileText, Paperclip, MessageCircle } from "lucide-react";
+import {
+  Circle,
+  BellRing,
+  FileText,
+  Paperclip,
+  MessageCircle,
+} from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -138,6 +144,21 @@ const Navbar = () => {
     navigate(`/estudiante/${path}`);
     setIsMenuOpen(false);
   };
+  // Agrupar notificaciones por fecha en formato "20 octubre 2025"
+  const notificacionesAgrupadas = notifications
+    .filter((n) => n.fecha_creacion && !isNaN(new Date(n.fecha_creacion))) // ✅ usar 'fecha_creacion'
+    .sort((a, b) => new Date(b.fecha_creacion) - new Date(a.fecha_creacion))
+    .reduce((acc, noti) => {
+      const fecha = new Date(noti.fecha_creacion);
+      const dia = fecha.getDate().toString().padStart(2, "0");
+      const mes = fecha.toLocaleString("es-ES", { month: "long" }); // ej: octubre
+      const año = fecha.getFullYear();
+      const fechaClave = `${dia} ${mes} ${año}`;
+
+      if (!acc[fechaClave]) acc[fechaClave] = [];
+      acc[fechaClave].push(noti);
+      return acc;
+    }, {});
 
   return (
     <nav className="bg-white fixed top-0 left-[20px] w-full flex h-[56px] sm:h-[65px] md:h-[85px] px-7 md:px-10 md:pl-[65px] justify-between items-center shadow-md z-10">
@@ -153,53 +174,93 @@ const Navbar = () => {
         <div className="relative">
           <button onClick={toggleNoti} className="relative">
             <BellRing size={22} className="text-black" />
-            {notifications.length > 0 && (
+            {notifications.filter((n) => !n.leida).length > 0 && (
               <span className="absolute -top-1 -right-1 bg-black text-white text-[10px] font-bold rounded-full px-[5px]">
-                {notifications.length}
+                {notifications.filter((n) => !n.leida).length}
               </span>
             )}
           </button>
 
           {/* Dropdown de notificaciones */}
           {showNoti && (
-            <div className="absolute right-0 top-[40px] w-[260px] bg-white border rounded-lg shadow-lg p-3 z-50 text-sm">
-              <p className="font-semibold text-gray-800 mb-2">Notificaciones</p>
+            <>
+              <div
+                className="fixed inset-0 bg-black/30 z-40"
+                onClick={() => setShowNoti(false)}
+              />
 
-              <div className="max-h-[280px] overflow-y-auto scroll-smooth pr-1">
-                {notifications.length > 0 ? (
-                  notifications.map((n, i) => (
-                    <div
-                      key={i}
-                      onClick={() => marcarComoLeida(n.id)} // 👈 al hacer clic la marca como leída
-                      className={`flex items-start gap-2 p-2 border-b last:border-b-0 cursor-pointer transition ${
-                        n.leida ? "bg-gray-50" : "bg-white hover:bg-gray-100"
-                      }`}
-                    >
-                      {n.tipo === "avance" && (
-                        <FileText size={16} className="text-gray-700" />
-                      )}
-                      {n.tipo === "avance_enviado" && (
-                        <Paperclip size={16} className="text-gray-700" />
-                      )}
-                      {n.tipo === "nuevo_avance" && (
-                        <MessageCircle size={16} className="text-gray-700" />
-                      )}
-                      <span
-                        className={`text-gray-700 break-words ${
-                          !n.leida ? "font-semibold" : ""
-                        }`}
-                      >
-                        {n.mensaje}
-                      </span>
+              <div className="fixed top-0 right-0 h-full w-[350px] bg-white border-l shadow-lg z-50 p-4 text-sm overflow-y-auto transition-transform duration-300">
+                <p className="font-semibold text-gray-800 mb-4 text-lg">
+                  Notificaciones
+                </p>
+
+                {Object.entries(notificacionesAgrupadas).map(
+                  ([fecha, notisDelDia]) => (
+                    <div key={fecha} className="mb-4">
+                      <p className="text-sm font-semibold text-gray-500 mb-2">
+                        {fecha}
+                      </p>
+
+                      {notisDelDia.map((n, i) => (
+                        <div
+                          key={n.id || i}
+                          onClick={() => marcarComoLeida(n.id)}
+                          className={`flex items-start gap-2 p-2 border-b last:border-b-0 cursor-pointer transition ${
+                            n.leida
+                              ? "bg-gray-50"
+                              : "bg-white hover:bg-gray-100"
+                          }`}
+                        >
+                          {/* Estado de lectura */}
+                          <div className="mt-1">
+                            {n.leida ? (
+                              <Circle size={8} className="text-gray-300" />
+                            ) : (
+                              <Circle size={8} className="text-blue-500" />
+                            )}
+                          </div>
+
+                          {/* Icono por tipo de notificación */}
+                          {n.tipo === "avance_actualizado" && (
+                            <FileText
+                              size={16}
+                              className="text-gray-700 mt-1"
+                            />
+                          )}
+                          {n.tipo === "avance_enviado" && (
+                            <Paperclip
+                              size={16}
+                              className="text-gray-700 mt-1"
+                            />
+                          )}
+                          {n.tipo === "nuevo_avance" && (
+                            <MessageCircle
+                              size={16}
+                              className="text-gray-700 mt-1"
+                            />
+                          )}
+
+                          {/* Mensaje */}
+                          <span
+                            className={`text-gray-700 break-words flex-1 ${
+                              !n.leida ? "font-semibold" : ""
+                            }`}
+                          >
+                            {n.mensaje}
+
+                            {!n.leida && (
+                              <span className="ml-2 inline-block bg-blue-100 text-blue-600 text-[10px] font-medium px-2 py-[2px] rounded-full">
+                                No leído
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500 text-center py-2">
-                    Sin notificaciones
-                  </p>
+                  )
                 )}
               </div>
-            </div>
+            </>
           )}
         </div>
 
