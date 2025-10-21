@@ -268,17 +268,14 @@ const PanelSupervisor = () => {
                         </td>
                         <td className="p-3 text-center sm:table-cell">
                           {a.archivos?.length > 0 ? (
-                            a.archivos.map((url, i) => (
-                              <a
-                                key={i}
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline flex justify-center"
-                              >
-                                <FileText size={16} />
-                              </a>
-                            ))
+                            <a
+                              href={a.archivos[0]}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline flex justify-center"
+                            >
+                              <FileText size={16} />
+                            </a>
                           ) : (
                             <span className="text-gray-400">—</span>
                           )}
