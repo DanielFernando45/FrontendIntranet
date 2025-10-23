@@ -123,7 +123,7 @@ const HomeAsesor = () => {
           </div>
 
           {/* Imagen */}
-          <div className="w-full xl:w-1/2 h-[180px] sm:h-[220px] md:h-[250px] xl:h-[230px]">
+          <div className="w-full xl:w-1/2 h-[180px] sm:h-[220px] md:h-[250px] xl:h-[280px]">
             <img
               src={portada}
               alt="Graduación"
@@ -132,7 +132,7 @@ const HomeAsesor = () => {
           </div>
         </div>
 
-        <div className="flex flex-col xl:flex-row   mt-10 justify-between">
+        <div className="flex flex-col xl:flex-row   mt-4 justify-between">
           {/*Envio Asesor*/}
           <div className="bg-[#F5F5F5] rounded-xl p-4 mt-5 w-full xl:w-[780px] 1xl:w-[863px] 2xl:w-[1050px] 3xl:w-[1150px] 4xl:w-[1250px] 6xl:w-[1450px]">
             <div className="flex justify-between">
@@ -147,7 +147,7 @@ const HomeAsesor = () => {
           </div>
 
           {/*Reuniones */}
-          <div className="xl:ml-[45px] w-full flex flex-col gap-5 mt-5 2xl:w-[500px]">
+          <div className="xl:ml-[45px] w-full flex flex-col gap-5 mt-5 xl:w-[350px] 2xl:w-[500px]">
             <select
               className="border-2 rounded-md px-2 border-black "
               onChange={handleChange}
@@ -160,8 +160,8 @@ const HomeAsesor = () => {
               ))}
             </select>
 
-            <div className=" bg-[#F5F5F5] rounded-xl p-4 h-[280px] overflow-auto ">
-              <div className="  flex justify-between ">
+            <div className="bg-[#F5F5F5] rounded-xl p-4 h-[280px] overflow-auto ">
+              <div className=" flex justify-between ">
                 <h2 className="sm:text-2xl font-semibold ">Reuniones</h2>
               </div>
 

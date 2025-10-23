@@ -7,6 +7,7 @@ import FechaDerec from "../../assets/icons/arrow-right.svg";
 import flechaCirculo from "../../assets/icons/arrow-left-circulo.svg";
 import Zoom from "../../assets/icons/IconEstudiante/ZoomLink.svg";
 import DocsAsesor from "../Estudiante/EntregasEnvio/EnvioAsesor";
+import HomeEnvioAsesor from "../Estudiante/EntregasEnvio/HomeEnvioAsesor";
 import videoOff from "../../assets/icons/video-off.svg";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -266,7 +267,7 @@ const HomeEstudiante = () => {
         </div>
 
         {/*Noticias, Envios Asesor*/}
-        <section className="max-xl:hidden xl:mt-5  bg-white py-2 rounded-lg shadow-md">
+        <section className="max-xl:hidden xl:mt-2 1xl:mt-5 bg-white py-2 rounded-lg shadow-md">
           <h2 className="mb-2 text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold pl-4">
             Noticias Recientes
           </h2>
@@ -337,7 +338,7 @@ const HomeEstudiante = () => {
           </div>
         </section>
 
-        <div className="flex justify-between  flex-col mt-2 xl:flex-row md">
+        <div className="flex justify-between  flex-col mt-2 1xl:mt-5 xl:flex-row md">
           <div className="w-full xl:w-auto flex flex-col gap-2  ">
             <section className="xl:hidden  bg-white p-4 rounded-lg shadow-md">
               <h2 className="text-[12px] sm:text-[18px] lg:text-[30px] font-semibold">
@@ -434,7 +435,7 @@ const HomeEstudiante = () => {
                   Envios Asesor
                 </h1>
               </div>
-              <DocsAsesor
+              <HomeEnvioAsesor
                 key={selectedAsesoriaId}
                 idAsesoramiento={selectedAsesoriaId}
               />
@@ -588,13 +589,13 @@ const HomeEstudiante = () => {
             </div>
           </div>
 
-          <div className=" bg-white p-4 rounded-lg shadow-md max-xl:hidden xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
+          <div className=" bg-white px-4 rounded-lg shadow-md max-xl:hidden h-[230px] xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
             <div className="flex justify-between">
               <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">
                 Envios Asesor
               </h1>
             </div>
-            <DocsAsesor
+            <HomeEnvioAsesor
               key={selectedAsesoriaId}
               idAsesoramiento={selectedAsesoriaId}
             />
