@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import arrowIcon from "../../../assets/icons/IconEstudiante/arriba.svg";
 import descargar from "../../../assets/icons/Descargas.svg";
-import documentosVacios from "../../../assets/icons/documentosVacios.png";
+import { FileWarning } from "lucide-react";
 import axios from "axios";
 
 const EnviosCliente = ({ idAsesoramiento }) => {
@@ -102,7 +102,7 @@ const EnviosCliente = ({ idAsesoramiento }) => {
 
   return (
     <div className="flex flex-col text-[14px]">
-      {/* Encabezado: solo visible en sm+ */}
+      {/* Encabezado */}
       <div className="hidden sm:grid grid-cols-5 text-[#495D72] font-medium p-2 rounded-md">
         <div>Título</div>
         <div className="text-center">Estado</div>
@@ -118,7 +118,8 @@ const EnviosCliente = ({ idAsesoramiento }) => {
           <SkeletonRow />
         </>
       ) : envioCliente.length > 0 ? (
-        <div className="h-[300px] overflow-auto flex flex-col gap-2">
+        // 📌 Solo 4 filas visibles (scroll vertical para más)
+        <div className="max-h-[224px] overflow-y-auto flex flex-col gap-2 pr-1 scroll-smooth scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
           {envioCliente.map((envio, index) => {
             const documents = getDocuments(envio);
             const hasDocuments = documents.length > 0;
@@ -126,7 +127,7 @@ const EnviosCliente = ({ idAsesoramiento }) => {
             return (
               <React.Fragment key={envio.id_asunto || index}>
                 {/* Fila */}
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[#2B2829] text-xs md:text-sm font-normal bg-[#E9E7E7] p-2 rounded-md items-center">
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-[#2B2829] text-xs md:text-sm font-normal bg-[#E9E7E7] p-2 rounded-md items-center min-h-[52px]">
                   <div>{envio.asunto.cliente}</div>
                   <div className="hidden sm:flex justify-center text-white bg-[#353563] rounded px-2">
                     {envio.estado}
@@ -185,9 +186,10 @@ const EnviosCliente = ({ idAsesoramiento }) => {
           })}
         </div>
       ) : (
+        // Estado vacío
         <div className="flex justify-center">
           <div className="flex flex-col border rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A] shadow">
-            <img src={documentosVacios} alt="" />
+            <FileWarning size={50} className="text-gray-400" />
             No hay envíos realizados
           </div>
         </div>

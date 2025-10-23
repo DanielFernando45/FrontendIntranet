@@ -141,15 +141,18 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md text-xs md:text-base">
-        <div className="w-[300px] flex">Titulo</div>
-        <div className="w-[102px] hidden lg:flex justify-center">Estado</div>
-        <div className="w-[100px] flex justify-center">Fecha</div>
-        <div className="w-[250px] justify-center hidden md:flex">Archivo</div>
-        <div className="w-[65px] rounded-md px-3 flex justify-center">
-          Descargas
+      {/* Cabecera visible solo si hay datos y no está cargando */}
+      {!loading && misEnvios.length > 0 && (
+        <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md text-xs md:text-base">
+          <div className="w-[300px] flex">Título</div>
+          <div className="w-[102px] hidden lg:flex justify-center">Estado</div>
+          <div className="w-[100px] flex justify-center">Fecha</div>
+          <div className="w-[250px] justify-center hidden md:flex">Archivo</div>
+          <div className="w-[65px] rounded-md px-3 flex justify-center">
+            Descargas
+          </div>
         </div>
-      </div>
+      )}
 
       {loading ? (
         // Mostrar skeletons durante la carga
@@ -160,7 +163,7 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
           <SkeletonRow />
         </>
       ) : misEnvios.length > 0 ? (
-        // Mostrar datos cuando están cargados
+        // Mostrar datos cuando existen envíos
         <div className="max-h-[280px] overflow-auto">
           {misEnvios.map((envio, index) => {
             const documents = getDocuments(envio);
@@ -203,7 +206,6 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
 
                 {openItems[index] && hasDocuments && (
                   <div className="bg-white p-2 mt-1 rounded-md">
-                    {/* Encabezado repetido UNA VEZ */}
                     <div className="flex flex-col md:flex-row justify-between text-[#2B2829] font-normal items-center py-2 border-b text-xs md:text-base">
                       <div className="flex-1 flex">{envio.asunto.cliente}</div>
                       <div className="hidden lg:block text-white bg-[#353563] rounded px-3">
@@ -212,11 +214,11 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
                       <div className="flex-1 flex justify-center">
                         {formatDate(envio.fecha)}
                       </div>
-                      <div className="flex-1 flex flex-col gap-1 justify-center  font-semibold text-[#495D72]">
+                      <div className="flex-1 flex flex-col gap-1 justify-center font-semibold text-[#495D72]">
                         {documents.map((doc, docIndex) => (
                           <div
                             key={docIndex}
-                            className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
+                            className="flex justify-between items-center py-[6px] border-b last:border-b-0"
                           >
                             <div className="flex justify-start">
                               {formatearTextoArchivoConGuion(doc.name)}
@@ -242,9 +244,9 @@ const MisEnviosCli = ({ idAsesoramiento }) => {
           })}
         </div>
       ) : (
-        // Mostrar cuando no hay datos
+        // Mostrar mensaje cuando no hay datos
         <div className="flex justify-center">
-          <div className="flex flex-col    rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A]">
+          <div className="flex flex-col rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full h-[120px] sm:h-[190px] gap-5 text-[#82777A]">
             <img src={documentosVacios} alt="" />
             No hay envíos realizados
           </div>

@@ -134,43 +134,48 @@ const InduccionById = () => {
 
   return (
     <LayoutApp>
-      <div className="p-4 ml-[100px] xl:ml-0 relative">
-        {/* Header con información del asesoramiento */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg mb-6 relative transition-all duration-300 hover:shadow-xl">
+      <div className="p-4 sm:p-6 xl:p-8 relative">
+        {/* Header del asesoramiento */}
+        <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-lg mb-6 relative transition-all duration-300 hover:shadow-xl">
+          {/* Botón volver */}
           <button
             onClick={() => navigate("/asesor/inducciones")}
-            className="w-10 h-10 absolute rounded-full bg-gray-100 flex justify-center items-center right-4 top-4 hover:bg-gray-200 transition-colors group"
+            className="absolute right-4 top-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 flex justify-center items-center hover:bg-gray-200 transition-colors group"
             title="Volver atrás"
           >
             <img
               src={back}
-              alt="back-icon"
+              alt="Volver"
               className="group-hover:scale-110 transition-transform"
             />
           </button>
 
-          <h3 className="text-2xl font-bold mb-4 text-gray-800 pr-16">
+          {/* Título */}
+          <h3 className="text-xl sm:text-2xl font-bold mb-4 text-gray-800 pr-16 break-words">
             {asesoramiento.referencia}
           </h3>
 
+          {/* Info del asesoramiento */}
           <div className="space-y-4">
-            <div className="flex flex-wrap gap-8 items-start">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+              {/* Delegado y Área */}
               <div className="flex-1 min-w-[250px]">
                 <p className="font-semibold text-gray-700 mb-2">
-                  Delegado:{" "}
-                  <span className="font-medium text-gray-900 ml-2 bg-blue-50 px-3 py-1 rounded-full">
+                  Delegado:
+                  <span className="font-medium text-gray-900 ml-2 bg-blue-50 px-3 py-1 rounded-full inline-block mt-1 sm:mt-0">
                     {asesoramiento.delegado}
                   </span>
                 </p>
 
-                <div className="mt-4">
-                  <p className="font-semibold text-gray-700 mb-2">Área: </p>
-                  <span className="font-medium text-gray-900 bg-green-50 px-3 py-1 rounded-full">
+                <div className="mt-3">
+                  <p className="font-semibold text-gray-700 mb-2">Área:</p>
+                  <span className="font-medium text-gray-900 bg-green-50 px-3 py-1 rounded-full inline-block">
                     {asesoramiento.area}
                   </span>
                 </div>
               </div>
 
+              {/* Integrantes */}
               <div className="flex-1 min-w-[250px]">
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-semibold text-gray-700">Integrantes:</p>
@@ -181,6 +186,7 @@ const InduccionById = () => {
                     {expandedInfo ? "Ver menos" : "Ver todos"}
                   </button>
                 </div>
+
                 <ul
                   className={`space-y-1 transition-all duration-300 ${
                     expandedInfo ? "" : "max-h-20 overflow-hidden"
@@ -194,7 +200,7 @@ const InduccionById = () => {
                       <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm mr-2">
                         {index + 1}
                       </span>
-                      {item.estudiante}
+                      <span className="break-words">{item.estudiante}</span>
                     </li>
                   ))}
                 </ul>
@@ -204,9 +210,10 @@ const InduccionById = () => {
         </div>
 
         {/* Sección de videos */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <div className="flex items-center justify-between mb-6">
-            <h4 className="text-xl font-bold text-gray-800">
+        <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-lg">
+          {/* Título y contador */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
+            <h4 className="text-lg sm:text-xl font-bold text-gray-800">
               Videos de Inducción
             </h4>
             <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">
@@ -214,35 +221,44 @@ const InduccionById = () => {
             </span>
           </div>
 
+          {/* Estados */}
           {isLoadingInducciones ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <span className="ml-3">Cargando videos...</span>
+            <div className="flex justify-center items-center py-10 sm:py-12">
+              <div className="animate-spin rounded-full h-7 w-7 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
+              <span className="ml-3 text-sm sm:text-base text-gray-600">
+                Cargando videos...
+              </span>
             </div>
           ) : !induccionesByIdAsesoramiento ||
             induccionesByIdAsesoramiento.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-gray-300 text-8xl mb-4">🎬</div>
-              <h5 className="text-lg font-semibold text-gray-500 mb-2">
+            <div className="text-center py-10 sm:py-14">
+              <div className="flex justify-center mb-3">
+                <span className="text-gray-400 text-6xl sm:text-8xl">🎬</span>
+              </div>
+              <h5 className="text-base sm:text-lg font-semibold text-gray-500 mb-2">
                 No hay videos subidos aún
               </h5>
-              <p className="text-gray-400">
-                Los videos de inducción aparecerán aquí cuando sean agregados
+              <p className="text-gray-400 text-sm sm:text-base">
+                Los videos de inducción aparecerán aquí cuando sean agregados.
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            // 🧩 Grid responsive adaptable
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {induccionesByIdAsesoramiento.map((item, index) => (
                 <div
                   key={item.id}
                   className="bg-gray-50 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] group"
                 >
+                  {/* Video */}
                   <div className="relative">
                     <video
                       src={item.url}
-                      className="w-full h-32 object-cover"
+                      className="w-full h-40 sm:h-36 md:h-44 object-cover"
                       poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f3f4f6'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%23d1d5db'/%3E%3Cpolygon points='180,80 180,120 220,100' fill='%239ca3af'/%3E%3C/svg%3E"
                     />
+
+                    {/* Hover actions */}
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <button
                         onClick={() => handleVideoAction(item, "play")}
@@ -253,7 +269,7 @@ const InduccionById = () => {
                       </button>
                       <button
                         onClick={() => handleDownload(item)}
-                        className="bg-white bg-opacity-90 rounded-full p-3 mr-2 hover:scale-110 transition-transform"
+                        className="bg-white bg-opacity-90 rounded-full p-3 hover:scale-110 transition-transform"
                         title="Descargar video"
                       >
                         <img
@@ -263,6 +279,8 @@ const InduccionById = () => {
                         />
                       </button>
                     </div>
+
+                    {/* Botón eliminar */}
                     <button
                       onClick={() => handleVideoAction(item, "delete")}
                       className="absolute top-3 right-3 bg-white bg-opacity-80 rounded-full p-2 hover:bg-red-500 hover:scale-110 transition-all duration-200 opacity-0 group-hover:opacity-100"
@@ -272,6 +290,7 @@ const InduccionById = () => {
                     </button>
                   </div>
 
+                  {/* Info del video */}
                   <div className="p-4">
                     <h5 className="font-semibold text-gray-800 mb-1 line-clamp-1">
                       {item.titulo}
@@ -293,6 +312,7 @@ const InduccionById = () => {
         </div>
       </div>
 
+      {/* Modal para eliminar */}
       <ModalBorrarInduccion
         id={selectedVideo?.id}
         openModalDelete={openModalDelete}

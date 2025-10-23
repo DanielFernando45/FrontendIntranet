@@ -45,8 +45,6 @@ const Activos = () => {
     });
   };
 
-
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">Cargando...</div>
@@ -67,45 +65,59 @@ const Activos = () => {
   }
 
   return (
-    <div className="flex flex-col bg-white rounded-xl p-2">
-      <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
-        <div className="w-[100px] flex justify-center">IDAsesoria</div>
-        <div className="w-[300px] flex justify-center">Delegado</div>
-        <div className="w-[300px] flex justify-center">Tipo Trabajo</div>
-        <div className="w-[300px] flex justify-center">Modalidad</div>
-        <div className="w-[300px] flex justify-center">Referencia</div>
-        <div className="w-[250px] flex justify-center">F.inicio</div>
-        <div className="w-[250px] flex justify-center">F.vencimiento</div>
+    <div className="bg-white rounded-xl p-3 shadow-sm">
+      {/* Contenedor scrollable */}
+      <div className="overflow-x-auto rounded-md">
+        <table className="min-w-[900px] w-full text-sm text-left text-gray-700 border-collapse">
+          {/* Encabezado */}
+          <thead className="bg-[#F2F2F2] text-[#495D72] font-semibold">
+            <tr>
+              <th className="px-4 py-2 text-center w-[120px]">ID Asesoría</th>
+              <th className="px-4 py-2 text-center w-[250px]">Delegado</th>
+              <th className="px-4 py-2 text-center w-[250px]">Tipo Trabajo</th>
+              <th className="px-4 py-2 text-center w-[200px]">Modalidad</th>
+              <th className="px-4 py-2 text-center w-[250px]">Referencia</th>
+              <th className="px-4 py-2 text-center w-[180px]">F. Inicio</th>
+              <th className="px-4 py-2 text-center w-[180px]">
+                F. Vencimiento
+              </th>
+            </tr>
+          </thead>
+
+          {/* Cuerpo */}
+          <tbody>
+            {asesorias.map((asesoria, index) => (
+              <tr
+                key={asesoria.id}
+                className={`${
+                  index % 2 === 0 ? "bg-white" : "bg-[#F9F9F9]"
+                } hover:bg-blue-50 transition-colors`}
+              >
+                <td className="px-4 py-2 text-center">{asesoria.id}</td>
+                <td className="px-4 py-2 text-center">{asesoria.delegado}</td>
+                <td className="px-4 py-2 text-center">
+                  {asesoria.tipo_trabajo}
+                </td>
+                <td className="px-4 py-2 text-center">{asesoria.modalidad}</td>
+                <td className="px-4 py-2 text-center">
+                  {asesoria.profesion_asesoria}
+                </td>
+                <td className="px-4 py-2 text-center">
+                  {formatDate(asesoria.fecha_inicio)}
+                </td>
+                <td className="px-4 py-2 text-center">
+                  {formatDate(asesoria.fecha_fin)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {asesorias.map((asesoria, index) => (
-        <div
-          key={asesoria.id}
-          className={`flex justify-between text-[#2B2829] font-normal ${
-            index % 2 === 0 ? "bg-white" : "bg-[#E9E7E7]"
-          } p-[6px] rounded-md text-[14px]`}
-        >
-          <div className="w-[100px] flex justify-center">{asesoria.id}</div>
-          <div className="w-[300px] flex justify-center">
-            {asesoria.delegado}
-          </div>
-          <div className="w-[300px] flex justify-center">
-            {asesoria.tipo_trabajo}
-          </div>
-          <div className="w-[300px] flex justify-center">
-            {asesoria.modalidad}
-          </div>
-          <div className="w-[300px] flex justify-center">
-            {asesoria.profesion_asesoria}
-          </div>
-          <div className="w-[250px] flex justify-center">
-            {formatDate(asesoria.fecha_inicio)}
-          </div>
-          <div className="w-[250px] flex justify-center">
-            {formatDate(asesoria.fecha_fin)}
-          </div>
-        </div>
-      ))}
+      {/* Indicador visual opcional (móvil) */}
+      <p className="text-xs text-gray-400 mt-2 text-center block md:hidden">
+        🔹 Desliza horizontalmente para ver más columnas
+      </p>
     </div>
   );
 };

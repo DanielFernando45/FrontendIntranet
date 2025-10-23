@@ -156,7 +156,7 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
           {/* Cabecera SOLO si hay datos */}
           <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
             <div className="w-[200px] flex text-[8px] sm:text-[12px] lg:text-[17px]">
-              Titulo
+              Título
             </div>
             <div className="w-[102px] justify-center hidden lg:text-[17px] 1xl:flex">
               Estado
@@ -172,14 +172,18 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
             </div>
           </div>
 
-          <div className="max-h-[280px] overflow-auto">
+          {/* Contenedor de filas con scroll si hay más de 4 */}
+          <div
+            className="overflow-y-auto max-h-[240px] scroll-smooth scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+            style={{ scrollbarGutter: "stable" }}
+          >
             {misEnvios.map((envio, index) => {
               const documents = getDocuments(envio);
               const hasDocuments = documents.length > 0;
 
               return (
                 <React.Fragment key={envio.id_asunto || index}>
-                  <div className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2">
+                  <div className="flex justify-between text-[#2B2829] font-normal bg-[#E9E7E7] p-[6px] rounded-md items-center mt-2 min-h-[55px]">
                     <div className="w-[200px] flex text-[8px] sm:text-[12px] lg:text-[14px]">
                       {envio.asunto.asesor}
                     </div>
@@ -221,11 +225,11 @@ const EnvioAsesor = ({ idAsesoramiento }) => {
                       <div className="flex-1 flex justify-center">
                         {formatDate(envio.fecha)}
                       </div>
-                      <div className="flex-1 flex flex-col gap-1 justify-center  font-semibold text-[#495D72]">
+                      <div className="flex-1 flex flex-col gap-1 justify-center font-semibold text-[#495D72]">
                         {documents.map((doc, docIndex) => (
                           <div
                             key={docIndex}
-                            className=" flex justify-between items-center py-[6px] border-b last:border-b-0"
+                            className="flex justify-between items-center py-[6px] border-b last:border-b-0"
                           >
                             <div className="flex justify-start">
                               {formatearTextoArchivoConGuion(doc.name)}

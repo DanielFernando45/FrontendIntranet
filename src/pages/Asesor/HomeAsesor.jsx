@@ -106,41 +106,33 @@ const HomeAsesor = () => {
     <LayoutApp>
       <main className="md:mx-8">
         {/* Portada Asesor */}
-        <div className="xl:relative xl:justify-end flex items-center relative flex-col xl:flex-row bg-[#17162E] text-white rounded-2xl w-full xl:h-[410px] shadow-lg">
-          <div className="xl:absolute flex flex-col 5xl:justify-center  p-4 sm:p-9 md:p-12 lg:p-14 xl:p-10 xl:px-[55px] w-full md:h-full md:pt-7 lg:pt-14">
-            <p className="text-[12px] sm:text-[18px] md:text-[22px] lg:text-[28px] xl:text-[20px] text-[#B5B5B5]">
+        <div className="flex flex-col xl:flex-row items-center justify-between bg-[#17162E] text-white rounded-2xl w-full shadow-lg overflow-hidden">
+          {/* Texto */}
+          <div className="flex flex-col justify-center px-6 sm:px-10 md:px-14 lg:px-16 xl:px-[45px] py-6 sm:py-8 xl:py-6 w-full xl:w-1/2">
+            <p className="text-[12px] sm:text-[16px] md:text-[18px] text-[#B5B5B5] mb-2">
               {dia} de {mes}, {año}
             </p>
 
-            <div className="xl:w-[620px] 5xl:pt-20">
-              <h2 className="text-[15px] sm:text-[25px] md:text-[30px] lg:text-[40px] xl:text-[30px] 1xl:text-[35px] font-semibold mt-2 md:mt-1">
-                Bienvenido {NombreAsesor} al Intranet de asesoría de tesis
-              </h2>
-            </div>
+            <h2 className="text-[16px] sm:text-[22px] md:text-[26px] lg:text-[28px] xl:text-[24px] font-semibold leading-tight">
+              Bienvenido {NombreAsesor} al Intranet de asesoría de tesis
+            </h2>
 
-            <p className="text-[10px] sm:text-[15px] md:text-[20px] lg:text-[25px] xl:text-[17px] 1xl:text-[20px] text-[#B5B5B5] mt-4 xl:mt-3">
-              Aquí encontraras todas las herramientas que vas a utilizar
+            <p className="text-[11px] sm:text-[14px] md:text-[16px] xl:text-[15px] text-[#B5B5B5] mt-2">
+              Aquí encontrarás todas las herramientas que vas a utilizar
             </p>
           </div>
 
-          {/* Imagen móvil */}
-          <img
-            src={portada}
-            alt="Graduación"
-            className="rounded-b-xl w-full h-full object-cover xl:hidden"
-          />
-
-          {/* Imagen escritorio */}
-          <div className="max-xl:hidden">
+          {/* Imagen */}
+          <div className="w-full xl:w-1/2 h-[180px] sm:h-[220px] md:h-[250px] xl:h-[230px]">
             <img
               src={portada}
               alt="Graduación"
-              className="rounded-xl w-full h-full xl:h-[410px]   1xl:h-[410px]  2xl:h-[410px] object-cover"
+              className="w-full h-full object-cover rounded-b-2xl xl:rounded-r-2xl xl:rounded-b-none"
             />
           </div>
         </div>
 
-        <div className="flex flex-col xl:flex-row justify-between">
+        <div className="flex flex-col xl:flex-row   mt-10 justify-between">
           {/*Envio Asesor*/}
           <div className="bg-[#F5F5F5] rounded-xl p-4 mt-5 w-full xl:w-[780px] 1xl:w-[863px] 2xl:w-[1050px] 3xl:w-[1150px] 4xl:w-[1250px] 6xl:w-[1450px]">
             <div className="flex justify-between">
@@ -168,7 +160,7 @@ const HomeAsesor = () => {
               ))}
             </select>
 
-            <div className=" bg-[#F5F5F5] rounded-xl p-4 h-[230px] overflow-auto ">
+            <div className=" bg-[#F5F5F5] rounded-xl p-4 h-[280px] overflow-auto ">
               <div className="  flex justify-between ">
                 <h2 className="sm:text-2xl font-semibold ">Reuniones</h2>
               </div>
@@ -176,7 +168,7 @@ const HomeAsesor = () => {
               {reuniones.map((reunion) => (
                 <div
                   key={reunion.id}
-                  className="flex w-auto mt-4 h-auto mn:w-[300px] mn:h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[150px] md:w-[400px] mx-auto lg:w-auto items-center"
+                  className="flex w-auto mt-4 h-auto mn:w-[300px] mn:h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[200px] md:w-[400px] mx-auto lg:w-auto items-center"
                 >
                   {/* Fecha y Hora */}
                   <div className="flex flex-col h-full justify-between gap-4 items-center rounded-l-xl w-[80px] mn:w-[104px] bg-[#17162E] p-4 text-white">
