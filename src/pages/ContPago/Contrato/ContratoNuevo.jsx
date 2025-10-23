@@ -31,9 +31,11 @@ const ContratoNuevo = () => {
 
   // Mostrar solo un estudiante resumido
   const displayStudents = (clientes) => {
-    if (!Array.isArray(clientes) || clientes.length === 1) return "----------";
-    if (clientes.length === 1) return clientes[0].estudiante;
-    return `${clientes[0].estudiante} +${clientes.length - 1} más`;
+    if (!Array.isArray(clientes) || clientes.length === 0) return "----------";
+    if (clientes.length === 1) return clientes[0]?.estudiante || "----------";
+    return `${clientes[0]?.estudiante || "Estudiante"} +${
+      clientes.length - 1
+    } más`;
   };
 
   const {
@@ -115,7 +117,11 @@ const ContratoNuevo = () => {
                   {contrato.id_asesoramiento.toString().padStart(4, "0")}
                 </div>
                 <div>{contrato.delegado}</div>
-                <div>{displayStudents(contrato.cliente)}</div>
+                <div>
+                  {displayStudents(
+                    Array.isArray(contrato.cliente) ? contrato.cliente : []
+                  )}
+                </div>
                 <div>{contrato.asesor}</div>
                 <div className="flex justify-between md:justify-center gap-2">
                   <button
@@ -147,7 +153,8 @@ const ContratoNuevo = () => {
               {expandedIds[contrato.id_asesoramiento] && (
                 <div className="px-4 py-2 text-sm bg-gray-50 rounded-md">
                   <div className="font-medium mb-1">Estudiantes:</div>
-                  {contrato.cliente?.length > 0 ? (
+                  {Array.isArray(contrato.cliente) &&
+                  contrato.cliente.length > 0 ? (
                     <ul className="list-disc pl-5">
                       {contrato.cliente.map((e) => (
                         <li key={e.id_estudiante}>{e.estudiante}</li>
@@ -155,7 +162,7 @@ const ContratoNuevo = () => {
                     </ul>
                   ) : (
                     <div className="text-gray-500">
-                      Solo tienes 1 estudiante
+                      No hay estudiantes asignados
                     </div>
                   )}
                 </div>

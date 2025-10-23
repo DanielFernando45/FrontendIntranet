@@ -132,12 +132,12 @@ const HomeAsesor = () => {
           </div>
         </div>
 
-        <div className="flex flex-col xl:flex-row   mt-10 justify-between">
-          {/*Envio Asesor*/}
-          <div className="bg-[#F5F5F5] rounded-xl p-4 mt-5 w-full xl:w-[780px] 1xl:w-[863px] 2xl:w-[1050px] 3xl:w-[1150px] 4xl:w-[1250px] 6xl:w-[1450px]">
+        <div className="flex flex-col md:flex-row mt-10 justify-between gap-5">
+          {/* Envíos del cliente */}
+          <div className="bg-[#F5F5F5] rounded-xl p-4 w-full md:w-[65%]">
             <div className="flex justify-between">
-              <h2 className=" sm:text-2xl  font-semibold">
-                Ultimos Envios del Cliente
+              <h2 className="sm:text-2xl font-semibold">
+                Últimos Envíos del Cliente
               </h2>
             </div>
 
@@ -146,10 +146,10 @@ const HomeAsesor = () => {
             </div>
           </div>
 
-          {/*Reuniones */}
-          <div className="xl:ml-[45px] w-full flex flex-col gap-5 mt-5 2xl:w-[500px]">
+          {/* Reuniones */}
+          <div className="w-full md:w-[35%] flex flex-col gap-5">
             <select
-              className="border-2 rounded-md px-2 border-black "
+              className="border-2 rounded-md px-2 border-black"
               onChange={handleChange}
               value={selectedAsesoriaId || ""}
             >
@@ -160,17 +160,17 @@ const HomeAsesor = () => {
               ))}
             </select>
 
-            <div className=" bg-[#F5F5F5] rounded-xl p-4 h-[280px] overflow-auto ">
-              <div className="  flex justify-between ">
-                <h2 className="sm:text-2xl font-semibold ">Reuniones</h2>
+            <div className="bg-[#F5F5F5] rounded-xl p-4 h-[280px] overflow-auto">
+              <div className="flex justify-between">
+                <h2 className="sm:text-2xl font-semibold">Reuniones</h2>
               </div>
 
               {reuniones.map((reunion) => (
                 <div
                   key={reunion.id}
-                  className="flex w-auto mt-4 h-auto mn:w-[300px] mn:h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[200px] md:w-[400px] mx-auto lg:w-auto items-center"
+                  className="flex w-auto mt-4 h-auto mn:w-[300px] mn:h-[150px] md:h-[200px] xl:h-[130px] 1xl:h-[200px] md:w-full items-center"
                 >
-                  {/* Fecha y Hora */}
+                  {/* Fecha y hora */}
                   <div className="flex flex-col h-full justify-between gap-4 items-center rounded-l-xl w-[80px] mn:w-[104px] bg-[#17162E] p-4 text-white">
                     <div className="flex flex-col justify-center items-center gap-3">
                       <p className="text-xs md:text-sm uppercase text-[#B1B1B1]">
@@ -185,13 +185,12 @@ const HomeAsesor = () => {
                     </p>
                   </div>
 
-                  {/* Contenedor de contenido */}
+                  {/* Contenedor del contenido */}
                   <div className="flex flex-col h-full flex-1 gap-3 bg-white p-4 justify-between rounded-r-xl shadow-sm">
                     <p className="text-sm md:text-base text-[#333333] text-center">
                       {reunion.delegado}
                     </p>
 
-                    {/* Botón de Enlace Zoom */}
                     <button className="flex gap-3 justify-between px-4 h-10 md:h-12 items-center text-white rounded-lg bg-[#1271ED] hover:bg-[#1E85F6] transition-colors">
                       <a
                         href={reunion.enlace}
@@ -202,7 +201,11 @@ const HomeAsesor = () => {
                         <p className="font-medium text-xs md:text-sm">
                           Enlace Zoom
                         </p>
-                        <img src={Zoom} alt="Zoom" className="w-5 h-5" />
+                        <img
+                          src={Zoom}
+                          alt="Zoom"
+                          className="w-5 h-5 hidden xl:block"
+                        />
                       </a>
                     </button>
                   </div>
