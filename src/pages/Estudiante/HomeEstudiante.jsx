@@ -644,7 +644,7 @@ const HomeEstudiante = () => {
                         "Descripción de la noticia aquí. Si no hay descripción, se muestra este texto de ejemplo."}
                     </p>
                   </div>
-                  <a href="#" className="inline-block mt-auto">
+                  {/* <a href="#" className="inline-block mt-auto">
                     <button
                       className="flex items-center gap-2 px-6 py-3 text-xs font-bold text-center text-gray-900 uppercase transition-all rounded-lg hover:bg-gray-900/10 active:bg-gray-900/20"
                       type="button"
@@ -665,7 +665,7 @@ const HomeEstudiante = () => {
                         />
                       </svg>
                     </button>
-                  </a>
+                  </a> */}
                 </div>
               </div>
             </div>
