@@ -118,7 +118,7 @@ const SoporteEstudiante = () => {
   return (
     <LayoutApp>
       <main className="flex xl:mx-5 gap-8 justify-center lg:flex-row flex-col">
-        <div className="flex flex-col flex-1 bg-white rounded-xl p-5 gap-10 lg:gap-24">
+        <div className="flex flex-col flex-1 bg-white rounded-xl p-5 gap-10 ">
           <div className="flex w-full justify-center text-[20px] lg:text-[30px] font-semibold">
             <h1>Formulario de soporte</h1>
           </div>
@@ -174,7 +174,7 @@ const SoporteEstudiante = () => {
         </div>
 
         <div className="flex flex-col gap-10 flex-1 h-[850px] overflow-auto bg-white rounded-xl p-10">
-          <h1 className="text-[20px] lg:text-[30px]">Soluciones Frecuentes</h1>
+          <h1 className="text-[20px] lg:text-[30px]">Preguntas Frecuentes</h1>
           <PreguntasFrecuentes />
           <div className="flex flex-col items-center mt-6">
             <a

@@ -234,14 +234,14 @@ const HomeEnvioAsesor = ({ idAsesoramiento }) => {
                             <div className="flex justify-start">
                               {formatearTextoArchivoConGuion(doc.name)}
                             </div>
-                            <div className="w-[65px] flex justify-center">
+                            <div className="w-[20px] flex justify-center">
                               <button
                                 onClick={() =>
                                   handleDownload(doc.pathFile, doc.name)
                                 }
                                 className="transition-transform duration-300 hover:scale-110"
                               >
-                                <img src={descargar} alt="Descargar" />
+                                <img className="w-[10px] sm:w-[14px]" src={descargar} alt="Descargar" />
                               </button>
                             </div>
                           </div>

@@ -203,14 +203,15 @@ const PagosEstudiante = () => {
 
   return (
     <LayoutApp>
-      <main className="sm:ml-5 1xl:mr-20 sm:bg-white rounded-[20px] h-[658px] py-6 sm:p-10">
-        <div className="hidden flex-col gap-7 sm:flex">
+      <main className="sm:ml-5 1xl:mr-20 md:bg-white rounded-[20px] h-[658px] py-6 sm:p-10">
+        
+        <div className=" hidden flex-col gap-7 md:flex">
           <div className="w-full">
             <h1 className="text-[20px] font-bold">Estado de cuenta</h1>
           </div>
 
-          <div className="flex justify-between flex-wrap gap-y-10">
-            <div className="w-full 1xl:w-[80%]">
+          <div className="flex justify-between  gap-5">
+            <div className="w-full ">
               <div className="flex flex-row justify-between p-2">
                 <div className="flex justify-center flex-1">Título</div>
                 <div className="flex justify-center flex-1">Monto</div>
@@ -354,7 +355,7 @@ const PagosEstudiante = () => {
         </div>
 
         {/* RESPONSIVE */}
-        <div className="block sm:hidden space-y-9">
+        <div className="block md:hidden space-y-9">
           <div className="flex  border-b items-center">
             <button
               onClick={() => setShowOtrosPagos(false)}

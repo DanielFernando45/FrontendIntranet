@@ -3,11 +3,6 @@ import PreguntaItem from "./PreguntaItem";
 
 const dataPreguntas = [
   {
-    pregunta: "¿Quién evalúa mis avances o entregables?",
-    respuesta:
-      "Nuestros asesores especializados revisan cada avance enviado, garantizando calidad y cumplimiento con los estándares académicos.",
-  },
-  {
     pregunta: "¿Qué pasa si no entrego a tiempo un trabajo o avance?",
     respuesta:
       "Podrás reprogramar la entrega con previa coordinación. Sin embargo, es importante ajustarse al cronograma acordado para evitar retrasos en tu proyecto.",
@@ -28,11 +23,6 @@ const dataPreguntas = [
       "Sí, además de tesis completas, ofrecemos servicios por entregables específicos, como capítulos, análisis estadístico, correcciones y más.",
   },
   {
-    pregunta: "¿Cómo se realiza el pago por los servicios?",
-    respuesta:
-      "El pago puede realizarse mediante transferencia bancaria, Yape, Plin o depósito. Una vez registrado el pago, se habilita el acceso a tu asesor y cronograma.",
-  },
-  {
     pregunta: "¿Puedo solicitar solo la revisión o corrección de mi tesis?",
     respuesta:
       "Sí, ofrecemos servicios de revisión de estilo, redacción académica, normas APA, así como corrección de fondo y forma.",
@@ -40,7 +30,7 @@ const dataPreguntas = [
   {
     pregunta: "¿Cuánto tiempo tarda el desarrollo de una tesis?",
     respuesta:
-      "El tiempo varía según el grado académico y el alcance del proyecto. En promedio, una tesis completa puede tomar entre 2 a 6 meses, dependiendo del ritmo del estudiante.",
+      "El tiempo varía según el grado académico y el alcance del proyecto. ",
   },
   {
     pregunta: "¿Cómo se asigna el asesor que me apoyará?",
