@@ -54,22 +54,18 @@ const JefeOperSidebar = () => {
 
       <nav
         className={`fixed left-0 top-0
-          ${
-            isMobile
-              ? isExpanded
-                ? "w-[266px]"
-                : "w-[50px] md:w-[80px] shadow-md"
-              : isExpanded
-              ? "w-[266px]"
-              : "w-[100px]"
-          }
-          h-screen  /* 👈 ocupa exactamente el alto de la pantalla */
-          flex-shrink-0 bg-white z-30 transition-[width] duration-500 ease-in-out
-          overflow-y-auto /* 👈 solo aparece scroll si de verdad hay muchos links */
-        `}
+            ${
+              isMobile
+                ? isExpanded
+                  ? "w-[266px] h-full"
+                  : "w-[50px] h-[56px] md:w-[80px] sm:h-[65px] md:h-[85px] shadow-md"
+                : isExpanded
+                ? "w-[266px] h-full"
+                : "w-[100px] h-full"
+            } flex-shrink-0 bg-white z-30 transition-[width] duration-500 ease-in-out overflow-hidden`}
       >
         {!isMobile || isExpanded ? (
-          <div className="flex flex-col items-center gap-[30px] py-5 px-5">
+          <div className="flex flex-col items-center  gap-[30px] py-5 px-5">
             <img src={LogoAleja} alt="Logo" />
             <button onClick={toggleMenu}>
               <img src={isExpanded ? Menu : MenuRetraido} alt="Toggle Menu" />
@@ -92,30 +88,32 @@ const JefeOperSidebar = () => {
             {LINKS.map((link) => {
               const active = isActive(link.path);
               return (
-                <div key={link.title}>
-                  <Link to={link.path}>
-                    <li
-                      className={`flex items-center ${
-                        isExpanded ? "w-[266px]" : "w-[100px]"
-                      } px-[20px] py-[15px] cursor-pointer flex-shrink-0 transition-all duration-300 
-                        hover:bg-[#F0EFEF] ${
-                          active
-                            ? "bg-[#EFEFEE] border-l-[5px] border-[#000]"
-                            : ""
-                        }`}
-                      onClick={handleItemClick}
-                    >
-                      <div className="flex items-center gap-4 w-full">
-                        <img src={link.icono} className="w-6 h-6" />
-                        {isExpanded && (
-                          <span className="text-[17px] font-medium text-gray-800">
-                            {link.title}
-                          </span>
-                        )}
-                      </div>
-                    </li>
+                <li
+                  key={link.path} // Añadido key única usando el path
+                  className={`flex items-center ${
+                    isExpanded ? "w-[266px]" : "w-[100px]"
+                  } h-[77px]  cursor-pointer  bg-white z-30 transition-all duration-300 
+                hover:bg-[#F0EFEF] ${
+                  active ? "bg-[#efefef] border-l-[5px] border-[#000]" : ""
+                }`}
+                  onClick={handleItemClick}
+                >
+                  <Link
+                    to={link.path}
+                    className="flex items-center  justify-start pl-5 gap-4 w-full h-full"
+                  >
+                    <img
+                      src={link.icono}
+                      className="w-6 h-6"
+                      alt={link.title}
+                    />
+                    {isExpanded && (
+                      <span className="text-sm font-medium text-gray-800">
+                        {link.title}
+                      </span>
+                    )}
                   </Link>
-                </div>
+                </li>
               );
             })}
           </ul>

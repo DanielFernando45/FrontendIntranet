@@ -22,7 +22,8 @@ const ContratoAsignado = () => {
     documentos: "",
     documentoUrl: "",
   });
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Número de contratos por página
   const { data: contrato = [], refetch } = useQuery({
     queryKey: ["contrato"],
     queryFn: asesoriasService.listarContratosAsignados,
@@ -140,11 +141,26 @@ const ContratoAsignado = () => {
       documentos: contrato.documentos || "",
     });
   };
+  // Calcular los contratos que se deben mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentContratos = contrato.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(contrato.length / itemsPerPage);
+
+  // Función para cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-xl sm:text-2xl font-medium">Contratos Asignados</h1>
 
+      {/* Contenedor con scroll horizontal */}
       {/* Contenedor con scroll horizontal */}
       <div className="overflow-x-auto">
         <div className="min-w-[800px]">
@@ -160,7 +176,7 @@ const ContratoAsignado = () => {
           </div>
 
           {/* Filas */}
-          {contrato.map((c, index) => (
+          {currentContratos.map((c, index) => (
             <div
               key={index}
               className="grid grid-cols-8 text-sm sm:text-base items-center p-2 border-b"
@@ -194,6 +210,58 @@ const ContratoAsignado = () => {
           ))}
         </div>
       </div>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-between mt-5 gap-4 items-center">
+          <div className="flex items-center">
+            <span className="mr-2 text-sm">Rows per page</span>
+            <select
+              className="px-3 py-1 border rounded-md text-sm"
+              value={itemsPerPage}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+            </select>
+          </div>
+
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Modal Editar */}
       {editContrato && (

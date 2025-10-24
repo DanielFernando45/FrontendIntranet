@@ -11,6 +11,8 @@ const Tutoriales = () => {
   const [showAgregarTutoriales, setShowAgregarTutoriales] = useState(false);
   const [editTutoriales, setEditTutoriales] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Establecer la cantidad de items por página
 
   // 🔹 Query para obtener tutoriales
   const {
@@ -27,13 +29,14 @@ const Tutoriales = () => {
     },
   });
 
+  // 🔹 Mutación para eliminar noticia
   const eliminarMutation = useMutation({
     mutationFn: async (id) =>
       axios.delete(
         `${import.meta.env.VITE_API_PORT_ENV}/recursos/tutoriales/delete/${id}`
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries(["tutoriales"]); // refresca lista
+      queryClient.invalidateQueries(["tutoriales"]);
       toast.success("Tutorial eliminado correctamente");
     },
     onError: () => {
@@ -48,6 +51,21 @@ const Tutoriales = () => {
 
   const handleEliminar = (id) => {
     eliminarMutation.mutate(id);
+  };
+
+  // Calcular los tutoriales que se deben mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTutoriales = tutoriales.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(tutoriales.length / itemsPerPage);
+
+  // Función para cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   if (isLoading) return <p>Cargando tutoriales...</p>;
@@ -66,8 +84,8 @@ const Tutoriales = () => {
           <div className="text-center">Acciones</div>
         </div>
 
-        {/* Lista */}
-        {tutoriales.map((tutorial, index) => (
+        {/* Lista de tutoriales */}
+        {currentTutoriales.map((tutorial, index) => (
           <div
             key={tutorial.id}
             className={`grid grid-cols-4 items-center px-4 py-3 text-sm ${
@@ -96,7 +114,6 @@ const Tutoriales = () => {
 
             {/* Acciones */}
             <div className="flex justify-center gap-2">
-              {/* Editar */}
               <button
                 onClick={() => handleEditar(tutorial.id)}
                 className="w-9 h-9 rounded-md bg-[#1C1C34] flex justify-center items-center text-white hover:bg-[#2a2a4a] transition"
@@ -105,7 +122,6 @@ const Tutoriales = () => {
                 <Pencil className="w-4 h-4" />
               </button>
 
-              {/* Eliminar */}
               <button
                 onClick={() => handleEliminar(tutorial.id)}
                 className="w-9 h-9 rounded-md bg-[#8F1313] flex justify-center items-center text-white hover:bg-[#a31d1d] transition"
@@ -122,7 +138,59 @@ const Tutoriales = () => {
         ))}
       </div>
 
-      {/* Botón para agregar */}
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-between mt-5 gap-4 items-center">
+          <div className="flex items-center">
+            <span className="mr-2 text-sm">Rows per page</span>
+            <select
+              className="px-3 py-1 border rounded-md text-sm"
+              value={itemsPerPage}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+            </select>
+          </div>
+
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Botón para agregar nuevo tutorial */}
       <button
         onClick={() => setShowAgregarTutoriales(true)}
         className="mt-5 w-40 h-10 border rounded-xl text-[#5e98d3] border-[#5e98d3]"
@@ -135,7 +203,7 @@ const Tutoriales = () => {
         <AgregarTutoriales
           close={() => {
             setShowAgregarTutoriales(false);
-            queryClient.invalidateQueries(["tutoriales"]); // refresca lista
+            queryClient.invalidateQueries(["tutoriales"]);
           }}
         />
       )}
@@ -145,7 +213,7 @@ const Tutoriales = () => {
         <EditarTutoriales
           close={() => {
             setEditTutoriales(false);
-            queryClient.invalidateQueries(["tutoriales"]); // refresca lista
+            queryClient.invalidateQueries(["tutoriales"]);
           }}
           tutorialId={editId}
         />

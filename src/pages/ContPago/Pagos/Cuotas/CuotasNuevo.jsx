@@ -8,6 +8,10 @@ const CuotasNuevo = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Número de pagos por página
+
   useEffect(() => {
     const fetchCuotasSinPago = async () => {
       try {
@@ -39,6 +43,21 @@ const CuotasNuevo = () => {
     }
   };
 
+  // Paginación: Cálculo de las cuotas a mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCuotas = cuotasSinPago.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Paginación: Total de páginas
+  const totalPages = Math.ceil(cuotasSinPago.length / itemsPerPage);
+
+  // Cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">Cargando...</div>
@@ -63,8 +82,8 @@ const CuotasNuevo = () => {
           <div className="w-[140px] flex justify-center ml-5">Acción</div>
         </div>
 
-        {cuotasSinPago.length > 0 ? (
-          cuotasSinPago.map((item, index) => (
+        {currentCuotas.length > 0 ? (
+          currentCuotas.map((item, index) => (
             <div
               key={item.id_contrato}
               className={`flex justify-between items-center text-[#2B2829] font-normal ${
@@ -84,7 +103,7 @@ const CuotasNuevo = () => {
                 {item.trabajo_investigacion}
               </div>
               <div className="w-[360px] flex justify-center">
-                {item.profesion_asesoria} {/* Mostrar profesion_asesoria */}
+                {item.profesion_asesoria}
               </div>
               <button
                 onClick={() => handleAsignarPago(item)} // Aquí se pasa todo el objeto
@@ -97,6 +116,43 @@ const CuotasNuevo = () => {
         ) : (
           <div className="text-center p-4">
             No hay asesoramientos con cuotas sin pago
+          </div>
+        )}
+
+        {/* Paginación */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-5 gap-4">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <span className="flex items-center justify-center">
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
           </div>
         )}
       </div>

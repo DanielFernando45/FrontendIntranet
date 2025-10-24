@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AsignarAlContado from "../../../../Components/Administrador/Pagos/AsignarAlContado";
 
 const AlContadoNuevo = () => {
@@ -8,6 +7,10 @@ const AlContadoNuevo = () => {
   const [cuotasSinPago, setCuotasSinPago] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Número de items por página
 
   useEffect(() => {
     const fetchCuotasSinPago = async () => {
@@ -31,6 +34,21 @@ const AlContadoNuevo = () => {
     fetchCuotasSinPago();
   }, []);
 
+  // Calcular las cuotas a mostrar para la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCuotas = cuotasSinPago.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(cuotasSinPago.length / itemsPerPage);
+
+  // Cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   const handleAsignarPago = (asesoramiento) => {
     setSelectedAsesoramiento(asesoramiento);
     setAsigPago(true);
@@ -45,6 +63,7 @@ const AlContadoNuevo = () => {
   if (error) {
     return <div className="text-red-500 text-center p-4">Error: {error}</div>;
   }
+
   return (
     <>
       <div className="flex flex-col">
@@ -60,8 +79,8 @@ const AlContadoNuevo = () => {
           <div className="w-[140px] flex justify-center ml-5">Acción</div>
         </div>
 
-        {cuotasSinPago.length > 0 ? (
-          cuotasSinPago.map((item, index) => (
+        {currentCuotas.length > 0 ? (
+          currentCuotas.map((item, index) => (
             <div
               key={item.id_contrato}
               className={`flex justify-between items-center text-[#2B2829] font-normal ${
@@ -76,7 +95,7 @@ const AlContadoNuevo = () => {
               </div>
               <div className="w-[210px] flex justify-center">
                 {item.modalidad}
-              </div>{" "}
+              </div>
               <div className="w-[240px] flex justify-center">
                 {item.trabajo_investigacion}
               </div>
@@ -97,6 +116,43 @@ const AlContadoNuevo = () => {
           </div>
         )}
       </div>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-4 mt-4">
+          <button
+            onClick={() => handlePageChange(1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === 1}
+          >
+            {"<<"}
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === 1}
+          >
+            {"<"}
+          </button>
+          <span className="flex items-center justify-center">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === totalPages}
+          >
+            {">"}
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === totalPages}
+          >
+            {">>"}
+          </button>
+        </div>
+      )}
 
       {asigPago && (
         <AsignarAlContado

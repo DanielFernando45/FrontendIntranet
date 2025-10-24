@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import EditarAlContado from "../../../../Components/Administrador/Pagos/EditarAlContado";
 import tachoelimanar from "../../../../assets/icons/tacho.svg";
@@ -12,6 +12,10 @@ const EnActividad = () => {
   const [clienteEdit, setClienteEdit] = useState(null);
   const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
   const [clienteAEliminar, setClienteAEliminar] = useState(null);
+
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Número de clientes por página
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -104,6 +108,21 @@ const EnActividad = () => {
     }
   };
 
+  // Paginación: Cálculo de los clientes a mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentClientes = clientes.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Paginación: Total de páginas
+  const totalPages = Math.ceil(clientes.length / itemsPerPage);
+
+  // Cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-between text-[#495D72] font-medium p-[6px] pr-10 rounded-md">
@@ -115,7 +134,7 @@ const EnActividad = () => {
         <div className="w-[120px] flex justify-center">Accion</div>
       </div>
 
-      {clientes.map((cliente, index) => (
+      {currentClientes.map((cliente, index) => (
         <div
           key={cliente.id_infoPago}
           className={`flex justify-between text-[#2B2829] ${
@@ -153,6 +172,43 @@ const EnActividad = () => {
           </div>
         </div>
       ))}
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-4 gap-4">
+          <button
+            onClick={() => handlePageChange(1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === 1}
+          >
+            {"<<"}
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === 1}
+          >
+            {"<"}
+          </button>
+          <span className="flex items-center justify-center">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === totalPages}
+          >
+            {">"}
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === totalPages}
+          >
+            {">>"}
+          </button>
+        </div>
+      )}
 
       {editar && (
         <EditarAlContado
