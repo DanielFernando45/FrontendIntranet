@@ -8,6 +8,8 @@ const ListarAsesor = () => {
   const navigate = useNavigate();
   const [asesores, setAsesores] = useState([]);
   const [todosLosAsesores, setTodosLosAsesores] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Establecer la cantidad de items por página
 
   useEffect(() => {
     const fetchAsesores = async () => {
@@ -49,8 +51,7 @@ const ListarAsesor = () => {
   };
 
   const handleEliminarAsesor = async (id) => {
-    if (!window.confirm("¿Estás seguro que deseas eliminar este asesor?"))
-      return;
+    if (!window.confirm("¿Estás seguro de eliminar este asesor?")) return;
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_PORT_ENV}/asesor/delete/${id}`
@@ -65,6 +66,21 @@ const ListarAsesor = () => {
     }
   };
 
+  // Función para cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  // Calcular los asesores que se deben mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAsesores = asesores.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(asesores.length / itemsPerPage);
+
   return (
     <>
       <div className="flex flex-col gap-3">
@@ -73,7 +89,7 @@ const ListarAsesor = () => {
       </div>
 
       <div className="overflow-x-auto mt-4">
-        <div className="min-w-[700px]">
+        <div className="min-w-[700px] md:min-w-full">
           <div className="grid grid-cols-7 text-[#495D72] font-medium p-2 rounded-md bg-gray-100 text-sm">
             <div className="text-center">ID</div>
             <div className="text-center">Asesor</div>
@@ -84,8 +100,8 @@ const ListarAsesor = () => {
             <div className="text-center">Eliminar</div>
           </div>
 
-          {asesores.length > 0 ? (
-            asesores.map((asesor, index) => (
+          {currentAsesores.length > 0 ? (
+            currentAsesores.map((asesor, index) => (
               <div
                 key={asesor.id}
                 className={`grid grid-cols-7 items-center text-[#2B2829] text-sm md:text-base p-2 rounded-md ${
@@ -102,7 +118,7 @@ const ListarAsesor = () => {
                 <div className="flex justify-center">
                   <button
                     onClick={() => handleEditarAsesor(asesor?.id)}
-                    className="rounded-md px-3 py-1 bg-[#1C1C34] text-white text-sm hover:bg-[#2f2f50]"
+                    className="w-[110px] rounded-md px-3 py-1 bg-[#1C1C34] flex justify-center text-white"
                   >
                     Editar
                   </button>
@@ -125,10 +141,65 @@ const ListarAsesor = () => {
         </div>
       </div>
 
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex flex-col md:flex-row justify-between mt-5 gap-4 items-center">
+          {/* Filtro de filas por página */}
+          <div className="flex items-center">
+            <span className="mr-2 text-sm">Rows per page</span>
+            <select
+              className="px-3 py-1 border rounded-md text-sm"
+              value={itemsPerPage}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+            </select>
+          </div>
+
+          {/* Indicador de página */}
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          {/* Botones de navegación */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-center mt-5">
         <button
           onClick={handlerAgregarAsesor}
-          className="text-white w-full sm:w-[230px] h-10 rounded font-semibold bg-[#1B435D] hover:bg-[#163647]"
+          className="flex justify-between text-white w-[210px] h-8 rounded font-semibold bg-[#1B435D] px-6 py-1 mt-5"
         >
           Agregar Asesor
         </button>

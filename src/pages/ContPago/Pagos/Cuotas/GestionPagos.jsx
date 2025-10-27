@@ -10,6 +10,10 @@ const GestionPagos = () => {
   const [selectedPago, setSelectedPago] = useState(null);
   const [pagoToDelete, setPagoToDelete] = useState(null);
 
+  // Paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Número de pagos por página
+
   useEffect(() => {
     const fetchPagos = async () => {
       try {
@@ -98,6 +102,21 @@ const GestionPagos = () => {
     return pagosArray.reduce((total, pago) => total + pago.monto, 0);
   };
 
+  // Paginación: Cálculo de los pagos a mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPagos = pagos.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Paginación: Total de páginas
+  const totalPages = Math.ceil(pagos.length / itemsPerPage);
+
+  // Cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   if (loading) return <div>Cargando datos de pagos...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -114,7 +133,7 @@ const GestionPagos = () => {
           <div className="w-[200px] flex justify-center">Acción</div>
         </div>
 
-        {pagos.map((pagoInfo, idx) => (
+        {currentPagos.map((pagoInfo, idx) => (
           <div key={pagoInfo.id_infopago}>
             {/* Vista Desktop */}
             <div
@@ -170,70 +189,45 @@ const GestionPagos = () => {
                 </button>
               </div>
             </div>
-
-            {/* Vista Mobile/Tablet */}
-            <div
-              className={`md:hidden flex flex-col gap-2 text-[#575051] font-normal p-4 rounded-2xl ${
-                idx % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
-              }`}
-            >
-              <div>
-                <span className="font-semibold">IdPago:</span>{" "}
-                {pagoInfo.id_infopago}
-              </div>
-              <div>
-                <span className="font-semibold">Delegado:</span>{" "}
-                {pagoInfo.delegado}
-              </div>
-              <div>
-                <span className="font-semibold">Contrato:</span>{" "}
-                {pagoInfo.contrato}
-              </div>
-              <div>
-                <span className="font-semibold">Pagos:</span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {pagoInfo.pagos
-                    .sort((a, b) => a.nombre.localeCompare(b.nombre))
-                    .map((pago) => (
-                      <div
-                        key={pago.id}
-                        className="bg-gray-100 rounded-lg px-2 py-1 text-xs"
-                      >
-                        <p>
-                          {pago.nombre}: S/. {pago.monto}
-                        </p>
-                        {pago.estado_pago === "pagado" ? (
-                          <p className="text-green-600 text-[10px]">
-                            {formatDate(pago.fecha_pago)}
-                          </p>
-                        ) : (
-                          <p className="text-[#FF1E00] text-[10px]">Por pagar</p>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              </div>
-              <div>
-                <span className="font-semibold">Monto Total:</span> S/.{" "}
-                {calculateTotal(pagoInfo.pagos)}
-              </div>
-              <div className="flex gap-2 mt-2">
-                <button
-                  className="flex-1 px-1 py-1 bg-[#1C1C34] text-white text-[10px] rounded-md"
-                  onClick={() => handleActualizarClick(pagoInfo)}
-                >
-                  Actualizar 
-                </button>
-                <button
-                  className="flex-1 px-1 py-1 border border-red-500 text-red-500 text-[10px] rounded-md"
-                  onClick={() => handleEliminarClick(pagoInfo)}
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
           </div>
         ))}
+
+        {/* Paginación */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-5 gap-4">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <span className="flex items-center justify-center">
+              Página {currentPage} de {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        )}
       </div>
 
       {actualizar && selectedPago && (

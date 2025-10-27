@@ -8,34 +8,15 @@ import { useQuery } from "@tanstack/react-query";
 import { asesoriasService } from "../../services/asesoriasService";
 import axios from "axios";
 
-const parseToDate = (input) => {
-  if (!input) return null;
-  if (input instanceof Date) return isNaN(input.getTime()) ? null : input;
-  if (typeof input === "number") {
-    const d = new Date(input);
-    return isNaN(d.getTime()) ? null : d;
-  }
-  if (typeof input === "string") {
-    let s = input.trim();
-    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) s += "T00:00:00Z";
-    else if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(s))
-      s = s.replace(" ", "T") + "Z";
-    const d = new Date(s);
-    return isNaN(d.getTime()) ? null : d;
-  }
-  return null;
-};
-
 const safeFormatDate = (fecha) => {
-    const date = new Date(fecha);
-    return date.toLocaleDateString("es-PE", {
-      timeZone: "UTC",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  };
-
+  const date = new Date(fecha);
+  return date.toLocaleDateString("es-PE", {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
 
 const JefeOpeAsignar = () => {
   const [expandedIds, setExpandedIds] = useState([]);

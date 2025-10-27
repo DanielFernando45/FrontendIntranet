@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import flechaabajo from "../../../assets/icons/Flecha.svg";
 import flechaarriba from "../../../assets/icons/arrow-up.svg";
@@ -20,6 +20,8 @@ const ContratoNuevo = () => {
     documentos: "",
   });
   const [currentIdAsesoramiento, setCurrentIdAsesoramiento] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Página actual
+  const [itemsPerPage] = useState(5); // Elementos por página
   const navigate = useNavigate();
 
   const toggleExpand = (id) => {
@@ -85,6 +87,22 @@ const ContratoNuevo = () => {
     }
   };
 
+  // Paginación
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentContracts = contratosNoAsignados.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(contratosNoAsignados.length / itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   if (isLoading) return <div>Cargando...</div>;
   if (isError) return <div>Error al cargar: {error.message}</div>;
 
@@ -106,7 +124,7 @@ const ContratoNuevo = () => {
             No hay contratos nuevos por asignar
           </div>
         ) : (
-          contratosNoAsignados.map((contrato, index) => (
+          currentContracts.map((contrato, index) => (
             <React.Fragment key={contrato.id_asesoramiento}>
               <div
                 className={`grid grid-cols-1 md:grid-cols-5 gap-2 items-center p-2 rounded-md ${
@@ -172,6 +190,43 @@ const ContratoNuevo = () => {
         )}
       </div>
 
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-4 mt-4">
+          <button
+            onClick={() => handlePageChange(1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === 1}
+          >
+            {"<<"}
+          </button>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === 1}
+          >
+            {"<"}
+          </button>
+          <span className="flex items-center justify-center">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === totalPages}
+          >
+            {">"}
+          </button>
+          <button
+            onClick={() => handlePageChange(totalPages)}
+            className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+            disabled={currentPage === totalPages}
+          >
+            {">>"}
+          </button>
+        </div>
+      )}
+
       {/* Modal */}
       {asigContrato && (
         <div
@@ -186,6 +241,7 @@ const ContratoNuevo = () => {
               Asignar Contrato
             </h1>
 
+            {/* Formulario */}
             <div className="flex flex-col gap-6">
               {/* Modalidad y Servicio */}
               <div className="flex flex-col md:flex-row gap-4">

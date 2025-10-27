@@ -11,6 +11,8 @@ const Noticias = () => {
   const [showAgregarNoticias, setShowAgregarNoticias] = useState(false);
   const [editNoticias, setEditNoticias] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Establecer la cantidad de items por página
 
   // 🔹 Función para extraer nombre del archivo
   const extraerNombreArchivo = (url) => {
@@ -66,6 +68,21 @@ const Noticias = () => {
     eliminarMutation.mutate(id);
   };
 
+  // Calcular las noticias que se deben mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentNoticias = noticias.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(noticias.length / itemsPerPage);
+
+  // Función para cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   if (isLoading) return <p>Cargando noticias...</p>;
   if (isError) return <p>Error al cargar las noticias.</p>;
 
@@ -83,8 +100,8 @@ const Noticias = () => {
           <div className="text-center">Acciones</div>
         </div>
 
-        {/* Lista */}
-        {noticias.map((noticia, index) => (
+        {/* Lista de noticias */}
+        {currentNoticias.map((noticia, index) => (
           <div
             key={noticia.id}
             className={`grid grid-cols-7 items-center px-4 py-3 text-sm ${
@@ -136,14 +153,66 @@ const Noticias = () => {
         ))}
       </div>
 
-      {/* Botón para agregar */}
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-between mt-5 gap-4 items-center">
+          <div className="flex items-center">
+            <span className="mr-2 text-sm">Rows per page</span>
+            <select
+              className="px-3 py-1 border rounded-md text-sm"
+              value={itemsPerPage}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+            </select>
+          </div>
+
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Botón para agregar nueva noticia */}
       <button
         onClick={() => setShowAgregarNoticias(true)}
         className="mt-5 w-40 h-10 border rounded-xl text-[#5e98d3] border-[#5e98d3]"
       >
         Noticia Nueva
       </button>
-      {/* Modal para agregar */}
+
       {showAgregarNoticias && (
         <AgregarNoticias
           close={() => {
@@ -152,7 +221,7 @@ const Noticias = () => {
           }}
         />
       )}
-      {/* Modal para editar */}
+
       {editNoticias && (
         <EditarNoticias
           close={() => {

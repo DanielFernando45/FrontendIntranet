@@ -11,6 +11,8 @@ const Guias = () => {
   const [showAgregarGuias, setShowAgregarGuias] = useState(false);
   const [editGuias, setEditGuias] = useState(false);
   const [editId, setEditId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Establecer la cantidad de items por página
 
   // Función para extraer el nombre del archivo de una URL
   const extraerNombreArchivo = (url) => {
@@ -67,6 +69,21 @@ const Guias = () => {
     eliminarMutation.mutate(id);
   };
 
+  // Calcular los guías que se deben mostrar en la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentGuias = guias.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(guias.length / itemsPerPage);
+
+  // Función para cambiar de página
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   if (isLoading) return <p>Cargando guías...</p>;
   if (isError) return <p>Error al cargar las guías.</p>;
 
@@ -86,7 +103,7 @@ const Guias = () => {
         </div>
 
         {/* Lista de guías */}
-        {guias.map((guia, index) => (
+        {currentGuias.map((guia, index) => (
           <div
             key={guia.id}
             className={`grid grid-cols-6 items-center px-4 py-3 text-sm ${
@@ -159,6 +176,58 @@ const Guias = () => {
       >
         Guía Nueva
       </button>
+
+      {/* Paginación */}
+      {totalPages > 1 && (
+        <div className="flex justify-between mt-5 gap-4 items-center">
+          <div className="flex items-center">
+            <span className="mr-2 text-sm">Rows per page</span>
+            <select
+              className="px-3 py-1 border rounded-md text-sm"
+              value={itemsPerPage}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+            </select>
+          </div>
+
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => handlePageChange(1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+              disabled={currentPage === totalPages}
+            >
+              {">>"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {showAgregarGuias && (
         <AgregarGuias
