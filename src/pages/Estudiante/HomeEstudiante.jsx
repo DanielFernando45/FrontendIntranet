@@ -507,7 +507,7 @@ const HomeEstudiante = () => {
                     })
                   ) : (
                     <div className="flex justify-center mt-5">
-                      <div className="flex flex-col rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[150px] 5xl:h-[150px] gap-5 text-[#82777A] ">
+                      <div className="flex flex-col rounded-[12px] text-[12px] justify-center items-center w-[280px] sm:w-[370px] mn:w-[335px] lg:w-full xl:w-[375px] h-[120px] sm:h-[180px] lg:h-[220px] xl:h-[131px]  gap-5 text-[#82777A] ">
                         <img src={videoOff} alt="" />
                         No hay reuniones programadas
                       </div>
