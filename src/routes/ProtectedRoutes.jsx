@@ -19,7 +19,7 @@ const ProtectedRoutes = ({ allowedRoles }) => {
     return <Navigate to="/unauthorized" />;
   }
 
-  return <Outlet />;
+  return <Outlet />;  
 };
 
 export default ProtectedRoutes;

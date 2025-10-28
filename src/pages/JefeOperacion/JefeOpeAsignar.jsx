@@ -23,6 +23,10 @@ const JefeOpeAsignar = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [contratoToChange, setContratoToChange] = useState(null);
 
+  // 👇 Nuevo: paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   const { data: asesoria = [], refetch } = useQuery({
     queryKey: ["asesoria"],
     queryFn: async () => {
@@ -74,6 +78,18 @@ const JefeOpeAsignar = () => {
     setContratoToChange(null);
   };
 
+  // 👇 Calcular elementos por página
+  const totalPages = Math.ceil(asesoria.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAsesorias = asesoria.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <LayoutApp>
       <div className="px-4 md:ml-10">
@@ -100,116 +116,183 @@ const JefeOpeAsignar = () => {
 
             {/* Filas */}
             <div className="flex flex-col gap-1 px-1">
-              {asesoria.map((contrato, index) => {
-                const finContratoFmt =
-                  safeFormatDate(contrato?.finContrato) ?? "Por Asignar";
-                const tipoTrabajo =
-                  contrato?.tipotrabajo ??
-                  contrato?.tipoTrabajo ??
-                  "Por Asignar";
+              {currentAsesorias.length > 0 ? (
+                currentAsesorias.map((contrato, index) => {
+                  const finContratoFmt =
+                    safeFormatDate(contrato?.finContrato) ?? "Por Asignar";
+                  const tipoTrabajo =
+                    contrato?.tipotrabajo ??
+                    contrato?.tipoTrabajo ??
+                    "Por Asignar";
 
-                return (
-                  <React.Fragment key={contrato.id_asesoramiento}>
-                    <div
-                      className={`flex items-center text-center justify-between px-1 rounded-md text-xs md:text-sm ${
-                        index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-                      } py-2`}
-                    >
-                      <div className="min-w-[80px]">
-                        {String(contrato.id_asesoramiento).padStart(4, "0")}
-                      </div>
-                      <div className="min-w-[200px]">
-                        {contrato?.delegado ?? "—"}
-                      </div>
-                      <div className="min-w-[160px]">{finContratoFmt}</div>
-                      <div className="min-w-[160px]">{tipoTrabajo}</div>
-                      <div className="min-w-[160px]">
-                        {contrato?.area ?? "—"}
-                      </div>
-                      <div className="min-w-[200px]">
-                        {displayStudents(contrato?.cliente)}
-                      </div>
-                      <div className="min-w-[200px]">
-                        {contrato?.asesor ?? "—"}
-                      </div>
-
-                      <div className="flex min-w-[100px] justify-between px-3">
-                        <div className="text-[8px] flex flex-col items-center justify-center">
-                          <button
-                            onClick={() => handleEstadoClick(contrato)}
-                            className={`w-[50px] h-[22px] font-semibold rounded-3xl border border-black flex items-center transition-all duration-300 ease-in-out 
-                              ${
-                                contrato.estado
-                                  ? "bg-green-100 justify-end"
-                                  : "bg-red-100 justify-start"
-                              }`}
-                          >
-                            <div
-                              className={`w-[18px] h-[18px] m-0.5 rounded-full transition-all duration-300 ease-in-out
-                              ${
-                                contrato.estado ? "bg-green-500" : "bg-red-500"
-                              }`}
-                            >
-                              <img
-                                className="h-full w-full transition-transform duration-300 ease-in-out"
-                                src={contrato.estado ? activado : desactivado}
-                                alt="estado"
-                              />
-                            </div>
-                          </button>
-                          <label className="mt-1 text-[10px]">
-                            {contrato.estado ? "activado" : "desactivado"}
-                          </label>
+                  return (
+                    <React.Fragment key={contrato.id_asesoramiento}>
+                      <div
+                        className={`flex items-center text-center justify-between px-1 rounded-md text-xs md:text-sm ${
+                          index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                        } py-2`}
+                      >
+                        <div className="min-w-[80px]">
+                          {String(contrato.id_asesoramiento).padStart(4, "0")}
+                        </div>
+                        <div className="min-w-[200px]">
+                          {contrato?.delegado ?? "—"}
+                        </div>
+                        <div className="min-w-[160px]">{finContratoFmt}</div>
+                        <div className="min-w-[160px]">{tipoTrabajo}</div>
+                        <div className="min-w-[160px]">
+                          {contrato?.area ?? "—"}
+                        </div>
+                        <div className="min-w-[200px]">
+                          {displayStudents(contrato?.cliente)}
+                        </div>
+                        <div className="min-w-[200px]">
+                          {contrato?.asesor ?? "—"}
                         </div>
 
-                        <button
-                          onClick={() =>
-                            toggleExpand(contrato.id_asesoramiento)
-                          }
-                        >
-                          <img
-                            src={
-                              expandedIds.includes(contrato.id_asesoramiento)
-                                ? flechaarriba
-                                : flechaabajo
-                            }
-                            alt={
-                              expandedIds.includes(contrato.id_asesoramiento)
-                                ? "Cerrar"
-                                : "Expandir"
-                            }
-                          />
-                        </button>
-                      </div>
-                    </div>
-
-                    {expandedIds.includes(contrato.id_asesoramiento) && (
-                      <div
-                        className={`px-4 py-2 rounded-b-md text-xs md:text-sm ${
-                          index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
-                        }`}
-                      >
-                        <div className="font-medium mb-2">Estudiantes :</div>
-                        {Array.isArray(contrato?.cliente) &&
-                        contrato.cliente.length > 0 ? (
-                          <ul className="list-disc pl-5">
-                            {contrato.cliente.map((estudiante) => (
-                              <li key={estudiante.id_estudiante}>
-                                {estudiante.estudiante}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <div className="text-gray-500">
-                            Solo tienes 1 estudiante
+                        <div className="flex min-w-[100px] justify-between px-3">
+                          <div className="text-[8px] flex flex-col items-center justify-center">
+                            <button
+                              onClick={() => handleEstadoClick(contrato)}
+                              className={`w-[50px] h-[22px] font-semibold rounded-3xl border border-black flex items-center transition-all duration-300 ease-in-out 
+                                ${
+                                  contrato.estado
+                                    ? "bg-green-100 justify-end"
+                                    : "bg-red-100 justify-start"
+                                }`}
+                            >
+                              <div
+                                className={`w-[18px] h-[18px] m-0.5 rounded-full transition-all duration-300 ease-in-out
+                                ${
+                                  contrato.estado
+                                    ? "bg-green-500"
+                                    : "bg-red-500"
+                                }`}
+                              >
+                                <img
+                                  className="h-full w-full transition-transform duration-300 ease-in-out"
+                                  src={contrato.estado ? activado : desactivado}
+                                  alt="estado"
+                                />
+                              </div>
+                            </button>
+                            <label className="mt-1 text-[10px]">
+                              {contrato.estado ? "activado" : "desactivado"}
+                            </label>
                           </div>
-                        )}
+
+                          <button
+                            onClick={() =>
+                              toggleExpand(contrato.id_asesoramiento)
+                            }
+                          >
+                            <img
+                              src={
+                                expandedIds.includes(contrato.id_asesoramiento)
+                                  ? flechaarriba
+                                  : flechaabajo
+                              }
+                              alt={
+                                expandedIds.includes(contrato.id_asesoramiento)
+                                  ? "Cerrar"
+                                  : "Expandir"
+                              }
+                            />
+                          </button>
+                        </div>
                       </div>
-                    )}
-                  </React.Fragment>
-                );
-              })}
+
+                      {expandedIds.includes(contrato.id_asesoramiento) && (
+                        <div
+                          className={`px-4 py-2 rounded-b-md text-xs md:text-sm ${
+                            index % 2 === 0 ? "bg-[#E9E7E7]" : "bg-white"
+                          }`}
+                        >
+                          <div className="font-medium mb-2">Estudiantes :</div>
+                          {Array.isArray(contrato?.cliente) &&
+                          contrato.cliente.length > 0 ? (
+                            <ul className="list-disc pl-5">
+                              {contrato.cliente.map((estudiante) => (
+                                <li key={estudiante.id_estudiante}>
+                                  {estudiante.estudiante}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <div className="text-gray-500">
+                              Solo tienes 1 estudiante
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })
+              ) : (
+                <div className="text-center text-gray-500 py-4">
+                  No se encontraron registros.
+                </div>
+              )}
             </div>
+
+            {/* 🔢 Paginación */}
+            {totalPages > 1 && (
+              <div className="flex flex-col md:flex-row justify-between mt-5 gap-4 items-center">
+                {/* Filtro de filas */}
+                <div className="flex items-center">
+                  <span className="mr-2 text-sm">Filas por página</span>
+                  <select
+                    className="px-3 py-1 border rounded-md text-sm"
+                    value={itemsPerPage}
+                    onChange={(e) => {
+                      setItemsPerPage(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                  >
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={30}>30</option>
+                  </select>
+                </div>
+
+                {/* Página actual */}
+                <span className="text-sm">
+                  Página {currentPage} de {totalPages}
+                </span>
+
+                {/* Botones */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => handlePageChange(1)}
+                    className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+                    disabled={currentPage === 1}
+                  >
+                    {"<<"}
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+                    disabled={currentPage === 1}
+                  >
+                    {"<"}
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+                    disabled={currentPage === totalPages}
+                  >
+                    {">"}
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(totalPages)}
+                    className="px-4 py-2 bg-gray-200 text-black rounded-md hover:bg-gray-300 transition-colors"
+                    disabled={currentPage === totalPages}
+                  >
+                    {">>"}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
