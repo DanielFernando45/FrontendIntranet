@@ -71,8 +71,7 @@ const HomeEstudiante = () => {
     if (selectedAsesoriaId) {
       setLoadingReuniones(true);
       fetch(
-        `${
-          import.meta.env.VITE_API_PORT_ENV
+        `${import.meta.env.VITE_API_PORT_ENV
         }/reuniones/espera/${selectedAsesoriaId}`
       )
         .then((res) => res.json())
@@ -295,11 +294,13 @@ const HomeEstudiante = () => {
                       key={`${noticia.id}-${index}`}
                       className="bg-[#1C1C34] w-[192px] lg:w-[230px] h-[204px] lg:h-[242px] rounded-[10px] overflow-hidden hover:scale-105 transition-transform duration-300 flex-shrink-0"
                     >
-                      <img
-                        className="w-full h-[115px] lg:h-[153px] object-cover"
-                        src={noticia.imagen}
-                        alt={`Noticia ${noticia.id}`}
-                      />
+                      <div className="w-full h-[115px] lg:h-[153px] overflow-hidden flex items-center justify-center ">
+                        <img
+                          className="max-w-full max-h-full object-contain "
+                          src={noticia.imagen}
+                          alt={`Noticia ${noticia.id}`}
+                        />
+                      </div>
                       <div className="m-4 gap-[13px]">
                         <p className="text-white text-[11px] lg:text-[13px] line-clamp-3">
                           {noticia?.titulo || "Título no disponible"}
@@ -368,11 +369,14 @@ const HomeEstudiante = () => {
                           key={`${noticia.id}-${index}`}
                           className="bg-[#1C1C34] w-[192px] lg:w-[230px] h-[204px] lg:h-[242px] rounded-[10px] overflow-hidden hover:scale-105 transition-transform duration-300 flex-shrink-0"
                         >
-                          <img
-                            className="w-full h-[115px] lg:h-[153px] object-cover"
-                            src={noticia.imagen}
-                            alt={`Noticia ${noticia.id}`}
-                          />
+                          <div className="w-full h-[115px] lg:h-[153px] overflow-hidden flex items-center justify-center ">
+                            <img
+                              className="w-full h-full object-contain"
+                              src={noticia.imagen}
+                              alt={`Noticia ${noticia.id}`}
+                            />
+                          </div>
+
                           <div className="m-4 gap-[13px]">
                             <p className="text-white text-[11px] lg:text-[13px] line-clamp-3">
                               {noticia?.titulo || "Título no disponible"}

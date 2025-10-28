@@ -5,7 +5,8 @@ import Diana from "../../../assets/PerfilAsesores/Diana.png";
 import Victor from "../../../assets/PerfilAsesores/Victor.png";
 import Antony from "../../../assets/PerfilAsesores/Antony.png";
 import Daniel from "../../../assets/PerfilAsesores/DanielDominguez.png";
-import Emanuel from "../../../assets/PerfilAsesores/Emanuel.png";
+import Olenka from "../../../assets/PerfilAsesores/Olenka.jpg";
+import Brenda from "../../../assets/PerfilAsesores/Brenda.jpg";
 import Haider from "../../../assets/PerfilAsesores/Haider.png";
 import Lidia from "../../../assets/PerfilAsesores/Lidia.png";
 
@@ -24,8 +25,9 @@ const MiAsesor = () => {
     { nombre: "Diana Alexandra", imagen: Diana },
     { nombre: "Victor Alfonso", imagen: Victor },
     { nombre: "Antony", imagen: Antony },
+    { nombre: "Brenda Lucia", imagen: Brenda },
+    { nombre: "Olenka Ethel", imagen: Olenka },
     { nombre: "Daniel Emmerson", imagen: Daniel },
-    { nombre: "Emanuel Oswaldo", imagen: Emanuel },
     { nombre: "Haider Dante", imagen: Haider },
     { nombre: "Lidia Balbina", imagen: Lidia },
   ];
@@ -122,8 +124,7 @@ const MiAsesor = () => {
               <h1 className="text-xl font-medium">
                 {asesor.nombre} {asesor.apellido}
               </h1>
-              <h2>{asesor.especialidad}</h2>
-              <p>{asesor.gradoAcademico}</p>
+
             </div>
           ) : (
             <p className="text-gray-500">
