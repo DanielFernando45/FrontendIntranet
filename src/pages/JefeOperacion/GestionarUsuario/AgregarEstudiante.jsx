@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 const AgregarEstudiante = () => {
   const navigate = useNavigate();
 
+  const [isSubmitting, setIsSubmitting] = useState(false); // 🚫 Evita doble envío
+
   const [clienteData, setClienteData] = useState({
     dni: "",
     nombre: "",
@@ -33,18 +35,28 @@ const AgregarEstudiante = () => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // 🔒 Bloquea clics repetidos
+
+    setIsSubmitting(true);
+    const toastId = toast.loading("Guardando estudiante...");
+
     try {
       await axios.post(
         `${import.meta.env.VITE_API_PORT_ENV}/cliente/add`,
         clienteData
       );
-      toast.success("Cliente añadido exitosamente ✅");
+      toast.success("Cliente añadido exitosamente ✅", { id: toastId });
       navigate("/jefe-operaciones/gestionar-usuarios");
     } catch (error) {
       console.error("Error al añadir estudiante:", error);
-      toast.error("❌ Error al guardar estudiante. Revisa los datos.");
+      toast.error("❌ Error al guardar estudiante. Revisa los datos.", {
+        id: toastId,
+      });
+    } finally {
+      setIsSubmitting(false); // 🔓 Reactiva el botón
     }
   };
+
   return (
     <LayoutApp>
       <main className="px-4 md:px-20 py-10">
@@ -170,15 +182,19 @@ const AgregarEstudiante = () => {
               <div className="flex flex-col md:flex-row gap-4 w-full md:w-1/2 justify-end">
                 <button
                   onClick={handlerAtras}
+                  disabled={isSubmitting}
                   className="h-[46px] w-full md:w-[180px] border border-black rounded-lg flex justify-center items-center"
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className="h-[46px] w-full md:w-[180px] fondo_login text-white rounded-lg flex justify-center items-center"
+                  disabled={isSubmitting}
+                  className={`h-[46px] w-full md:w-[180px] fondo_login text-white rounded-lg flex justify-center items-center ${
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
-                  Añadir
+                  {isSubmitting ? "Añadiendo..." : "Añadir"}
                 </button>
               </div>
             </div>
