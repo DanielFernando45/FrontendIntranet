@@ -9,6 +9,8 @@ import Olenka from "../../../assets/PerfilAsesores/Olenka.jpg";
 import Brenda from "../../../assets/PerfilAsesores/Brenda.jpg";
 import Haider from "../../../assets/PerfilAsesores/Haider.png";
 import Lidia from "../../../assets/PerfilAsesores/Lidia.png";
+import Hebert from "../../../assets/PerfilAsesores/Hebert.jpeg";
+import Christian from "../../../assets/PerfilAsesores/Christian.jpeg";
 
 const MiAsesor = () => {
   const [asesorias, setAsesorias] = useState([]);
@@ -24,6 +26,8 @@ const MiAsesor = () => {
   const verAsesor = [
     { nombre: "Diana Alexandra", imagen: Diana },
     { nombre: "Victor Alfonso", imagen: Victor },
+    {nombre :"Hebert Wilder", imagen: Hebert},
+    {nombre :"Christian Alexis", imagen:Christian},
     { nombre: "Antony", imagen: Antony },
     { nombre: "Brenda Lucia", imagen: Brenda },
     { nombre: "Olenka Ethel", imagen: Olenka },
