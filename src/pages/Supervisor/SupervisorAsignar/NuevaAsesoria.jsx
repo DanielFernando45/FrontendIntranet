@@ -118,6 +118,9 @@ const NuevaAsesoria = () => {
   };
 
   const handleAsignar = () => {
+    // 🚫 Evita clics dobles
+    if (mutationAsignar.isLoading) return;
+
     if (!delegado || !areaSeleccionada || !asesorSeleccionado) {
       toast.error("Debes seleccionar un delegado, un área y un asesor.", {
         duration: 4000,
@@ -132,10 +135,13 @@ const NuevaAsesoria = () => {
       area: areaSeleccionada.nombre,
     };
 
-    toast.loading("Asignando...");
+    // 🔄 Mostrar loading visual
+    const toastId = toast.loading("Asignando...");
+
+    // 🚀 Ejecutar mutación con callbacks
     mutationAsignar.mutate(body, {
       onSuccess: () => {
-        toast.dismiss(); // Quitar el loading
+        toast.dismiss(toastId);
         toast.success("¡Asignación creada exitosamente!", { duration: 4000 });
 
         // Limpiar estado
@@ -146,13 +152,13 @@ const NuevaAsesoria = () => {
         setAsesorSeleccionado(null);
         setReferencia("");
 
-        // Redirigir después de un pequeño delay
+        // Redirigir con pequeño delay
         setTimeout(() => {
           navigate("/supervisor/asignaciones?tab=asignados");
         }, 3000);
       },
       onError: (err) => {
-        toast.dismiss(); // Quitar el loading
+        toast.dismiss(toastId);
         console.error("Error al asignar:", err);
         toast.error("Ocurrió un error al asignar.", { duration: 5000 });
       },
@@ -238,8 +244,9 @@ const NuevaAsesoria = () => {
             {clientes.filter(filtrarClientes).map((cliente, index) => (
               <div
                 key={cliente.id}
-                className={`flex justify-between text-[#2B2829] font-normal ${index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-                  } p-[6px] rounded-md`}
+                className={`flex justify-between text-[#2B2829] font-normal ${
+                  index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+                } p-[6px] rounded-md`}
               >
                 <div className="w-[40px] flex justify-center">{cliente.id}</div>
                 <div className="w-[300px] flex justify-center">
@@ -248,13 +255,13 @@ const NuevaAsesoria = () => {
                 <div className="w-[160px] flex justify-center">
                   {cliente.fecha_creacion
                     ? new Date(cliente.fecha_creacion).toLocaleDateString(
-                      "es-PE",
-                      {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      }
-                    )
+                        "es-PE",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )
                     : "—"}
                 </div>
                 <div className="w-[360px] flex justify-center">
@@ -270,7 +277,6 @@ const NuevaAsesoria = () => {
             ))}
           </div>
         </div>
-
 
         {/* Selects y referencia */}
         <div className="flex justify-between xl:flex-row flex-col gap-4 mt-5">

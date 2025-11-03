@@ -106,6 +106,8 @@ const SinAsignar = () => {
   };
 
   const handleAsignar = () => {
+    if (mutationAsignar.isLoading) return; // 🚫 evita doble clic
+
     if (!delegado || !areaSeleccionada || !asesorSeleccionado) {
       toast.error("Debes seleccionar un delegado, un área y un asesor.");
       return;
@@ -179,12 +181,14 @@ const SinAsignar = () => {
       </div>
 
       {/* Tabla de clientes */}
-      <div className="overflow-x-auto " >
-        <div className="flex flex-col  min-w-[920px] " >
+      <div className="overflow-x-auto ">
+        <div className="flex flex-col  min-w-[920px] ">
           <div className="flex justify-between text-[#495D72] font-medium p-[6px] rounded-md">
             <div className="w-[40px] flex justify-center">ID</div>
             <div className="w-[300px] flex justify-center">Alumno</div>
-            <div className="w-[160px] flex justify-center">Fecha de Creación</div>
+            <div className="w-[160px] flex justify-center">
+              Fecha de Creación
+            </div>
             <div className="w-[360px] flex justify-center">Carrera</div>
             <div className="w-[180px] flex justify-center">Acción</div>
           </div>
@@ -192,8 +196,9 @@ const SinAsignar = () => {
           {clientes.filter(filtrarClientes).map((cliente, index) => (
             <div
               key={cliente.id}
-              className={`flex justify-between text-[#2B2829] font-normal ${index % 2 === 0 ? "bg-[#E9E7E7]" : ""
-                } p-[6px] rounded-md`}
+              className={`flex justify-between text-[#2B2829] font-normal ${
+                index % 2 === 0 ? "bg-[#E9E7E7]" : ""
+              } p-[6px] rounded-md`}
             >
               <div className="w-[40px] flex justify-center">{cliente.id}</div>
               <div className="w-[300px] flex justify-center">
@@ -219,7 +224,6 @@ const SinAsignar = () => {
           ))}
         </div>
       </div>
-
 
       {/* Selects y referencia */}
       <div className="flex justify-between xl:flex-row flex-col gap-4 mt-5">
