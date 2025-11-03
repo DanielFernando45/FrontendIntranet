@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 const HomeEstudiante = () => {
   const [NoticiasRecientes, setNoticiasRecientes] = useState([]);
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState("");
+  
   const [proximasReuniones, setProximasReuniones] = useState([]);
   const [verNoticias, setVerNoticias] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
