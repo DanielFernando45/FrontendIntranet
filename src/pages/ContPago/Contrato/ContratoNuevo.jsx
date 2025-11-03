@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import flechaabajo from "../../../assets/icons/Flecha.svg";
 import flechaarriba from "../../../assets/icons/arrow-up.svg";
@@ -76,15 +76,32 @@ const ContratoNuevo = () => {
   });
 
   const handleFormSubmit = () => {
-    if (currentIdAsesoramiento) {
-      mutation.mutate(currentIdAsesoramiento, {
-        onSuccess: () => {
-          navigate("/cont-pago/contratos?tab=asignado");
-        },
-      });
-    } else {
-      toast.error("No se ha seleccionado un asesoramiento.");
+    if (mutation.isLoading) return; // 🚫 Previene clicks repetidos
+
+    if (!currentIdAsesoramiento) {
+      toast.error("⚠️ No se ha seleccionado un asesoramiento.");
+      return;
     }
+
+    const toastId = toast.loading("🧾 Creando contrato...");
+
+    mutation.mutate(currentIdAsesoramiento, {
+      onSuccess: () => {
+        toast.dismiss(toastId);
+        toast.success("Contrato creado exitosamente 🎉");
+        setAsigContrato(false);
+        navigate("/cont-pago/contratos?tab=asignado");
+      },
+      onError: (error) => {
+        toast.dismiss(toastId);
+        console.error("Error al crear el contrato:", error.response?.data);
+        toast.error(
+          `Error al crear el contrato: ${
+            error.response?.data?.message || error.message
+          }`
+        );
+      },
+    });
   };
 
   // Paginación

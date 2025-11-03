@@ -11,6 +11,8 @@ const ModalSubirInduccion = ({
 }) => {
   const [capitulo, setCapitulo] = useState("");
   const [titulo, setTitulo] = useState("");
+  const [isUploading, setIsUploading] = useState(false); // 🚫 Bloquea clics múltiples
+
   const file = useRef();
   console.log("🪣 Bucket:", import.meta.env.VITE_BUCKET_NAME);
 
@@ -35,6 +37,9 @@ const ModalSubirInduccion = ({
   });
 
   const handleSubmitInduccion = async () => {
+    // 🚫 Evita múltiples clics
+    if (isUploading || mutate.isLoading) return;
+
     if ([capitulo.trim(), titulo.trim()].some((f) => f === "")) {
       return toast.error("⚠️ Ingrese todos los campos requeridos");
     }
@@ -44,6 +49,7 @@ const ModalSubirInduccion = ({
     if (selectedFile.type !== "video/mp4")
       return toast.error("🎥 Solo se permiten archivos .mp4");
 
+    setIsUploading(true); // 🔒 Bloquear todo el proceso
     const uploadToast = toast.loading("⏫ Solicitando URL de subida...");
 
     try {
@@ -55,6 +61,7 @@ const ModalSubirInduccion = ({
         const text = await res.text();
         console.error("❌ Error al obtener upload-url:", res.status, text);
         toast.dismiss(uploadToast);
+        setIsUploading(false);
         return toast.error(
           `Error ${res.status}: No se pudo obtener la URL de subida`
         );
@@ -69,8 +76,6 @@ const ModalSubirInduccion = ({
 
       // 🎯 Subida con XMLHttpRequest (barra de progreso)
       const progressToastId = toast.loading("🚀 Subiendo video... 0%");
-
-      // ⏱️ Iniciar conteo
       const startTime = performance.now();
 
       await new Promise((resolve, reject) => {
@@ -104,19 +109,19 @@ const ModalSubirInduccion = ({
         xhr.send(selectedFile);
       });
 
-      // ⏹️ Terminar conteo de tiempo
+      // ⏱️ Terminar conteo de tiempo
       const endTime = performance.now();
       const durationSec = ((endTime - startTime) / 1000).toFixed(2);
       console.log(`⏱️ Tiempo de subida del video: ${durationSec} segundos`);
       toast.success(`⏱️ Subida completada en ${durationSec} segundos`);
-
       toast.dismiss(progressToastId);
       toast.success("🎬 Video subido correctamente a Backblaze");
 
-      // ✅ Verificación de bucket name
+      // ✅ Verificación del bucket
       const bucketName = import.meta.env.VITE_BUCKET_NAME;
       if (!bucketName) {
-        console.error("❌ VITE_BUCKET_NAME no está definido en el entorno");
+        console.error("❌ VITE_BUCKET_NAME no está definido");
+        setIsUploading(false);
         return toast.error("❌ Configuración del bucket inválida");
       }
 
@@ -140,9 +145,11 @@ const ModalSubirInduccion = ({
       toast.dismiss();
       console.error("💥 Error al subir inducción:", error);
       toast.error("❌ Ocurrió un error durante la subida del video");
+      setIsUploading(false);
+    } finally {
+      setIsUploading(false);
     }
   };
-
   return (
     <>
       <div
