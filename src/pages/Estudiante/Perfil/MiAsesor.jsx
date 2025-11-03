@@ -9,7 +9,7 @@ import Olenka from "../../../assets/PerfilAsesores/Olenka.jpg";
 import Brenda from "../../../assets/PerfilAsesores/Brenda.jpg";
 import Haider from "../../../assets/PerfilAsesores/Haider.png";
 import Lidia from "../../../assets/PerfilAsesores/Lidia.png";
-import Hebert from "../../../assets/PerfilAsesores/Hebert.jpeg";
+import Hebert from "../../../assets/PerfilAsesores/Heber.jpeg";
 import Christian from "../../../assets/PerfilAsesores/Christian.jpeg";
 
 const MiAsesor = () => {
