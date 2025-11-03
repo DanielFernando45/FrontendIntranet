@@ -60,6 +60,8 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // 🚫 Doble clic bloqueado
+
     if (titulo.trim() === "" || archivos.length === 0) {
       toast.error("Debes ingresar un título y al menos un archivo", {
         position: "top-right",
@@ -68,6 +70,8 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
     }
 
     setIsSubmitting(true);
+    const toastId = toast.loading("📤 Enviando avance...");
+
     try {
       const formData = new FormData();
       formData.append("titulo", titulo);
@@ -82,12 +86,15 @@ const EnviarAvance = ({ show, onClose, onSubmit }) => {
       setArchivos([]);
       onClose();
 
-      toast.success("Avance enviado correctamente ✅", {});
+      toast.dismiss(toastId);
+      toast.success("Avance enviado correctamente ✅");
 
       // 👇 Redirección después de guardar
       navigate("/asesor/entrega/terminados");
-    } catch {
-      toast.error("Ocurrió un error al enviar el avance ", {});
+    } catch (err) {
+      console.error("Error al enviar avance:", err);
+      toast.dismiss(toastId);
+      toast.error("Ocurrió un error al enviar el avance ❌");
     } finally {
       setIsSubmitting(false);
     }

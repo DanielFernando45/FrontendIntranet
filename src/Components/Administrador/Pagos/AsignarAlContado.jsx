@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import toast from "react-hot-toast";
 const AsignarAlContado = ({ close, asesoramiento }) => {
   const [formData, setFormData] = useState({
     pago_total: "",
@@ -50,6 +50,8 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // 🚫 Bloquea clics repetidos
+
     setIsSubmitting(true);
     setErrorMessage("");
 
@@ -61,11 +63,13 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
     ) {
       setFieldErrors((prev) => ({
         ...prev,
-        pago_total: "Solo se permite enteros",
+        pago_total: "Solo se permiten números enteros",
       }));
       setIsSubmitting(false);
       return;
     }
+
+    const toastId = toast.loading("💰 Registrando pago al contado...");
 
     try {
       const payload = {
@@ -78,16 +82,13 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
         `${import.meta.env.VITE_API_PORT_ENV}/pagos/alContado`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
       );
 
-      // Manejar respuesta que podría no ser JSON
-      let data;
       const text = await response.text();
+      let data;
       try {
         data = text ? JSON.parse(text) : {};
       } catch {
@@ -98,9 +99,17 @@ const AsignarAlContado = ({ close, asesoramiento }) => {
         throw new Error(data.message || "Error al registrar el pago");
       }
 
+      toast.dismiss(toastId);
+      toast.success("✅ Pago al contado registrado correctamente");
+
+      // Redirigir tras éxito
       navigate("/cont-pago/pagos/al-contado?tab=actividad");
     } catch (error) {
       console.error("Error completo:", error);
+      toast.dismiss();
+      toast.error(
+        "❌ " + (error.message || "Ocurrió un error al registrar el pago")
+      );
       setErrorMessage(error.message || "Ocurrió un error al registrar el pago");
     } finally {
       setIsSubmitting(false);

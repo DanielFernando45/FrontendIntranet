@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import agregar from "../../assets/icons/IconEstudiante/add.svg";
 import eliminar from "../../assets/icons/delete.svg";
-
+import toast from "react-hot-toast";
 const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
   const [asunto, setAsunto] = useState("");
   const [archivos, setArchivos] = useState([]);
@@ -86,23 +86,24 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
   };
 
   const handleSubmit = async () => {
-    if (asunto.trim() === "" || archivos.length === 0) return;
+    if (isSubmitting) return; // 🚫 Evita clics repetidos
+
+    if (asunto.trim() === "" || archivos.length === 0) {
+      toast.error("Debes ingresar un asunto y al menos un archivo");
+      return;
+    }
 
     setIsSubmitting(true);
-    setSubmitError(null);
+    const toastId = toast.loading("📤 Enviando archivos...");
 
     try {
-      // Obtenemos el token y datos básicos
       const { token, user } = getAuthData();
-
-      // Sanitizamos role (por si acaso)
       const role = user?.role === "asesor" ? "asesor" : "estudiante";
 
       const formData = new FormData();
       formData.append("titulo", asunto);
-      formData.append("subido_por", role); // 👈 Ahora siempre string válido
+      formData.append("subido_por", role);
 
-      // Agregar cada archivo al FormData
       archivos.forEach((file) => {
         formData.append("files", file);
       });
@@ -114,22 +115,27 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token?.access_token || token}`, // ✅ usa el campo correcto
+            Authorization: `Bearer ${token?.access_token || token}`,
           },
           body: formData,
         }
       );
+
+      toast.dismiss(toastId);
 
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(errorText || "Error al enviar los documentos");
       }
 
-      setSubmitSuccess(true);
-      setTimeout(() => onClose(), 1000);
+      toast.success("✅ Archivos enviados correctamente");
+      setAsunto("");
+      setArchivos([]);
+      setTimeout(() => onClose(), 1200);
     } catch (error) {
       console.error("Error:", error);
-      setSubmitError(error.message);
+      toast.dismiss(toastId);
+      toast.error("❌ Ocurrió un error al enviar los documentos");
     } finally {
       setIsSubmitting(false);
     }

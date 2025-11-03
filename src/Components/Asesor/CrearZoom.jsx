@@ -7,6 +7,7 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
     fecha: "",
     hora: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // 🚫 Evita clics dobles
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,12 +33,18 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 🚫 Previene doble envío
+    if (isSubmitting) return;
+
     if (!formData.titulo || !formData.fecha || !formData.hora) {
       toast.error("Todos los campos son obligatorios");
       return;
     }
 
     try {
+      setIsSubmitting(true); // 🔒 Bloquea el botón
+      const loadingToast = toast.loading("Creando reunión Zoom...");
+
       const user = JSON.parse(localStorage.getItem("user"));
       const idAsesor = user.id_asesor;
       const fecha_reunion = `${formData.fecha}T${formData.hora}:00`;
@@ -60,6 +67,8 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
         }
       );
 
+      toast.dismiss(loadingToast);
+
       if (!response.ok) {
         throw new Error("Error al crear la reunión");
       }
@@ -72,6 +81,8 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
     } catch (err) {
       console.error("Error:", err);
       toast.error("Error al crear la reunión. Intenta nuevamente ❌");
+    } finally {
+      setIsSubmitting(false); // 🔓 Reactiva el botón
     }
   };
 
