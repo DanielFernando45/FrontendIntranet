@@ -8,7 +8,10 @@ const AsignarExtra = ({ close }) => {
   const [showResults, setShowResults] = useState(false);
   const [, setSelectedAlumno] = useState(null);
   const [allAlumnos, setAllAlumnos] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 🔒 Control envío único
+
   const inputRef = useRef(null);
+
   const dropdownRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -82,9 +85,26 @@ const AsignarExtra = ({ close }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 🚫 Evita clics dobles o múltiples envíos
+    if (isSubmitting) return;
+
+    if (
+      !formData.titulo.trim() ||
+      !formData.pago_total ||
+      !formData.fecha_pago ||
+      !formData.id_asesoramiento
+    ) {
+      toast.error("⚠️ Complete todos los campos antes de continuar");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const toastId = toast.loading("💾 Registrando servicio adicional...");
+
     try {
       const response = await fetch(
-        "http://localhost:3001/pagos/otrosServicios",
+        `${import.meta.env.VITE_API_PORT_ENV}/pagos/otrosServicios`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -99,18 +119,23 @@ const AsignarExtra = ({ close }) => {
         }
       );
 
-      if (response.ok) {
-        toast.success(
-          `Servicio agregado correctamente`
-        );
-        close();
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        throw new Error("Error al agregar el servicio");
+      toast.dismiss(toastId);
+
+      if (!response.ok) {
+        throw new Error("❌ Error al agregar el servicio");
       }
+
+      toast.success("✅ Servicio agregado correctamente");
+      close();
+
+      // ⏳ Espera antes de recargar (opcional)
+      setTimeout(() => window.location.reload(), 1200);
     } catch (error) {
       console.error("Error:", error);
-      toast.error(`Error al agregar el servicio "${formData.titulo}" ❌`);
+      toast.dismiss(toastId);
+      toast.error(`Error al agregar el servicio "${formData.titulo}"`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

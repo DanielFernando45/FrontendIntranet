@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de tener esta línea arriba
-
+import toast from "react-hot-toast";
 const AsignarPago = ({ Cerrar, asesoramiento }) => {
   const [numeroCuotas, setNumeroCuotas] = useState(2);
   const [pagoTotal, setPagoTotal] = useState("");
@@ -31,28 +31,32 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
   };
 
   const handleSubmit = async () => {
+    // 🚫 Bloquea clics múltiples
+    if (loading) return;
+
     if (!pagoTotal || !fechaPago) {
-      setError("Por favor complete todos los campos obligatorios");
+      toast.error("Por favor complete todos los campos obligatorios");
+      setError("Campos incompletos");
       return;
     }
 
     for (let i = 1; i <= numeroCuotas; i++) {
       if (!montosCuotas[`monto${i}`]) {
-        setError(`Por favor complete el monto para la cuota ${i}`);
+        toast.error(`Por favor complete el monto para la cuota ${i}`);
+        setError(`Falta monto de la cuota ${i}`);
         return;
       }
     }
 
     setLoading(true);
     setError(null);
+    const toastId = toast.loading("💳 Asignando pago...");
 
     try {
       const cuotasData = {};
       for (let i = 1; i <= numeroCuotas; i++) {
         cuotasData[`monto${i}`] = parseFloat(montosCuotas[`monto${i}`]);
-        if (i === 1) {
-          cuotasData[`fecha_pago${i}`] = fechaPago;
-        }
+        if (i === 1) cuotasData[`fecha_pago${i}`] = fechaPago;
       }
 
       const requestBody = {
@@ -68,15 +72,12 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
         `${import.meta.env.VITE_API_PORT_ENV}/pagos/porCuotas`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(requestBody),
         }
       );
 
       const text = await response.text();
-
       if (!response.ok) {
         let errorData;
         try {
@@ -89,9 +90,13 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
         throw new Error(errorData.message || "Error al asignar el pago");
       }
 
-      // ✅ Redirigir después del éxito
+      toast.dismiss(toastId);
+      toast.success("✅ Pago asignado correctamente");
       navigate("/cont-pago/pagos/cuotas?vista=GestionPagos");
     } catch (err) {
+      console.error("Error:", err);
+      toast.dismiss(toastId);
+      toast.error("❌ " + (err.message || "Error al asignar el pago"));
       setError(err.message);
     } finally {
       setLoading(false);
