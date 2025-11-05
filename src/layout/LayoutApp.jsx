@@ -7,7 +7,7 @@ import ContPagoSidebar from "../Components/Sidebar/ContPagoSidebar";
 import SoporteSidebar from "../Components/Sidebar/SoporteSidebar";
 import Navbar from "../Components/Navbar";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { checkAuth } from "../store/auth/authSlice";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate para redirigir
 import { jwtDecode } from "jwt-decode"; // Corregir la importación aquí
@@ -17,24 +17,10 @@ const LayoutApp = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Usar useNavigate para la redirección
 
-  const [timeRemaining, setTimeRemaining] = useState(null); // Estado para almacenar el tiempo restante
-
-  // Función para calcular el tiempo restante hasta la expiración del token
   const calculateTimeRemaining = (expirationTime) => {
     const currentTime = Date.now();
     const timeLeft = expirationTime - currentTime;
     return timeLeft;
-  };
-
-  // Función para formatear el tiempo restante en minutos y segundos
-  const formatTime = (timeInMillis) => {
-    if (timeInMillis === null) return "Cargando...";
-
-    const seconds = Math.floor((timeInMillis / 1000) % 60);
-    const minutes = Math.floor((timeInMillis / (1000 * 60)) % 60);
-    const hours = Math.floor((timeInMillis / (1000 * 60 * 60)) % 24);
-
-    return `${hours}h ${minutes}m ${seconds}s`;
   };
 
   // Verificar la validez del token al cargar el componente
@@ -106,13 +92,7 @@ const LayoutApp = ({ children }) => {
 
   return (
     <div className="layout-container">
-      {/* Mostrar cronómetro de expiración */}
-      <div className="text-center p-5">
-        <p>
-          Tiempo restante para la expiración del token:{" "}
-          {formatTime(timeRemaining)}
-        </p>
-      </div>
+
 
       {/* Renderiza el Sidebar dependiendo del rol */}
       {renderSidebar()}
