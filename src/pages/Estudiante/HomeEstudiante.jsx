@@ -613,7 +613,7 @@ const HomeEstudiante = () => {
             onClick={() => setVerNoticias(null)}
           >
             <div
-              className="relative flex flex-col overflow-hidden bg-white w-full max-w-[740px] max-h-[90vh] shadow-[8px_8px_4px_0px_rgba(0,0,0,0.25)] rounded-[20px] mx-auto"
+              className="relative flex flex-col overflow-hidden bg-white w-full  md:w-[750px] lg:w-[850px] max-h-[90vh] shadow-[8px_8px_4px_0px_rgba(0,0,0,0.25)] rounded-[20px] mx-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Botón de cerrar */}
@@ -625,8 +625,8 @@ const HomeEstudiante = () => {
               </button>
 
               {/* Card content */}
-              <div className="relative flex bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-full flex-row">
-                <div className="relative w-2/5 overflow-hidden rounded-l-xl shrink-0">
+              <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-full  md:flex-row">
+                <div className="relative md:w-[500px] lg:w-[480px] overflow-hidden md:rounded-l-xl shrink-0">
                   <img
                     src={
                       verNoticias?.imagen ||
@@ -636,15 +636,15 @@ const HomeEstudiante = () => {
                     className="object-cover w-full h-full"
                   />
                 </div>
-                <div className="p-6 flex flex-col justify-between">
+                <div className="p-6 flex flex-col  justify-between">
                   <div>
                     <h6 className="mb-4 text-base font-semibold uppercase text-gray-700">
                       Noticia
                     </h6>
-                    <h4 className="mb-2 text-2xl font-semibold text-blue-gray-900">
+                    <h4 className="mb-2 text-[14px] md:text-2xl font-semibold text-blue-gray-900">
                       {verNoticias?.titulo || "Título de la noticia"}
                     </h4>
-                    <p className="mb-8 text-base text-gray-700">
+                    <p className="mb-8 text-[10px] md:text-base text-gray-700">
                       {verNoticias?.descripcion ||
                         "Descripción de la noticia aquí. Si no hay descripción, se muestra este texto de ejemplo."}
                     </p>
