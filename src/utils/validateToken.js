@@ -21,7 +21,6 @@ export const isTokenValid = () => {
 
   try {
     const decodedToken = jwtDecode(token); // Decodificamos el JWT
-    console.log("Token decodificado:", decodedToken);
 
     // Verificamos si el token ya ha expirado
     const expirationTime = decodedToken.exp * 1000; // Expiración en milisegundos
