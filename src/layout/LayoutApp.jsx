@@ -7,12 +7,13 @@ import ContPagoSidebar from "../Components/Sidebar/ContPagoSidebar";
 import SoporteSidebar from "../Components/Sidebar/SoporteSidebar";
 import Navbar from "../Components/Navbar";
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { checkAuth } from "../store/auth/authSlice";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate para redirigir
 import { jwtDecode } from "jwt-decode"; // Corregir la importación aquí
 
 const LayoutApp = ({ children }) => {
+  const [TimeRemaining, setTimeRemaining] = useState(null);
   const user = useSelector((state) => state.auth.user); // Estado global del usuario
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Usar useNavigate para la redirección
@@ -92,8 +93,6 @@ const LayoutApp = ({ children }) => {
 
   return (
     <div className="layout-container">
-
-
       {/* Renderiza el Sidebar dependiendo del rol */}
       {renderSidebar()}
       <Navbar user={user} />
