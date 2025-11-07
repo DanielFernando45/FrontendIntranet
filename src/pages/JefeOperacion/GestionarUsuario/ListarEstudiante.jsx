@@ -10,7 +10,11 @@ const ListarEstudiante = () => {
   const [estudiantesBase, setEstudiantesBase] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Establecer la cantidad de items por página
-  const token = JSON.parse(localStorage.getItem("authToken"));
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    console.error("No hay token en localStorage");
+  }
 
   useEffect(() => {
     axios
