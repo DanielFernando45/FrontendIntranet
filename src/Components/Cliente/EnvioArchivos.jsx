@@ -34,28 +34,43 @@ const EnvioArchivo = ({ show, onClose, asesoriaId }) => {
   // Función simplificada para obtener el token y datos básicos del usuario
   const getAuthData = () => {
     let token = null;
-    let user = { role: "estudiante" };
+    let role = "estudiante";
 
-    try {
-      const tokenString = localStorage.getItem("authToken");
-      const parsed = tokenString ? JSON.parse(tokenString) : null;
-      token = parsed?.access_token || parsed; // ✅ si es objeto, toma el access_token
+    // ✅ OBTENER TOKEN
+    const rawToken = localStorage.getItem("authToken");
 
-      const userDataString = localStorage.getItem("user");
-      if (userDataString) {
-        const parsedUser = JSON.parse(userDataString);
-        if (
-          parsedUser?.role === "asesor" ||
-          parsedUser?.role === "estudiante"
-        ) {
-          user.role = parsedUser.role;
+    if (rawToken) {
+      try {
+        // Si es un JSON (objeto con access_token)
+        if (rawToken.trim().startsWith("{")) {
+          const parsed = JSON.parse(rawToken);
+          token = parsed?.access_token || null;
+        } else {
+          // Si es un token plano (JWT crudo)
+          token = rawToken;
         }
+      } catch (error) {
+        // Si falla, usamos el rawToken como string
+        token = rawToken;
+        console.warn("Advertencia: No se pudo parsear el token:", error);
       }
-    } catch (e) {
-      console.warn("Error leyendo datos de auth:", e);
     }
 
-    return { token, user };
+    // ✅ OBTENER ROLE DEL USUARIO
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser?.role) {
+          role = parsedUser.role;
+        }
+      } catch (error) {
+        console.warn("Advertencia: No se pudo parsear el usuario:", error);
+      }
+    }
+
+    return { token, user: { role } };
   };
 
   const handleFileChange = (e) => {
