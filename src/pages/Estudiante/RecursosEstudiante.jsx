@@ -416,7 +416,7 @@ const RecursosEstudiante = () => {
 
                       <div className="absolute bottom-0 left-0 w-full p-6 z-10 transition-all duration-500 group-hover:bottom-1/4 group-hover:translate-y-1/2">
                         <div className="flex flex-col gap-[1px] transition-all duration-300 group-hover:items-center group-hover:gap-2">
-                          <h1 className="text-[16px] font-semibold transition-all duration-300 group-hover:text-[20px] group-hover:text-center">
+                          <h1 className="text-[12px] sm:text-[16px] font-semibold transition-all duration-300 group-hover:text-[20px] group-hover:text-center">
                             {tutorial.titulo}
                           </h1>
                         </div>
