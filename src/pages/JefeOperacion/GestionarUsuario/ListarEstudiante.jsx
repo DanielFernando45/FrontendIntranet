@@ -16,6 +16,8 @@ const ListarEstudiante = () => {
     console.error("No hay token en localStorage");
   }
 
+  
+
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_PORT_ENV}/cliente`, {
