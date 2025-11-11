@@ -1,37 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/src/assets/icons/Login/LogoAlejandria.svg" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ FAVICONS -->
+  <link rel="icon" type="image/svg+xml" href="/src/assets/icons/Login/LogoAlejandria.svg" />
+
+
+  <!--  SEO BÁSICO -->
   <title>Intranet | Alejandría Consultores</title>
-  <meta name="description"
-    content="Plataforma interna de Alejandría Consultores. Acceso exclusivo para colaboradores autorizados.">
+  <meta name="description" content="Accede a la intranet de Alejandría Consultores. Plataforma interna diseñada para colaboradores, donde se gestionan proyectos, recursos y comunicación profesional.">
+
+  <!--  CANÓNICA -->
   <link rel="canonical" href="https://intranet.alejandriaconsultora.com/" />
 
+  <!--  OPEN GRAPH (para redes y snippet visual de Google) -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://intranet.alejandriaconsultora.com/">
+  <meta property="og:title" content="Intranet | Alejandría Consultores">
+  <meta property="og:description" content="Acceso exclusivo para colaboradores de Alejandría Consultores. Gestiona tus proyectos, tareas y comunicación interna desde nuestra plataforma.">
+  <meta property="og:image" content="https://intranet.alejandriaconsultora.com/src/assets/icons/Login/LogoAlejandria.svg">
+
+  <!--  TWITTER CARD -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Intranet | Alejandría Consultores">
+  <meta name="twitter:description" content="Plataforma interna de Alejandría Consultores para la gestión y colaboración de equipos.">
+  <meta name="twitter:image" content="https://intranet.alejandriaconsultora.com/src/assets/icons/Login/LogoAlejandria.svg">
+
+  <!--  FUENTE -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!--  DATOS ESTRUCTURADOS JSON-LD -->
   <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Intranet Alejandría Consultores",
-        "url": "https://intranet.alejandriaconsultora.com",
-        "publisher": {
-          "@type": "Organization",
-          "name": "Alejandría Consultores"
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": "https://intranet.alejandriaconsultora.com/search?q={search_term_string}",
-          "query-input": "required name=search_term_string"
-        }
-      }
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Alejandría Consultores",
+    "url": "https://intranet.alejandriaconsultora.com",
+    "logo": "https://intranet.alejandriaconsultora.com/src/assets/icons/Login/LogoAlejandria.svg",
+    "sameAs": [
+      "https://alejandriaconsultora.com",
+      "https://www.linkedin.com/company/alejandriaconsultora"
+    ],
+    "department": {
+      "@type": "WebSite",
+      "name": "Intranet Alejandría Consultores",
+      "url": "https://intranet.alejandriaconsultora.com",
+      "description": "Portal interno de gestión y comunicación para colaboradores autorizados."
+    }
+  }
   </script>
 
 </head>
 
-<body class="bg-[#F0EFEF] ">
+<body class="bg-[#F0EFEF]">
+  <noscript>
+    <p style="text-align:center;margin-top:2rem;font-family:Poppins,sans-serif;">
+      Bienvenido a la Intranet de Alejandría Consultores. Acceso exclusivo para colaboradores autorizados.
+    </p>
+  </noscript>
+
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
