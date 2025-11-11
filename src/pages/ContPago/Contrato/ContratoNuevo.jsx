@@ -417,7 +417,7 @@ const ContratoNuevo = () => {
                       e.target.value = ""; // limpia el input
                       return;
                     }
-                    setFormData({ ...formData, documentos: File });
+                    setFormData({ ...formData, documentos: file });
                   }}
                 />
               </div>
