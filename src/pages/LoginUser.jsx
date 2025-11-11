@@ -88,7 +88,7 @@ const Login = () => {
                   id="username"
                   type="text"
                   className="bg-transparent w-full pl-10 pr-4 py-3 text-white border border-white rounded-[10px] placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                  placeholder="Ejemplo: juan.perez"
+                  placeholder="Ingrese correo"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
