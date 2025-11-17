@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import MiEnvioAsesor from "../../pages/Asesor/EnviosCliente/MisEnviosAsesor";
 import EnvioCliente from "../../pages/Asesor/EnviosCliente/EnviosCliente";
+import OtrosDocs from "../../pages/Asesor/EnviosCliente/OtrosDocs";
 
 const EntregaRevisionAse = () => {
   const [asesorias, setAsesorias] = useState([]);
@@ -46,6 +47,19 @@ const EntregaRevisionAse = () => {
   const handleChange = (e) => {
     setSelectedAsesoriaId(e.target.value);
   };
+
+  const renderDoc = () =>{
+    switch(docEnvio) {
+      case "MisEnvios":
+        return <MiEnvioAsesor idAsesoramiento={selectedAsesoriaId} />;
+      case "EnviosCliente":
+        return <EnvioCliente idAsesoramiento={selectedAsesoriaId} />;
+      case "OtrosDocs":
+        return <OtrosDocs />;
+      default:
+        return null;
+    }
+  }
 
   return (
     <LayoutApp>
@@ -116,14 +130,23 @@ const EntregaRevisionAse = () => {
             >
               Envíos cliente
             </button>
+            <button
+              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${
+                docEnvio === "OtrosDocs" ? "bg-[#17162E] text-white" : ""
+              }`}
+              onClick={() => setEnvio("OtrosDocs")}
+            >
+              Otros Docs 
+            </button>
           </div>
 
           <div className="">
-            {docEnvio === "MisEnvios" ? (
+            {renderDoc()}
+            {/* {docEnvio === "MisEnvios" ? (
               <MiEnvioAsesor idAsesoramiento={selectedAsesoriaId} />
             ) : (
               <EnvioCliente idAsesoramiento={selectedAsesoriaId} />
-            )}
+            )} */}
           </div>
         </div>
       </main>
