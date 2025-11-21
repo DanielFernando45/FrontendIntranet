@@ -4,11 +4,14 @@ import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import MiEnvioAsesor from "../../pages/Asesor/EnviosCliente/MisEnviosAsesor";
 import EnvioCliente from "../../pages/Asesor/EnviosCliente/EnviosCliente";
 import OtrosDocs from "../../pages/Asesor/EnviosCliente/OtrosDocs";
+import EnviarDocs from "../../Components/Asesor/EnviarDocs";
+import plus from "../../assets/icons/IconEstudiante/add.svg";
 
 const EntregaRevisionAse = () => {
   const [asesorias, setAsesorias] = useState([]);
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState(null);
   const [docEnvio, setEnvio] = useState("MisEnvios");
+  const [showModal, setShowModal] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,8 +26,7 @@ const EntregaRevisionAse = () => {
       const id = user.id_asesor;
 
       fetch(
-        `${
-          import.meta.env.VITE_API_PORT_ENV
+        `${import.meta.env.VITE_API_PORT_ENV
         }/asesor/asesoramientosYDelegado/${id}`
       )
         .then((res) => res.json())
@@ -48,14 +50,14 @@ const EntregaRevisionAse = () => {
     setSelectedAsesoriaId(e.target.value);
   };
 
-  const renderDoc = () =>{
-    switch(docEnvio) {
+  const renderDoc = () => {
+    switch (docEnvio) {
       case "MisEnvios":
         return <MiEnvioAsesor idAsesoramiento={selectedAsesoriaId} />;
       case "EnviosCliente":
         return <EnvioCliente idAsesoramiento={selectedAsesoriaId} />;
       case "OtrosDocs":
-        return <OtrosDocs />;
+        return <OtrosDocs idAsesoramiento={selectedAsesoriaId}/>;
       default:
         return null;
     }
@@ -87,17 +89,15 @@ const EntregaRevisionAse = () => {
 
           <div className="flex w-full border-b-2 gap-3 border-black font-normal overflow-x-auto">
             <button
-              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${
-                isTerminados ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${isTerminados ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => navigate("terminados")}
             >
               Terminados
             </button>
             <button
-              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${
-                isPendientes ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${isPendientes ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => navigate("pendientes")}
             >
               Pendientes
@@ -111,32 +111,41 @@ const EntregaRevisionAse = () => {
 
         {/* Documentos */}
         <div className="flex flex-col gap-4 p-4 sm:p-6 lg:p-10 w-full bg-white rounded-[10px] shadow-sm">
-          <h2 className="text-xl sm:text-2xl font-bold">Documentos</h2>
+          <div className="flex flex-row justify-between">
+            <h2 className="text-xl sm:text-2xl font-bold">Documentos</h2>
+            <div>
+              <button
+                className="flex justify-between p-3 rounded-lg bg-[#F0EFEE] w-[180px] items-center font-medium"
+                onClick={() => setShowModal(true)}
+              >
+                <p>Enviar Docs</p>
+                <img className="" src={plus} alt="" />
+              </button>
+            </div>
+          </div>
+
 
           <div className="flex w-full border-b-2 gap-3 border-black font-normal overflow-x-auto">
             <button
-              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${
-                docEnvio === "MisEnvios" ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${docEnvio === "MisEnvios" ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => setEnvio("MisEnvios")}
             >
               Mis envíos
             </button>
             <button
-              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${
-                docEnvio === "EnviosCliente" ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${docEnvio === "EnviosCliente" ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => setEnvio("EnviosCliente")}
             >
               Envíos cliente
             </button>
             <button
-              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${
-                docEnvio === "OtrosDocs" ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-4 py-2 rounded-t-[5px] whitespace-nowrap ${docEnvio === "OtrosDocs" ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => setEnvio("OtrosDocs")}
             >
-              Otros Docs 
+              Otros Docs
             </button>
           </div>
 
@@ -149,6 +158,11 @@ const EntregaRevisionAse = () => {
             )} */}
           </div>
         </div>
+        <EnviarDocs 
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          asesoriaId={selectedAsesoriaId} 
+      /> 
       </main>
     </LayoutApp>
   );

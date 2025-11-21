@@ -13,7 +13,6 @@ const EntregaRevisionEst = () => {
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState(null);
   const [docEnvio, setEnvio] = useState("MisEnvios");
 
-  // 👇 Guardamos permisos por cada asesoría
   const [permisos, setPermisos] = useState({});
 
   const navigate = useNavigate();
@@ -92,7 +91,7 @@ const EntregaRevisionEst = () => {
     case  "EnviosAsesor":
       return <EnvioAsesor idAsesoramiento={selectedAsesoriaId} />;
     case "OtrosDocs":
-      return <OtrosDocs />;
+      return <OtrosDocs idAsesoramiento={selectedAsesoriaId}/>;
     default:
       return null;
   } };
@@ -162,6 +161,7 @@ const EntregaRevisionEst = () => {
         <div className="flex flex-col gap-[10px] px-[20px] sm:px-[40px] py-5 w-full  bg-white rounded-[10px]">
           <div className="flex justify-between flex-col md:flex-row">
             <h2 className="text-base md:text-2xl font-bold">Documentos</h2>
+
           </div>
           <div className="flex w-full border-b-2 gap-3 border-black font-normal">
             <button
@@ -189,11 +189,6 @@ const EntregaRevisionEst = () => {
 
           <div>
             {renderDoc()}
-            {/* {docEnvio === "MisEnvios" ? (
-              <MisEnvios idAsesoramiento={selectedAsesoriaId} />
-            ) : (
-              <EnvioAsesor idAsesoramiento={selectedAsesoriaId} />
-            )} */}
           </div>
         </div>
 
