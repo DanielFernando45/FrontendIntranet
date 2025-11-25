@@ -25,7 +25,7 @@ const ReunionesAsesor = () => {
         .then((res) => res.json())
         .then((data) => {
           const asesoriasArray = Object.values(data).map((item) => ({
-            id: item.id_asesoramiento,
+            id: Number(item.id_asesoramiento),
             profesion: item.profesion_asesoria,
             delegado: item.delegado,
           }));
@@ -41,7 +41,7 @@ const ReunionesAsesor = () => {
   }, []);
 
   const handleChange = (e) => {
-    const asesoriaId = e.target.value;
+    const asesoriaId = Number(e.target.value);
     setSelectedAsesoriaId(asesoriaId);
   };
 
