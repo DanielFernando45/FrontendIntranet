@@ -85,7 +85,7 @@ const CrearZoom = ({ Close, idAsesoramiento, delegado }) => {
       setIsSubmitting(false); // 🔓 Reactiva el botón
     }
   };
-
+  console.log("Delegado en CrearZoom:", delegado);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div

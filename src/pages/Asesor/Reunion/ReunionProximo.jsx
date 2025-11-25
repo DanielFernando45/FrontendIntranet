@@ -15,17 +15,14 @@ const ReunionProximo = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [meetingToDelete, setMeetingToDelete] = useState(null);
   const { selectedAsesoriaId, asesorias } = useOutletContext();
-
   const [fechaFiltro, setFechaFiltro] = useState(null);
-
   // Obtener el ID del asesor del localStorage
   const userString = localStorage.getItem("user");
   const user = JSON.parse(userString);
   const idAsesor = user.id_asesor;
 
   // Obtener el delegado correspondiente al asesoramiento seleccionado
-  const delegado =
-    asesorias.find((a) => a.id === selectedAsesoriaId)?.delegado || "";
+  const delegado = asesorias.find((a) => a.id === selectedAsesoriaId)?.delegado || "";
 
   const {
     data: reunionesPorFecha,
@@ -129,7 +126,7 @@ const ReunionProximo = () => {
     <div className="flex flex-col gap-5">
       <div className="flex gap-8 flex-wrap">
         {/**BOTON CREAR */}
-        <div className="flex gap-3 flex-col w-[310px]  items-center justify-center bg-[#F0EFEF] border-[#AAA3A5] rounded-xl">
+        <div className="flex gap-3 flex-col w-[310px] h-[182px] items-center justify-center bg-[#F0EFEF] border-[#AAA3A5] rounded-xl">
           <h1>Añadir una nueva reunion</h1>
           <button
             onClick={() => {
@@ -146,13 +143,13 @@ const ReunionProximo = () => {
 
           return (
             <div key={index} className="flex w-[350px]  items-center">
-              <div className="flex flex-col justify-center items-center rounded-l-xl h-full w-[104px] bg-[#1C1C34] p-4 text-white">
+              <div className="flex flex-col justify-center items-center rounded-l-xl h-[162px] w-[104px] bg-[#1C1C34] p-4 text-white">
                 <p>{fechaFormateada.month}</p>
                 <h1 className="text-[30px]">{fechaFormateada.day}</h1>
                 <p className="text-[12px]">{fechaFormateada.time}</p>
               </div>
 
-              <div className="flex flex-col w-full bg-white p-4 rounded-r-xl shadow-sm border border-[#EAEAEA]">
+              <div className="flex flex-col w-full  bg-white p-4 rounded-r-xl shadow-sm border border-[#EAEAEA]">
                 <div className="flex justify-between items-center mb-4">
                   <p className="font-semibold text-[#333333]">
                     {reunion.delegado}
