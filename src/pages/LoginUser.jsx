@@ -61,87 +61,105 @@ const Login = () => {
   };
 
   return (
-    <main className="h-screen w-screen flex items-center justify-center fondo_login overflow-hidden">
-      <div className="w-full flex justify-center">
-        <form
-          className="flex w-[410px] px-[60px] flex-col justify-center items-center gap-[40px] bg-transparent"
-          onSubmit={handleSubmit}
-        >
-          {/* Logo */}
-          <img src={LogoBlanco} alt="Logo Alejandría" />
+    <main className="h-screen w-screen flex items-center justify-center overflow-hidden fondo_login px-2 mn:px-3">
+      
+      <div className="max-w-5xl w-full grid md:grid-cols-2 gap-10 items-center">
 
-          {/* Inputs */}
-          <div className="flex flex-col justify-center items-center gap-[25px] w-full bg-transparent">
-            {/* Usuario */}
-            <div className="w-full">
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-white mb-1"
-              >
-                Nombre de Usuario
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-3">
-                  <img src={LogoUsuario} alt="" />
-                </span>
-                <input
-                  id="username"
-                  type="text"
-                  className="bg-transparent w-full pl-10 pr-4 py-3 text-white border border-white rounded-[10px] placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                  placeholder="Ingrese correo"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
+        {/* 🔹 DESCRIPCIÓN (lado izquierdo) */}
+        <section className="text-white space-y-4 max-md:hidden">
+          <h1 className="text-4xl font-bold leading-tight text-center">
+            Intranet de Alejandría Consultores
+          </h1>
+
+          <p className="text-white/90 text-lg leading-relaxed text-center">
+            Plataforma interna para clientes de Alejandría Consultores 
+            donde se gestionan proyectos, recursos y la comunicación profesional del equipo.
+          </p>
+        </section>
+
+        {/* 🔹 FORMULARIO DE LOGIN (lado derecho) */}
+        <section className="flex justify-center">
+          <form
+            onSubmit={handleSubmit}
+            className="w-[325px] mn:w-[350px] sm:w-[380px] bg-white/10 backdrop-blur-lg p-8 rounded-xl shadow-lg flex flex-col items-center gap-6 border border-white/20"
+          >
+            {/* Logo */}
+            <img src={LogoBlanco} alt="Logo Alejandría" className="w-40" />
+
+            {/* INPUTS */}
+            <div className="flex flex-col w-full gap-5">
+
+              {/* Usuario */}
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm text-white mb-1"
+                >
+                  Nombre de Usuario
+                </label>
+
+                <div className="relative">
+                  <span className="absolute left-3 top-3">
+                    <img src={LogoUsuario} alt="user" />
+                  </span>
+                  <input
+                    id="username"
+                    type="text"
+                    placeholder="Ingrese su correo"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
               </div>
-             
-            </div>
 
-            {/* Contraseña */}
-            <div className="w-full">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-white mb-1"
-              >
-                Contraseña
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-3">
-                  <img src={Candado} alt="" />
-                </span>
-                <input
-                  id="password"
-                  type="password"
-                  className="bg-transparent w-full pl-10 pr-4 py-3 text-white border border-white rounded-[10px] placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                  placeholder="Ingrese su contraseña"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+              {/* Contraseña */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm text-white mb-1"
+                >
+                  Contraseña
+                </label>
+
+                <div className="relative">
+                  <span className="absolute left-3 top-3">
+                    <img src={Candado} alt="password" />
+                  </span>
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="Ingrese su contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
               </div>
-            
+
+              {/* Error */}
+              {error && (
+                <p className="text-red-400 text-sm text-center">{error}</p>
+              )}
+
+              {/* Botón */}
+              <button
+                type="submit"
+                className="w-full h-11 text-[#1C1C34] bg-white font-semibold rounded-lg hover:bg-gray-100 transition"
+              >
+                INICIAR SESIÓN
+              </button>
+
+              {/* Recuperar contraseña */}
+              <a
+                href="/recuperarContraseña"
+                className="text-white text-sm text-right hover:underline"
+              >
+                ¿Olvidó su contraseña?
+              </a>
             </div>
-
-            {/* Error */}
-            {error && (
-              <p className="text-red-400 text-sm text-center">{error}</p>
-            )}
-
-            {/* Botón */}
-            <button
-              type="submit"
-              className="w-full h-12 text-[#1C1C34] bg-white font-semibold rounded-md hover:opacity-90 transition"
-            >
-              INICIAR SESIÓN
-            </button>
-
-            {/* Recuperar contraseña */}
-            <a
-              href="/recuperarContraseña"
-              className="text-white text-right text-sm hover:underline"
-            >
-              ¿OLVIDÓ SU CONTRASEÑA?
-            </a>
-          </div>
-        </form>
+          </form>
+        </section>
       </div>
     </main>
   );
