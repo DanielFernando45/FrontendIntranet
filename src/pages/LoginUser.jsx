@@ -68,12 +68,12 @@ const Login = () => {
         {/* 🔹 DESCRIPCIÓN (lado izquierdo) */}
         <section className="text-white space-y-4 max-md:hidden">
           <h1 className="text-4xl font-bold leading-tight text-center">
-            Intranet de Alejandría Consultores
+            Intranet de Alejandría Centro de Investigación
           </h1>
 
           <p className="text-white/90 text-lg leading-relaxed text-center">
-            Plataforma interna para clientes de Alejandría Consultores 
-            donde se gestionan proyectos, recursos y la comunicación profesional del equipo.
+            Plataforma interna para clientes de Alejandría Centro de Investigación
+            donde se gestionan proyectos, recursos y la comunicación profesional.
           </p>
         </section>
 
