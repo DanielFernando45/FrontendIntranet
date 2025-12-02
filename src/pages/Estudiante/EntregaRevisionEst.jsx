@@ -4,6 +4,7 @@ import plus from "../../assets/icons/IconEstudiante/add.svg";
 import EnvioArchivo from "../../Components/Cliente/EnvioArchivos";
 import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import MisEnvios from "../../pages/Estudiante/EntregasEnvio/MisEnviosCli";
+import OtrosDocs from "../../pages/Estudiante/EntregasEnvio/OtrosDocs";
 import EnvioAsesor from "../../pages/Estudiante/EntregasEnvio/EnvioAsesor";
 
 const EntregaRevisionEst = () => {
@@ -12,7 +13,6 @@ const EntregaRevisionEst = () => {
   const [selectedAsesoriaId, setSelectedAsesoriaId] = useState(null);
   const [docEnvio, setEnvio] = useState("MisEnvios");
 
-  // 👇 Guardamos permisos por cada asesoría
   const [permisos, setPermisos] = useState({});
 
   const navigate = useNavigate();
@@ -52,8 +52,7 @@ const EntregaRevisionEst = () => {
 
   const checkIfUserIsAdvisor = (asesoriaId, userId) => {
     fetch(
-      `${
-        import.meta.env.VITE_API_PORT_ENV
+      `${import.meta.env.VITE_API_PORT_ENV
       }/cliente/idClienteByAsesoramiento/${asesoriaId}`
     )
       .then((res) => res.json())
@@ -84,6 +83,18 @@ const EntregaRevisionEst = () => {
       checkIfUserIsAdvisor(asesoriaId, user.id_cliente);
     }
   };
+
+  const renderDoc = () => {
+    switch(docEnvio) {
+    case "MisEnvios":
+      return <MisEnvios idAsesoramiento={selectedAsesoriaId} />;
+    case  "EnviosAsesor":
+      return <EnvioAsesor idAsesoramiento={selectedAsesoriaId} />;
+    case "OtrosDocs":
+      return <OtrosDocs idAsesoramiento={selectedAsesoriaId}/>;
+    default:
+      return null;
+  } };
 
   return (
     <LayoutApp>
@@ -121,17 +132,15 @@ const EntregaRevisionEst = () => {
 
             <div className="flex w-full border-b-2 gap-3 border-black font-normal">
               <button
-                className={`px-3 text-xs md:text-base rounded-t-[5px] w-[115px] ${
-                  isTerminados ? "bg-[#17162E] text-white" : ""
-                }`}
+                className={`px-3 text-xs md:text-base rounded-t-[5px] w-[115px] ${isTerminados ? "bg-[#17162E] text-white" : ""
+                  }`}
                 onClick={() => navigate("terminados")}
               >
                 Terminados
               </button>
               <button
-                className={`px-3 text-xs md:text-base rounded-t-[5px] w-[105px] ${
-                  isPendientes ? "bg-[#17162E] text-white" : ""
-                }`}
+                className={`px-3 text-xs md:text-base rounded-t-[5px] w-[105px] ${isPendientes ? "bg-[#17162E] text-white" : ""
+                  }`}
                 onClick={() => navigate("pendientes")}
               >
                 Pendientes
@@ -152,32 +161,34 @@ const EntregaRevisionEst = () => {
         <div className="flex flex-col gap-[10px] px-[20px] sm:px-[40px] py-5 w-full  bg-white rounded-[10px]">
           <div className="flex justify-between flex-col md:flex-row">
             <h2 className="text-base md:text-2xl font-bold">Documentos</h2>
+
           </div>
           <div className="flex w-full border-b-2 gap-3 border-black font-normal">
             <button
-              className={`px-3 text-xs md:text-base rounded-t-[5px] w-[115px] ${
-                docEnvio === "MisEnvios" ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-3 text-xs md:text-base rounded-t-[5px] w-[115px] ${docEnvio === "MisEnvios" ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => setEnvio("MisEnvios")}
             >
               Mis envíos
             </button>
             <button
-              className={`px-3 text-xs md:text-base rounded-t-[5px] w-[135px] ${
-                docEnvio === "EnviosAsesor" ? "bg-[#17162E] text-white" : ""
-              }`}
+              className={`px-3 text-xs md:text-base rounded-t-[5px] w-[135px] ${docEnvio === "EnviosAsesor" ? "bg-[#17162E] text-white" : ""
+                }`}
               onClick={() => setEnvio("EnviosAsesor")}
             >
               Envíos asesor
             </button>
+            <button
+              className={`px-3 text-xs md:text-base rounded-t-[5px] w-[135px] ${docEnvio === "OtrosDocs" ? "bg-[#17162E] text-white" : ""
+                }`}
+              onClick={() => setEnvio("OtrosDocs")}
+            >
+              Otros Docs
+            </button>
           </div>
 
           <div>
-            {docEnvio === "MisEnvios" ? (
-              <MisEnvios idAsesoramiento={selectedAsesoriaId} />
-            ) : (
-              <EnvioAsesor idAsesoramiento={selectedAsesoriaId} />
-            )}
+            {renderDoc()}
           </div>
         </div>
 

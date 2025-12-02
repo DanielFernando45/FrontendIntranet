@@ -28,7 +28,7 @@ const MiAsesor = () => {
     { nombre: "Victor Alfonso", imagen: Victor },
     {nombre :"Hebert Wilder", imagen: Hebert},
     {nombre :"Christian Alexis", imagen:Christian},
-    { nombre: "Antony", imagen: Antony },
+    { nombre: "Anthony Israel", imagen: Antony },
     { nombre: "Brenda Lucia", imagen: Brenda },
     { nombre: "Olenka Ethel", imagen: Olenka },
     { nombre: "Daniel Emmerson", imagen: Daniel },

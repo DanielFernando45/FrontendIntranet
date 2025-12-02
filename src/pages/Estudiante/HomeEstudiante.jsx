@@ -594,7 +594,7 @@ const HomeEstudiante = () => {
             </div>
           </div>
 
-          <div className=" bg-white px-4 rounded-lg shadow-md max-xl:hidden h-[230px] xl:w-[62%] 1xl:w-[68%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%]">
+          <div className=" bg-white px-4 rounded-lg shadow-md max-xl:hidden h-[230px] xl:w-[62%] 1xl:w-[66%] 2xl:w-[70%] 3xl:w-[72%] 4xl:w-[73%] 6xl:w-[75%] ">
             <div className="flex justify-between">
               <h1 className="text-[12px] sm:text-[18px] lg:text-[30px] xl:text-[20px] font-semibold">
                 Envios Asesor
