@@ -25,7 +25,9 @@ const RecursosEstudiante = () => {
   // Estados para controlar los índices de los elementos visibles
   const [visibleTutorials, setVisibleTutorials] = useState([0, 1, 2, 3]);
   const [visibleGuias, setVisibleGuias] = useState([0, 1, 2, 3, 4]);
-  const [visibleHerramientas, setVisibleHerramientas] = useState([0, 1, 2, 3, 4, 5]);
+  const [visibleHerramientas, setVisibleHerramientas] = useState([
+    0, 1, 2, 3, 4, 5,
+  ]);
 
   useEffect(() => {
     const calcularTutorialsVisibles = () => {
@@ -53,7 +55,7 @@ const RecursosEstudiante = () => {
       if (width >= 1440) setVisibleHerramientas([0, 1, 2, 3, 4, 5]);
       else if (width >= 1200) setVisibleHerramientas([0, 1, 2, 3, 4]);
       else if (width >= 900) setVisibleHerramientas([0, 1, 2, 3]);
-      else if (width >= 768) setVisibleHerramientas([0, 1, 2 ]);
+      else if (width >= 768) setVisibleHerramientas([0, 1, 2]);
       else if (width >= 600) setVisibleHerramientas([0, 1]);
       else setVisibleHerramientas([0]);
     };
@@ -74,7 +76,7 @@ const RecursosEstudiante = () => {
       window.removeEventListener("resize", calcularGuiasVisibles);
       window.removeEventListener("resize", calcularHerramientasVisibles);
     };
-  }, []); 
+  }, []);
 
   // Función para cargar imágenes y verificar cuando están listas
   const loadImages = async (items, imageKey) => {
@@ -97,15 +99,15 @@ const RecursosEstudiante = () => {
 
         // Obtener todos los datos en paralelo
         const [tutorialesRes, guiasRes, herramientasRes] = await Promise.all([
-          fetch(`${import.meta.env.VITE_API_PORT_ENV}/recursos/tutoriales/all`).then((res) =>
-            res.json()
+          fetch(
+            `${import.meta.env.VITE_API_PORT_ENV}/recursos/tutoriales/all`
+          ).then((res) => res.json()),
+          fetch(`${import.meta.env.VITE_API_PORT_ENV}/recursos/guias/all`).then(
+            (res) => res.json()
           ),
-          fetch(`${import.meta.env.VITE_API_PORT_ENV}/recursos/guias/all`).then((res) =>
-            res.json()
-          ),
-          fetch(`${import.meta.env.VITE_API_PORT_ENV}/recursos/herramientas/all`).then((res) =>
-            res.json()
-          ),
+          fetch(
+            `${import.meta.env.VITE_API_PORT_ENV}/recursos/herramientas/all`
+          ).then((res) => res.json()),
         ]);
 
         // Establecer los datos
@@ -379,9 +381,8 @@ const RecursosEstudiante = () => {
 
         {/* TUTORIALES */}
         <div className="bg-white rounded-xl py-5">
-
           <h2 className="text-[20px] font-medium ml-4 sm:ml-8">Tutoriales</h2>
-          
+
           <div className="flex justify-center w-full  sm:gap-4 xl:gap-[1px] ">
             <button
               onClick={() => rotateLeft("tutorial")}
@@ -445,141 +446,138 @@ const RecursosEstudiante = () => {
               <img src={FechaDerec} alt="" />
             </button>
           </div>
-
         </div>
 
         <div className="flex flex-col justify-between gap-5">
-            {/* GUIAS */}
-            <div className="bg-white rounded-xl py-2">
+          {/* GUIAS */}
+          <div className="bg-white rounded-xl py-2">
+            <h2 className="text-[20px] font-medium ml-4">Guías</h2>
 
-              <h2 className="text-[20px] font-medium ml-4">Guías</h2>
+            <div className="flex justify-center w-full ">
+              <button
+                onClick={() => rotateLeft("guia")}
+                className="flex items-center"
+              >
+                <img src={FeclaIzqui} alt="" />
+              </button>
 
-              <div className="flex justify-center w-full ">
-                <button
-                  onClick={() => rotateLeft("guia")}
-                  className="flex items-center"
-                >
-                  <img src={FeclaIzqui} alt="" />
-                </button>
+              <div className="flex gap-2 1xl:gap-6 3xl:gap-2">
+                {visibleGuias.map((index) => {
+                  const guia = guias[index];
+                  if (!guia) return null;
 
-                <div className="flex gap-2 1xl:gap-6 3xl:gap-2">
-                  {visibleGuias.map((index) => {
-                    const guia = guias[index];
-                    if (!guia) return null;
-
-                    return (
-                      <section
-                        key={guia.id}
-                        className="relative w-[262px] h-[284px] drop-shadow-md rounded-xl"
-                      >
-                        <img
-                          className="w-full h-[126px] rounded-t-xl object-cover"
-                          src={guia.imagen}
-                          alt={guia.titulo}
-                          onError={(e) => {
-                            e.target.src = youtube; // Imagen de respaldo
-                          }}
-                        />
-                        <div className="w-full h-[110px] gap-[10px] py-[10px] px-[15px] bg-white">
-                          <h1 className="text-[15px] font-medium">{guia.titulo}</h1>
-                          <p className="text-[12px] text-[#425466] line-clamp-3">
-                            {guia.descripcion}
-                          </p>
-                        </div>
-                        <div className="flex h-[48px] bg-[#1B435D] rounded-b-xl">
-                          <button
-                            className="flex w-full h-[48px] justify-center items-center border-r"
-                            onClick={() => openPdfModal(guia.documento)}
-                          >
-                            <img src={ver} alt="Ver" />
-                          </button>
-                          <button
-                            className="flex w-full h-[48px] justify-center items-center border-l"
-                            onClick={() => downloadPdf(guia.documento, guia.titulo)}
-                          >
-                            <img src={descargar} alt="Descargar" />
-                          </button>
-                        </div>
-                      </section>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => rotateRight("guia")}
-                  className="flex items-center"
-                >
-                  <img src={FechaDerec} alt="" />
-                </button>
-              </div>
-            </div>
-
-              {/* HERRAMIENTAS */}
-            <div className="flex flex-col  gap-5 bg-white rounded-xl p-2">
-
-                <h2 className="text-[20px] font-medium ml-4">Herramientas</h2>
-
-              <div className="flex justify-center w-full h-[250px] ">
-                <button
-                  onClick={() => rotateLeft("herramienta")}
-                  className="flex items-center"
-                >
-                  <img src={FeclaIzqui} alt="" />
-                </button>
-
-                <div className="flex gap-4 1xl:gap-2 3xl:gap-7 ">
-                  {visibleHerramientas.map((index) => {
-                    const herramienta = herramientas[index];
-                    if (!herramienta) return null;
-
-                    return (
-                      <section
-                        key={herramienta.id}
-                        className="relative w-[190px] h-[235px] drop-shadow-md rounded-xl"
-                      >
-                        <img
-                          className="w-full h-[126px] rounded-t-xl object-cover bg-white"
-                          src={herramienta.imagen}
-                          alt={herramienta.nombre}
-                          onError={(e) => {
-                            e.target.src = youtube; // Imagen de respaldo
-                          }}
-                        />
-                        <div className="flex flex-col w-full h-[83px] gap-[4px] py-[10px] px-[10px] bg-white">
-                          <h1 className="text-[15px] font-medium">
-                            {herramienta.nombre}
-                          </h1>
-                          <p className="text-[9px] text-[#425466] line-clamp-3">
-                            {herramienta.descripcion}
-                          </p>
-                        </div>
-
-                        <a
-                          href={herramienta.enlace}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="h-[33px] bg-[#1B435D] rounded-b-xl flex flex-col w-full justify-center items-center"
+                  return (
+                    <section
+                      key={guia.id}
+                      className="relative w-[262px] h-[284px] drop-shadow-md rounded-xl"
+                    >
+                      <img
+                        className="w-full h-[126px] rounded-t-xl object-cover"
+                        src={guia.imagen}
+                        alt={guia.titulo}
+                        onError={(e) => {
+                          e.target.src = youtube; // Imagen de respaldo
+                        }}
+                      />
+                      <div className="w-full h-[110px] gap-[10px] py-[10px] px-[15px] bg-white">
+                        <h1 className="text-[15px] font-medium">
+                          {guia.titulo}
+                        </h1>
+                        <p className="text-[12px] text-[#425466] line-clamp-3">
+                          {guia.descripcion}
+                        </p>
+                      </div>
+                      <div className="flex h-[48px] bg-[#1B435D] rounded-b-xl">
+                        <button
+                          className="flex w-full h-[48px] justify-center items-center border-r"
+                          onClick={() => openPdfModal(guia.documento)}
                         >
-                          <img src={link} alt="Enlace" />
-                        </a>
-                      </section>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => rotateRight("herramienta")}
-                  className="flex items-center"
-                >
-                  <img src={FechaDerec} alt="" />
-                </button>
+                          <img src={ver} alt="Ver" />
+                        </button>
+                        <button
+                          className="flex w-full h-[48px] justify-center items-center border-l"
+                          onClick={() =>
+                            downloadPdf(guia.documento, guia.titulo)
+                          }
+                        >
+                          <img src={descargar} alt="Descargar" />
+                        </button>
+                      </div>
+                    </section>
+                  );
+                })}
               </div>
+
+              <button
+                onClick={() => rotateRight("guia")}
+                className="flex items-center"
+              >
+                <img src={FechaDerec} alt="" />
+              </button>
             </div>
+          </div>
 
+          {/* HERRAMIENTAS */}
+          <div className="flex flex-col  gap-5 bg-white rounded-xl p-2">
+            <h2 className="text-[20px] font-medium ml-4">Herramientas</h2>
+
+            <div className="flex justify-center w-full h-[250px] ">
+              <button
+                onClick={() => rotateLeft("herramienta")}
+                className="flex items-center"
+              >
+                <img src={FeclaIzqui} alt="" />
+              </button>
+
+              <div className="flex gap-4 1xl:gap-2 3xl:gap-7 ">
+                {visibleHerramientas.map((index) => {
+                  const herramienta = herramientas[index];
+                  if (!herramienta) return null;
+
+                  return (
+                    <section
+                      key={herramienta.id}
+                      className="relative w-[190px] h-[235px] drop-shadow-md rounded-xl"
+                    >
+                      <img
+                        className="w-full h-[126px] rounded-t-xl object-cover bg-white"
+                        src={herramienta.imagen}
+                        alt={herramienta.nombre}
+                        onError={(e) => {
+                          e.target.src = youtube; // Imagen de respaldo
+                        }}
+                      />
+                      <div className="flex flex-col w-full h-[83px] gap-[4px] py-[10px] px-[10px] bg-white">
+                        <h1 className="text-[15px] font-medium">
+                          {herramienta.nombre}
+                        </h1>
+                        <p className="text-[9px] text-[#425466] line-clamp-3">
+                          {herramienta.descripcion}
+                        </p>
+                      </div>
+
+                      <a
+                        href={herramienta.enlace}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="h-[33px] bg-[#1B435D] rounded-b-xl flex flex-col w-full justify-center items-center"
+                      >
+                        <img src={link} alt="Enlace" />
+                      </a>
+                    </section>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => rotateRight("herramienta")}
+                className="flex items-center"
+              >
+                <img src={FechaDerec} alt="" />
+              </button>
+            </div>
+          </div>
         </div>
-
-        
-        
       </main>
     </LayoutApp>
   );

@@ -403,7 +403,7 @@ const ContratoNuevo = () => {
                   accept=".pdf,.doc,.docx"
                   className="bg-[#E9E7E7] rounded-lg p-2"
                   onChange={(e) => {
-                    const file = e.target.files[0];
+                    const   file = e.target.files[0];
                     if (!file) return;
                     const validTypes = [
                       "application/pdf",
