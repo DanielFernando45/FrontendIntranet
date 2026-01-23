@@ -53,41 +53,6 @@ const OtrosDocs = ({ idAsesoramiento }) => {
     }
   };
 
-  // Función para descargar archivos
-  const descargarArchivos = async (archivos) => {
-    try {
-      for (const archivo of archivos) {
-        const response = await fetch(archivo.signedUrl);
-        const blob = await response.blob();
-        
-        // Crear un enlace temporal para descargar
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        
-        // Obtener el nombre del archivo desde la URL
-        const nombreArchivo = archivo.url.split('/').pop();
-        a.download = nombreArchivo;
-        
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        // Liberar el objeto URL
-        window.URL.revokeObjectURL(url);
-      }
-      
-      if (archivos.length > 1) {
-        alert(`${archivos.length} archivos descargados correctamente`);
-      } else {
-        alert("Archivo descargado correctamente");
-      }
-    } catch (error) {
-      console.error("Error al descargar archivos:", error);
-      alert("Ocurrió un error al descargar los archivos");
-    }
-  };
-
   const formatDate = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -166,47 +131,31 @@ const OtrosDocs = ({ idAsesoramiento }) => {
             <div className="w-[100px] flex justify-center">{formatDate(doc.fecha)}</div>
 
             <div className="w-[250px] hidden md:flex justify-center">
-              {doc.archivos && doc.archivos.length > 0 ? (
-                cortarTexto(doc.archivos[0]?.url)
-              ) : (
-                "Sin archivo"
-              )}
+              {cortarTexto(doc.archivos?.[0]?.url)}
             </div>
 
             <button
-              className="w-[65px] flex justify-center hover:opacity-80 transition-opacity"
+              className="w-[65px] flex justify-center"
               onClick={() => {
                 setEditarDoc(true);
                 setIdDocsExtra(doc.id);
               }}
-              title="Editar documento"
             >
-              <img src={editar} alt="Editar" />
+              <img src={editar} alt="" />
             </button>
 
             <button
-              className="w-[65px] flex justify-center hover:opacity-80 transition-opacity"
+              className="w-[65px] flex justify-center"
               onClick={() => {
                 setShowConfirm(true);
                 setIdEliminar(doc.id);
               }}
-              title="Eliminar documento"
             >
-              <img src={eliminar} alt="Eliminar" />
+              <img src={eliminar} alt="" />
             </button>
-            
-            <button
-              className="w-[65px] flex justify-center hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-              onClick={() => descargarArchivos(doc.archivos || [])}
-              disabled={!doc.archivos || doc.archivos.length === 0}
-              title={
-                doc.archivos && doc.archivos.length > 0 
-                  ? `Descargar ${doc.archivos.length} archivo(s)` 
-                  : "No hay archivos para descargar"
-              }
-            >
-              <img src={descargar} alt="Descargar" />
-            </button>
+            <buttton>
+              <img src={descargar} alt="" />
+            </buttton>
           </div>
         ))
       ) : (
