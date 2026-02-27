@@ -10,7 +10,7 @@ const ModalEditarExtraDocs = ({ idDocExtra, onClose }) => {
   useEffect(() => {
     const obtenerDocumento = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/asesoramiento-documentos/obtener/${idDocExtra}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_PORT_ENV}/asesoramiento-documentos/obtener/${idDocExtra}`);
         setTitulo(res.data.titulo || "");
       } catch (error) {
         toast.error("Error al cargar el documento");
@@ -60,7 +60,7 @@ const ModalEditarExtraDocs = ({ idDocExtra, onClose }) => {
       formData.append("files", archivoNuevo); // 👈 solo un archivo, como en Postman
 
       await axios.patch(
-        `http://localhost:3001/asesoramiento-documentos/editar/${idDocExtra}`,
+        `${import.meta.env.VITE_API_PORT_ENV}/asesoramiento-documentos/editar/${idDocExtra}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
