@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Asegúrate de tener esta línea arriba
 import toast from "react-hot-toast";
+
 const AsignarPago = ({ Cerrar, asesoramiento }) => {
   const [numeroCuotas, setNumeroCuotas] = useState(2);
   const [pagoTotal, setPagoTotal] = useState("");
@@ -12,7 +13,19 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
   const navigate = useNavigate(); // Dentro del componente
 
   const handleNumeroCuotasChange = (e) => {
-    setNumeroCuotas(Number(e.target.value));
+    const newNumeroCuotas = Number(e.target.value);
+    setNumeroCuotas(newNumeroCuotas);
+    
+    // Limpiar montos de cuotas que ya no son necesarias
+    const updatedMontos = { ...montosCuotas };
+    // Mantener solo las cuotas hasta el nuevo número
+    Object.keys(updatedMontos).forEach(key => {
+      const index = parseInt(key.replace('monto', ''));
+      if (index > newNumeroCuotas) {
+        delete updatedMontos[key];
+      }
+    });
+    setMontosCuotas(updatedMontos);
   };
 
   const handlePagoTotalChange = (e) => {
@@ -103,6 +116,52 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
     }
   };
 
+  // Función para generar las opciones de cuotas del 2 al 6
+  const generarOpcionesCuotas = () => {
+    const opciones = [];
+    for (let i = 2; i <= 6; i++) {
+      opciones.push(
+        <option key={i} value={i}>
+          {i}
+        </option>
+      );
+    }
+    return opciones;
+  };
+
+  // Función para renderizar las cuotas adicionales en filas de 3
+  const renderizarCuotasAdicionales = () => {
+    if (numeroCuotas <= 1) return null;
+    
+    const cuotasAdicionales = numeroCuotas - 1;
+    const filas = [];
+    
+    for (let i = 0; i < cuotasAdicionales; i += 3) {
+      const cuotasEnFila = Math.min(3, cuotasAdicionales - i);
+      filas.push(
+        <div key={`fila-${i}`} className="flex gap-5 mt-5">
+          {[...Array(cuotasEnFila)].map((_, index) => {
+            const numeroCuota = i + index + 2;
+            return (
+              <div key={numeroCuota} className="flex flex-col w-[250px] gap-[15px]">
+                <h2 className="font-medium">Monto Cuota {numeroCuota}:</h2>
+                <input
+                  type="number"
+                  value={montosCuotas[`monto${numeroCuota}`] || ""}
+                  onChange={(e) => handleMontoCuotaChange(e, numeroCuota)}
+                  placeholder="Ingrese un monto"
+                  className="rounded-xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
+                />
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+    
+    return filas;
+  };
+
   return (
     <div className="flex flex-col absolute gap-[15px] top-60 left-96 px-10 py-5 w-[875px] rounded-lg bg-white border border-[#D2CECF]">
       <h1 className="text-[25px] font-semibold">Asignar por cuotas</h1>
@@ -132,8 +191,7 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
             <option disabled value="">
               Seleccione cuotas
             </option>
-            <option value="2">2</option>
-            <option value="3">3</option>
+            {generarOpcionesCuotas()}
           </select>
         </div>
         <div className="flex flex-col w-[222px] h-[82px] gap-[15px]">
@@ -172,36 +230,19 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
       </div>
 
       {numeroCuotas > 1 && (
-        <div className="text-[25px] font-semibold">
+        <div className="text-[25px] font-semibold mt-5">
           <h2>Fijar otras cuotas</h2>
         </div>
       )}
 
-      <div className="flex gap-40">
-        {numeroCuotas > 1 &&
-          [...Array(numeroCuotas - 1)].map((_, index) => (
-            <div key={index} className="flex flex-col justify-start gap-5 mt-5">
-              <h1 className="font-medium">Cuota {index + 2}</h1>
-              <div className="flex flex-col w-[250px] gap-[15px]">
-                <h2 className="font-medium">Monto de Cuota:</h2>
-                <input
-                  type="number"
-                  value={montosCuotas[`monto${index + 2}`] || ""}
-                  onChange={(e) => handleMontoCuotaChange(e, index + 2)}
-                  placeholder="Ingrese un monto"
-                  className="rounded-xl text-[#1C1C34] w-full h-[43px] bg-[#E9E7E7] px-4 font-medium"
-                />
-              </div>
-            </div>
-          ))}
-      </div>
+      {renderizarCuotasAdicionales()}
 
       <div className="flex w-full py-4 px-1 h-[68px] justify-end gap-4">
         <button
           onClick={handleSubmit}
           disabled={loading}
           className={`h-7 w-[100px] border border-black rounded-[4px] text-[11px] font-bold text-[#02242B] ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
+            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"
           }`}
         >
           {loading ? "Procesando..." : "Agregar"}
@@ -210,7 +251,7 @@ const AsignarPago = ({ Cerrar, asesoramiento }) => {
           onClick={Cerrar}
           disabled={loading}
           className={`h-7 w-[100px] border bg-black rounded-[4px] text-[11px] font-bold text-white ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
+            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"
           }`}
         >
           Cancelar
