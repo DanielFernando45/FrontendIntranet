@@ -111,7 +111,7 @@ const OtrosDocs = ({ idAsesoramiento }) => {
 
   const formatDate = (dateString) => {
     if (!dateString) return "";
-    const date = new Date(dateString);
+    const date = new Date(dateString + "T00:00:00");
     return date.toLocaleDateString("es-PE", {
       month: "short",
       day: "numeric",
@@ -230,8 +230,8 @@ const OtrosDocs = ({ idAsesoramiento }) => {
             {doc.archivos && doc.archivos.length > 0 && (
               <div className="bg-gray-50 p-2">
                 {doc.archivos.map((archivo, index) => (
-                  <div 
-                    key={archivo.id} 
+                  <div
+                    key={archivo.id}
                     className="flex items-center justify-between p-2 mb-1 last:mb-0 bg-white rounded border border-gray-200 hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex items-center flex-1">
@@ -249,7 +249,7 @@ const OtrosDocs = ({ idAsesoramiento }) => {
                     </button>
                   </div>
                 ))}
-                
+
                 {/* Botón para descargar todos los archivos (si hay más de 1) */}
                 {doc.archivos.length > 1 && (
                   <div className="flex justify-end mt-2 pt-2 border-t border-gray-300">
